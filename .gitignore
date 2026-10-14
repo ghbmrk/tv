@@ -16,3 +16,4 @@ __pycache__/
 .gradle/
 local.properties
 .DS_Store
+.kotlin/

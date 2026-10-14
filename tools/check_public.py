@@ -16,7 +16,7 @@ def main():
             continue
         name = raw.decode()
         path = ROOT / name
-        if name.startswith(('.local/', 'reference/firmware/', 'reference/source/')) or name.endswith(('.jks', '.keystore', '.jpg', '.png', '.zip', '.bin', '.msd')):
+        if any(part in {'.local', '.gradle', '.kotlin', '__pycache__', 'build'} for part in path.relative_to(ROOT).parts) or name.startswith(('reference/firmware/', 'reference/source/')) or name.endswith(('.jks', '.keystore', '.jpg', '.png', '.zip', '.bin', '.msd')):
             errors.append(f'private/binary artifact tracked: {name}')
         if path.stat().st_size > 1024 * 1024:
             errors.append(f'large public artifact: {name}')
