@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "checked": "2026-10-14",
+  "target_runtime_observations": [
+    {
+      "id": "owner_about_tv_photo_2026_10_14",
+      "kind": "owner_supplied_device_ui_observation",
+      "observed": "2026-10-14",
+      "source": "owner_supplied_photo_of_about_this_tv_screen",
+      "fields": {
+        "full_model_code": "QN50LS03FAFXZA",
+        "installed_software_build": "T-PTMFAKUC-0090-1301.0"
+      },
+      "normalization": "Joined the wrapped software text ending in -1 and continuing with 301.0. Other displayed metadata was not retained.",
+      "confidence": "high_visual_transcription",
+      "limit": "The settings screen does not identify the physical board, SoC, CPU ABI, boot permissions, or Android compatibility.",
+      "raw_photo_retained_in_project": false,
+      "source_sha256": "046c89965654d62034e96521bb065bcddcb60ddeab35706df1c8b8e806d1084f"
+    }
+  ],
+  "sources": [
+    {
+      "id": "android_architecture",
+      "url": "https://source.android.com/docs/core/architecture",
+      "kind": "primary_platform_documentation",
+      "use": "Framework and hardware abstraction boundaries for the proposed Android port"
+    },
+    {
+      "id": "android_drm",
+      "url": "https://source.android.com/docs/core/media/drm",
+      "kind": "primary_platform_documentation",
+      "use": "MediaDrm framework, vendor DRM plugins, provisioning and protected media integration",
+      "limit": "Does not establish a DRM implementation or provider acceptance on the LS03F"
+    },
+    {
+      "id": "android_home_data",
+      "url": "https://support.google.com/androidtv/answer/12305147?hl=en",
+      "kind": "primary_service_documentation",
+      "use": "Google documents data collection in its Android TV Home services; custom Home alone is not a full system privacy audit"
+    },
+    {
+      "id": "compose_tv",
+      "url": "https://developer.android.com/jetpack/androidx/releases/tv",
+      "kind": "primary_ui_documentation",
+      "use": "Pinned tv-material 1.0.1 for the native development shell; target Android BSP remains unselected"
+    },
+    {
+      "id": "aosp_build",
+      "url": "https://source.android.com/docs/setup/start",
+      "kind": "primary_build_documentation",
+      "use": "Plan an owner-managed Linux x86-64 build environment and resource budget before a full checkout"
+    },
+    {
+      "id": "android_verified_boot",
+      "url": "https://source.android.com/docs/security/features/verifiedboot",
+      "kind": "primary_security_documentation",
+      "use": "Candidate release integrity mechanism; exact board support and key ownership remain unverified"
+    },
+    {
+      "id": "android_ab_updates",
+      "url": "https://source.android.com/docs/core/ota/ab",
+      "kind": "primary_update_documentation",
+      "use": "Candidate update and recovery architecture; not an assertion that the board supports A/B"
+    },
+    {
+      "id": "samsung_likely_sku_support",
+      "url": "https://www.samsung.com/latin/support/model/QN50LS03FAFXZA/",
+      "kind": "primary_product_support",
+      "use": "Public update metadata lists T-PTMFAKUC-0090.zip version 0090-1301.0 for the owner-confirmed SKU and software family/version",
+      "limit": "Metadata agreement is not a complete backup, verified recovery method, package hash, board identification, or Android port"
+    },
+    {
+      "id": "related_ls03f_art_research",
+      "url": "https://github.com/TheFab21/ha-samsungtv-smart/blob/master/notes/QN55LS03FAFXZA/ART_MODE_DECOMPILED.md",
+      "kind": "first_party_research_report_from_another_device",
+      "use": "Related QN55LS03FAFXZA report lists T-PTMFAKUC-0090-1296.8, Tizen 9 and Linux 5.4.261 armv7l and describes Art Mode service boundaries",
+      "limit": "55-inch device; raw target evidence not independently verified here. Does not identify the owner's 50-inch ABI, hardware or an Android boot path"
+    },
+    {
+      "id": "rea",
+      "url": "https://github.com/morluto/rea",
+      "kind": "primary_analysis_tool_documentation",
+      "use": "Pin reviewed release and analysis providers for bounded firmware questions",
+      "limit": "No REA analysis of owner-device artifacts has been performed"
+    },
+    {
+      "id": "rea_firmware",
+      "url": "https://github.com/morluto/rea/blob/main/docs/firmware-analysis.md",
+      "kind": "primary_analysis_tool_documentation",
+      "use": "Account for documented provider host support, input limits and extraction gaps; preserve source hashes and extraction lineage"
+    },
+    {
+      "id": "official_firmware_range_inspection",
+      "url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "kind": "static_observation_of_bounded_official_artifact_ranges",
+      "use": "ZIP directory and CRC-checked info.txt identify version 1301.0, package build date 2026-07-14, and the PontusM 2025 TV key-family label. Partial upgrade.msd begins MSDU11.",
+      "evidence": "research/firmware-archive-index.json",
+      "limit": "No full archive hash, signature verification, firmware reconstruction, chip identification, or runtime boot evidence."
+    },
+    {
+      "id": "samsung_pontusm_source_listing",
+      "url": "https://opensource.samsung.com/uploadSearch?searchValue=LS03F",
+      "kind": "primary_source_portal_ui_observation",
+      "observed": "2026-10-14",
+      "entry_id": "12715",
+      "package_name": "25_DTV_PontusM",
+      "listing_version": "1000",
+      "covered_model_pattern": "QN**LS03FA****",
+      "archive_name": "25_DTV_PontusM.zip",
+      "archive_file_id": "39883",
+      "displayed_size": "1021.58 MB",
+      "use": "Official source release groups this model family under PontusM. The firmware metadata independently contains the PontusM label.",
+      "download_status": "agreement_approved_by_owner_and_accepted_in_browser; archive_transfer_not_delivered; manual_download_handoff_ready",
+      "limit": "Family coverage is established by the listing. Source contents, exact correspondence to installed 1301.0, and Android support are not established.",
+      "approval_scope": "Accept displayed source-download agreement and download 25_DTV_PontusM.zip for offline Android-port research",
+      "acquisition_attempts": [
+        {
+          "method": "browser_individual_file_control",
+          "result": "agreement accepted; no completed download delivered"
+        },
+        {
+          "method": "browser_selected_file_control",
+          "result": "agreement accepted; no completed download delivered"
+        },
+        {
+          "method": "direct_http_public_portal",
+          "result": "HTTP 403"
+        }
+      ],
+      "manual_destination": "reference/source/25_DTV_PontusM.zip",
+      "handoff_screenshot": "research/source-download-handoff.jpg"
+    }
+  ]
+}

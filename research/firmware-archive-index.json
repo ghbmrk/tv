@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+  "archive_bytes_reported": 1465434949,
+  "range": {
+    "offset": 1465369392,
+    "length": 65557,
+    "sha256": "cb3320e3c13273daa9baf4c317a03fa0d08f08b7d0c14d1bb6a87d39b67dbb5f"
+  },
+  "central_directory": {
+    "offset": 1465434403,
+    "length": 524,
+    "entry_count": 5
+  },
+  "entries": [
+    {
+      "name": "SWU_AUTO_FLAG",
+      "flags": 0,
+      "compression_method": 0,
+      "crc32": "83dcefb7",
+      "compressed_bytes": 1,
+      "uncompressed_bytes": 1,
+      "local_header_offset": 0
+    },
+    {
+      "name": "T-PTMFAKUC-0090/",
+      "flags": 0,
+      "compression_method": 0,
+      "crc32": "00000000",
+      "compressed_bytes": 0,
+      "uncompressed_bytes": 0,
+      "local_header_offset": 44
+    },
+    {
+      "name": "T-PTMFAKUC-0090/image/",
+      "flags": 0,
+      "compression_method": 0,
+      "crc32": "00000000",
+      "compressed_bytes": 0,
+      "uncompressed_bytes": 0,
+      "local_header_offset": 90
+    },
+    {
+      "name": "T-PTMFAKUC-0090/image/info.txt",
+      "flags": 0,
+      "compression_method": 8,
+      "crc32": "102dd2a6",
+      "compressed_bytes": 315,
+      "uncompressed_bytes": 521,
+      "local_header_offset": 142
+    },
+    {
+      "name": "T-PTMFAKUC-0090/image/upgrade.msd",
+      "flags": 0,
+      "compression_method": 8,
+      "crc32": "dfa2256e",
+      "compressed_bytes": 1465433823,
+      "uncompressed_bytes": 1465203794,
+      "local_header_offset": 517
+    }
+  ],
+  "coverage": "ZIP directory and info.txt inspected. info.txt passed ZIP CRC32. Large upgrade.msd payload, package signature, whole archive hash, hardware identity and boot behavior remain unverified.",
+  "inspected_entry": {
+    "path": "T-PTMFAKUC-0090/image/info.txt",
+    "compressed_range": {
+      "offset": 202,
+      "length": 315
+    },
+    "output_path": "reference/firmware/info.txt",
+    "sha256": "233779bb8bc3d30da9c2a5df3fe856f1bc1fe38fe023b4ea338e8a221ba2dbec",
+    "crc32_verified": true,
+    "signature_verified": false
+  },
+  "additional_range": {
+    "offset": 0,
+    "length": 576,
+    "sha256": "197ac87cd4cd679f6a7ea23bbf4d888ef89b79cce3579c71d98374f2b79623e0"
+  },
+  "payload_prefix_inspection": {
+    "source_zip_range": {
+      "offset": 0,
+      "length": 262144,
+      "sha256": "ac948e90a3aec589fbd110df9de03cad27a61fe0ec0cc2eb8d28b6fadc0d4f8a"
+    },
+    "compressed_entry_payload_offset": 580,
+    "decompressed_prefix_path": "reference/firmware/upgrade-prefix.bin",
+    "decompressed_prefix_bytes": 261520,
+    "decompressed_prefix_sha256": "0dc897ae6908a4ff3d753adb286fd9879de6ae008ad5dcf6f6d0bd2e9464946e",
+    "deflate_stream_complete": false,
+    "entry_crc32_verified": false,
+    "coverage": "Incomplete decompressed prefix only; not a complete upgrade.msd and not a firmware-region or partition reconstruction."
+  }
+}

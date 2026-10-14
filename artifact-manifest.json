@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "path": "reference/original-spec.txt",
+      "kind": "owner_supplied_specification",
+      "sha256": "f04a030e0203b9103e86b0f44eb9015731b8aa408d4cb1e9146239ff87d645e2",
+      "size_bytes": 24233,
+      "contains_device_firmware": false
+    },
+    {
+      "path": "reference/firmware/archive-head.bin",
+      "kind": "partial_official_firmware_research_artifact",
+      "sha256": "ac948e90a3aec589fbd110df9de03cad27a61fe0ec0cc2eb8d28b6fadc0d4f8a",
+      "size_bytes": 262144,
+      "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "complete_firmware_image": false,
+      "signature_verified": false,
+      "derivation_record": "research/firmware-archive-index.json"
+    },
+    {
+      "path": "reference/firmware/archive-prefix.bin",
+      "kind": "partial_official_firmware_research_artifact",
+      "sha256": "197ac87cd4cd679f6a7ea23bbf4d888ef89b79cce3579c71d98374f2b79623e0",
+      "size_bytes": 576,
+      "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "complete_firmware_image": false,
+      "signature_verified": false,
+      "derivation_record": "research/firmware-archive-index.json"
+    },
+    {
+      "path": "reference/firmware/archive-tail.bin",
+      "kind": "partial_official_firmware_research_artifact",
+      "sha256": "cb3320e3c13273daa9baf4c317a03fa0d08f08b7d0c14d1bb6a87d39b67dbb5f",
+      "size_bytes": 65557,
+      "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "complete_firmware_image": false,
+      "signature_verified": false,
+      "derivation_record": "research/firmware-archive-index.json"
+    },
+    {
+      "path": "reference/firmware/info.txt",
+      "kind": "partial_official_firmware_research_artifact",
+      "sha256": "233779bb8bc3d30da9c2a5df3fe856f1bc1fe38fe023b4ea338e8a221ba2dbec",
+      "size_bytes": 521,
+      "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "complete_firmware_image": false,
+      "signature_verified": false,
+      "derivation_record": "research/firmware-archive-index.json"
+    },
+    {
+      "path": "reference/firmware/upgrade-prefix.bin",
+      "kind": "partial_official_firmware_research_artifact",
+      "sha256": "0dc897ae6908a4ff3d753adb286fd9879de6ae008ad5dcf6f6d0bd2e9464946e",
+      "size_bytes": 261520,
+      "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "complete_firmware_image": false,
+      "signature_verified": false,
+      "derivation_record": "research/firmware-archive-index.json"
+    }
+  ]
+}

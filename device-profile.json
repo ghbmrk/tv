@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "target": {
+    "manufacturer": "Samsung",
+    "family": "The Frame LS03F",
+    "model_year": 2025,
+    "nominal_diagonal_inches": 50,
+    "identity_basis": "owner_photo_of_about_this_tv_screen",
+    "identity_evidence": "owner_about_tv_photo_2026_10_14",
+    "full_model_code": "QN50LS03FAFXZA",
+    "region": "US model suffix XZA; configured region and location not inferred",
+    "installed_software_version": "1301.0",
+    "installed_software_build": "T-PTMFAKUC-0090-1301.0",
+    "installed_firmware_family": "T-PTMFAKUC-0090",
+    "board_id": null,
+    "board_revision": null,
+    "soc_vendor": null,
+    "soc_part": null,
+    "cpu_abi": null,
+    "kernel": null,
+    "storage_layout": null,
+    "boot_chain": null,
+    "recovery_method": null
+  },
+  "research_leads": {
+    "confirmed_us_sku": "QN50LS03FAFXZA",
+    "official_update_family_for_that_sku": "T-PTMFAKUC-0090",
+    "official_update_version_listed": "0090-1301.0",
+    "platform_label_in_package_metadata": "PontusM 2025 TV",
+    "platform_label_evidence": "reference/firmware/info.txt",
+    "status": "official_archive_directory_and_info_txt_inspected; model_family_and_version_match_owner_photo; full_package_payload_and_signature_unverified",
+    "official_source_package": "25_DTV_PontusM.zip",
+    "official_source_listing_version": "1000",
+    "source_package_match": "model_family_pattern_QN**LS03FA****; exact_1301_source_correspondence_unverified"
+  },
+  "baseline": {
+    "provider_subscriptions": null,
+    "representative_titles": null,
+    "observed_stream_resolution_and_hdr": null,
+    "audio_output_hardware": null,
+    "audio_formats": null,
+    "picture_settings": null,
+    "standby_and_art_power": null,
+    "hdmi_cec_earc_tuner_and_casting_requirements": null
+  },
+  "next_inputs": [
+    "documented_board_and_soc_identification"
+  ],
+  "collection_policy": "Do not record serial numbers, account credentials, pairing tokens, device signing keys, or DRM secrets in this profile",
+  "remote": {
+    "model": null,
+    "receiver_hardware": null,
+    "per_button_transport": null,
+    "pairing_and_wake_path": null,
+    "button_and_gesture_baseline": null,
+    "internal_firmware_provenance": null
+  },
+  "performance_baseline": {
+    "input_to_visible_feedback": null,
+    "owned_screen_transitions": null,
+    "home_return_from_each_provider": null,
+    "provider_cold_and_warm_launch": null,
+    "artwork_and_standby_wake": null,
+    "display_refresh_and_frame_pacing": null
+  }
+}

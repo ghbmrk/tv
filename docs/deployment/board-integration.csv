@@ -1,0 +1,13 @@
+component,exact_hardware,independent_implementation,provenance,abi,test_evidence,status
+boot_chain,,,,,,unverified
+secure_world,,,,,,unverified
+storage_and_recovery,,,,,,unverified
+graphics_display_composer,,,,,,unverified
+panel_one_connect_controller,,,,,,unverified
+video_decoder,,,,,,unverified
+audio_and_earc,,,,,,unverified
+drm_protected_path_and_provisioning,,,,,,unverified
+hdmi_input_cec,,,,,,unverified
+remote_and_input,,,,,,unverified
+network,,,,,,unverified
+power_standby_thermal,,,,,,unverified

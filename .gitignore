@@ -1,0 +1,18 @@
+# Manufacturer research artifacts remain off-device and outside source distribution.
+reference/firmware/
+reference/source/
+evidence/private/
+build/
+out/
+*.jks
+*.keystore
+# Private reference inputs, browser captures, development credentials and state.
+reference/original-spec.txt
+research/*.jpg
+research/*.png
+.local/
+__pycache__/
+*.pyc
+.gradle/
+local.properties
+.DS_Store

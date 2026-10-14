@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-14",
+  "objective": "Equivalent-quality, locally controlled and modifiable custom software replacement on the original Samsung 50-inch LS03F hardware",
+  "selected_path": {
+    "platform": "AOSP with television features and native provider TV applications",
+    "selection_status": "authorized_for_investigation",
+    "target_support": "unverified",
+    "android_release": null,
+    "kernel_release": null,
+    "cpu_abi": null
+  },
+  "component_policy": {
+    "compose_existing_open_source": true,
+    "owner_modifiable_local_software": true,
+    "independently_sourced_proprietary_provider_or_drm_components": "permitted_subject_to_original_spec_and_verified_integration",
+    "original_hardware_required": true,
+    "samsung_platform_software_removal": "required_under_original_spec",
+    "retained_stock_kernel_boot_recovery_secure_world_or_controller_software": "does_not_satisfy_original_spec",
+    "unresolved_provenance": "unverified"
+  },
+  "quality": {
+    "baseline": "Current native TV capability under comparable title, subscription, settings, output hardware and network conditions",
+    "preserve_4k": true,
+    "preserve_hdr_when_supported": true,
+    "preserve_frame_cadence_and_rendering_quality": true,
+    "preserve_current_audio_capability": true,
+    "intentional_quality_downgrade_acceptable": false
+  },
+  "providers": [
+    {
+      "id": "netflix",
+      "required": true,
+      "client_path": "official_tv_client",
+      "target_playback": "unverified"
+    },
+    {
+      "id": "prime_video",
+      "required": true,
+      "client_path": "official_tv_client",
+      "target_playback": "unverified"
+    },
+    {
+      "id": "disney_plus",
+      "required": true,
+      "client_path": "official_tv_client",
+      "target_playback": "unverified"
+    },
+    {
+      "id": "youtube",
+      "required": true,
+      "client_path": "official_tv_client",
+      "target_playback": "unverified"
+    }
+  ],
+  "local_ownership": {
+    "home_settings_and_artwork": "local_and_owner_controlled",
+    "cloud_backend_for_owner_shell": false,
+    "shell_telemetry": false,
+    "local_only_external_egress": "zero_except_explicitly_enabled_features",
+    "configuration_export_import_reset": true,
+    "network_policy": "per_application_os_enforcement_and_external_measurement",
+    "provider_account_and_playback_observation": "unavoidable_for_normal_account_based_streaming_and_must_be_documented",
+    "mandatory_google_components": "minimize_and_verify_without_assuming_client_compatibility"
+  },
+  "persistent_deployment_gates": [
+    "exact_board_identification",
+    "independent_boot",
+    "practical_recovery",
+    "safe_display_power_and_thermal_operation",
+    "all_required_provider_quality_tests",
+    "complete_provenance_and_samsung_software_removal_audit",
+    "agentos_control_state_security_and_recovery_acceptance",
+    "existing_remote_full_interaction_acceptance",
+    "stock_parity_and_interface_latency_acceptance"
+  ],
+  "agentos_integration": {
+    "required": true,
+    "repository": "https://github.com/ghbmrk/agentOS",
+    "inspected_revision": "76ec0022012664e734aba22f281b88d9c0aa23f1",
+    "status": "architecture_defined_not_implemented",
+    "architecture": "broker_controlled_device_executor_to_paired_local_tv_service",
+    "guest_direct_lan_access": false,
+    "owner_software_semantic_control_parity": true,
+    "provider_interaction": [
+      "launch",
+      "navigate",
+      "search_where_supported",
+      "select_title",
+      "playback_transport",
+      "inspect_available_state"
+    ],
+    "provider_qualification": "each_required_client_and_version_on_target",
+    "state_reads_and_events": true,
+    "effect_readback_and_reconciliation": true,
+    "local_pairing_and_identity_pinning": true,
+    "physical_remote_override": true,
+    "raw_shell_or_unrestricted_input_passthrough": false,
+    "capture": "separate_opt_in_and_agentos_DEV_7_policy_no_protected_frame_extraction",
+    "administration": "typed_owner_authorized_operations_including_configuration_updates_and_recovery",
+    "acceptance_reference": "docs/agentos-integration.md",
+    "agentos_dependencies": [
+      "qualified_device_executor_and_broker_device_operation_wiring",
+      "broker_owned_TV_operation_classification",
+      "device_grants_events_and_capture_enforcement"
+    ],
+    "current_broker_gap": "inspected_closed_verb_list_lacks_DEV_4_present_actuate_and_actuate_physical",
+    "household_editing": {
+      "required": true,
+      "scope": [
+        "layouts_navigation_themes_and_widgets",
+        "displayed_content_and_content_sources",
+        "available_apps_collections_and_household_profiles",
+        "artwork_and_schedules",
+        "picture_audio_accessibility_and_other_owner_settings"
+      ],
+      "authority": "owner_delegated_persistent_scopes_with_standing_grants_for_routine_edits",
+      "state_model": "versioned_local_declarative_experience_document_and_typed_settings",
+      "workflow": [
+        "inspect",
+        "edit",
+        "validate",
+        "preview",
+        "apply_atomically",
+        "verify",
+        "undo"
+      ],
+      "persists_across_reboot": true,
+      "arbitrary_executable_ui": "owner_controlled_build_and_update_pipeline",
+      "availability": "distinguish_home_visibility_from_enforced_launch_and_content_access_policy",
+      "provider_boundary": "custom_shell_and_supported_provider_operations_no_claim_of_rewriting_provider_internals"
+    }
+  },
+  "remote_control": {
+    "existing_physical_samsung_remote_required": true,
+    "replacement_remote_required": false,
+    "manual_operation_requires_agentos_or_internet": false,
+    "preserve_stock_supported_functions": true,
+    "functions_to_qualify": [
+      "pairing_and_repairing",
+      "dpad_select_repeat_and_focus",
+      "home_and_back",
+      "volume_mute_and_external_audio_routing",
+      "power_artwork_short_long_press",
+      "standby_wake",
+      "playback_and_present_shortcuts",
+      "voice_channel_and_multifunction_where_present"
+    ],
+    "receiver_transport_and_remote_model": "unverified",
+    "tv_side_samsung_software_retention_for_remote": "not_authorized",
+    "physical_input_overrides_agent_navigation": true,
+    "acceptance_reference": "docs/REMOTE_AND_PERFORMANCE.md"
+  },
+  "responsiveness": {
+    "release_gate": "no_regression_against_measured_stock_baseline_under_comparable_conditions",
+    "optimization_goal": "minimize_end_to_end_input_and_interface_transition_latency_without_media_quality_or_safety_tradeoffs",
+    "provisional_engineering_goals_ms_p95": {
+      "remote_visible_feedback": 100,
+      "owned_screen_switch": 150,
+      "warm_home_return": 250
+    },
+    "numeric_goal_status": "provisional_not_measured_on_target",
+    "cold_provider_launch_and_wake": "measure_separately_and_preserve_stock_parity",
+    "focus_and_scroll_restoration": true,
+    "local_navigation_waits_for_agent_or_network": false,
+    "production_frame_path_blocking_io": false,
+    "home_state_and_cache": "resident_when_possible_with_measured_bounded_memory",
+    "provider_retention": "respect_client_lifecycle_and_memory_pressure_no_unbounded_pinning",
+    "metrics": [
+      "p50",
+      "p95",
+      "worst_observed",
+      "missed_frames",
+      "memory",
+      "thermal",
+      "standby_power"
+    ],
+    "acceptance_reference": "docs/REMOTE_AND_PERFORMANCE.md"
+  }
+}

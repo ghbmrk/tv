@@ -1,0 +1,39 @@
+# Deployment on the original TV
+
+Target: Samsung QN50LS03FAFXZA, installed family/build T-PTMFAKUC-0090-1301.0. The selected route is an independently booting AOSP TV system on the original board, with native Netflix, Prime Video, Disney+, and YouTube clients. Preserve stock-capable 4K/HDR, cadence, picture processing, audio, remote, and hardware safety. Reuse the existing physical Samsung remote and qualify stock-parity responsiveness using [the remote and performance plan](../REMOTE_AND_PERFORMANCE.md). No Android image or flashing procedure is qualified for this TV yet.
+
+## Work sequence and decision gates
+
+| Stage | Work and concrete deliverable | Exit evidence |
+|---|---|---|
+| 0 — Product slice | Run the local experience studio; build the native shell and exercise it on an Android TV emulator or an existing development target. | API tests; Android build; D-pad/import/persistence tests. This does not qualify the Samsung hardware. |
+| 1 — Source and board | Acquire the official `25_DTV_PontusM.zip`, hash it, inspect its bounded member index, then inspect selected kernel configs, device trees and board definitions. Match the source to installed 1301.0 using corroborating metadata. Establish exact board, SoC, ABI, storage/controller and panel/One Connect identities. | `device-profile.json`, source index, exact component integration table, evidence-backed storage map. Family name alone is insufficient. |
+| 2 — Independent boot and recovery | Investigate documented boot/unlock/recovery routes and exact firmware validation with pinned REA tools. Determine whether the original hardware accepts an independently built boot chain, kernel and secure-world dependencies. Define recovery for boot, storage and controller failures. | Reviewed boot-chain report, complete provenance coverage, demonstrated recovery for the proposed experiment's failure mode. Temporary root is not independent boot. |
+| 3 — Board support | Select an Android/kernel branch only after matching independent board support. Integrate graphics/composer, decoder, audio, input, HDMI/CEC/eARC, power/thermal and protected-media HALs. Obtain provider/device qualification and independent DRM provisioning. | An exact BSP/HAL bill of materials and early proof that all required official clients/provisioning can be acquired for this configuration. |
+| 4 — First hardware session | Prefer a documented RAM/alternate-boot route after its recovery/safety gates pass. Test minimal display, original remote pairing/gestures, audio, bounded load, thermal and standby before launching providers. | Instrumented independent boot, no stock dependency hidden in the boot path, safe hardware behavior. Never treat an ordinary Samsung USB update port as an Android boot installer. |
+| 5 — Quality and agentOS | Prove one real UHD/HDR session, then all four providers at the stock-supported baseline; integrate the paired TV service and broker device executor. | Per-provider title/plan/client/version/output evidence; household edits, receipts, navigation, interruption, privacy and standby qualification. |
+| 6 — Persistent installation | Build owner-signed release artifacts and an exact-board install procedure. Verify artifact identity and recovery coverage immediately before any write. Test interrupted updates and settings migrations. | Reviewed installation manifest, qualified restore instructions, offline recovery materials and tested health/rollback behavior. |
+| 7 — Final acceptance | Inventory all mutable and immutable software stores, including controllers, dormant/recovery images and required peripherals. Repeat media, original-remote, stock-baseline latency/frame-pacing, hardware, privacy and agentOS tests on the final image. | Evidence for every release requirement and no unresolved Samsung-software provenance. |
+
+The host studio and Android APK are product-development artifacts. The APK cannot install Android onto Samsung Tizen. Installing it on a separate Android target helps test the shell but does not replace the original-hardware requirement.
+
+## Immediate work
+
+1. Complete the approved Samsung source download from [the official release search](https://opensource.samsung.com/uploadSearch?searchValue=LS03F). Save the ZIP outside Git under `reference/source/25_DTV_PontusM.zip`. The browser transfer previously failed; no source archive has been acquired.
+2. Run `python3 tools/index_source.py reference/source/25_DTV_PontusM.zip --output .local/source-index.json`. This hashes and lists selected metadata paths without extracting or executing source. Review that index, then extract only needed files using a bounded, path-safe procedure. Do not blindly unpack the entire archive.
+3. Populate the integration table and storage/provenance records from actual evidence. Treat source listing version 1000 versus installed firmware 1301.0 as unresolved correspondence.
+4. Resolve the independent-boot, original-software-removal and qualifying-provider paths before investing in a large AOSP board port. Public source access alone establishes none of them.
+
+## Decision boundary
+
+Continue the original-board route only while a credible path exists to independent boot, safe control of this panel, independent protected playback, and practical recovery. A maintained SoC Android BSP is the preferred reuse route if it meets these conditions. An immutable Samsung software dependency or an irreplaceable protected-media/panel component contradicts the original acceptance requirement. Record the exact evidence and obtain an explicit scope decision if that occurs; do not relabel a stock launcher, temporary root, or external streamer as completion.
+
+No exploit payload, fuses, bootloader replacement, partition erasure or speculative write is part of the current build. Hardware work needs board-specific electrical and connector information before disassembly or connection. The eventual install script must have no guessed addresses, images, partition offsets, or generic Samsung flashing commands.
+
+## Recovery and installation deliverables
+
+Before an installation proposal, produce `storage-map.md`, `software-provenance-ledger.json`, `recovery-plan.md`, `board-integration.csv`, and an installation manifest containing exact board/revision, source/build revisions, target components, artifact digests, write mechanism, ordering, preconditions, failure coverage and verification steps. Distinguish an update ZIP, a partition backup and a complete recoverable device image. Keep any unique calibration, credentials, pairing material and DRM provisioning private; never place them in this repository or agent-visible logs.
+
+A factory reset is not bootloader recovery. A/B rollback is conditional on actual storage/boot support and does not automatically undo controller or secure-world updates. Recovery from a dead CPU or deep standby may require a separate authenticated controller or physical procedure; a network service in Android cannot operate while Android is stopped.
+
+Primary references: [AOSP device architecture](https://source.android.com/docs/core/architecture), [DRM integration](https://source.android.com/docs/core/media/drm), [verified boot](https://source.android.com/docs/security/features/verifiedboot), [A/B updates](https://source.android.com/docs/core/ota/ab), [REA](https://github.com/morluto/rea). Target observations and applicability are recorded in `research/sources.json` and `device-profile.json`.
