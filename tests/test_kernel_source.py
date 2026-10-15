@@ -27,6 +27,18 @@ class KernelSourceTests(unittest.TestCase):
         self.assertEqual(len(record['sha256']), 64)
         self.assertFalse(result['files_extracted'])
 
+    def test_board_marker_metadata_records_provenance_without_redistributing_source(self):
+        import hashlib
+        import json
+        data = b'PRIVATE-SOURCE-CANARY\n"samsung,sdp-pontusm"\n_sdp_pontus_set_entry();\n'
+        result = inspect(archive('linux-5.4/arch/arm/mach-sdp/board-pontus-dt.c', data))
+        record = result['selected_metadata'][0]
+        self.assertEqual(record['sha256'], hashlib.sha256(data).hexdigest())
+        marker = record['lexical_markers']['samsung,sdp-pontusm'][0]
+        self.assertEqual(marker, {'line': 2, 'line_sha256': hashlib.sha256(b'"samsung,sdp-pontusm"').hexdigest()})
+        self.assertNotIn('PRIVATE-SOURCE-CANARY', json.dumps(result))
+        self.assertIn('Lexical', result['marker_semantics'])
+
     def test_version_parser_does_not_consume_next_line(self):
         result = inspect(archive('linux-5.4/Makefile',
                                 b'VERSION = 5\nSUBLEVEL = 261\nEXTRAVERSION =\nNAME = Example\n'))

@@ -72,6 +72,76 @@
       }
     },
     {
+      "path": "linux-5.4/arch/arm/mach-sdp/Makefile",
+      "size_bytes": 230,
+      "sha256": "db47cf12820f696db9e5087b0e52a43ea076507156979e8f1650cfbbeff755f9",
+      "lexical_markers": {}
+    },
+    {
+      "path": "linux-5.4/arch/arm/mach-sdp/board-pontus-dt.c",
+      "size_bytes": 4910,
+      "sha256": "cf83256d707d45d0bfe2b3e383394a00ada79c8a29796bfba16cd99dc86462dd",
+      "lexical_markers": {
+        "samsung,sdp-pontusm": [
+          {
+            "line": 62,
+            "line_sha256": "74d8f0bfcaa9c3db39e016d4bdfefc63b24c7135aa96591f02f762eea29296fe"
+          }
+        ],
+        "DT_MACHINE_START": [
+          {
+            "line": 197,
+            "line_sha256": "e7d63eb8f8f5183282db0c9d26a43237fcc0accc4d27a0ac38194df976c5a694"
+          }
+        ],
+        "sdp_platsmp_init": [
+          {
+            "line": 193,
+            "line_sha256": "97c334662c190daa5d1907554e45e410ee6beafe6ebd13c839e7be43f8a42361"
+          }
+        ],
+        "_sdp_pontus_set_entry": [
+          {
+            "line": 159,
+            "line_sha256": "404d40f3d22e8ff7117563e44fbc080f13f70025ca4edcea21514b9be965af39"
+          },
+          {
+            "line": 170,
+            "line_sha256": "71a3aa21874b626eb628e86b833c8e923675405c219dfb8dd139bc58efb3eb9d"
+          }
+        ],
+        "sdp_secondary_startup": [
+          {
+            "line": 170,
+            "line_sha256": "71a3aa21874b626eb628e86b833c8e923675405c219dfb8dd139bc58efb3eb9d"
+          }
+        ]
+      }
+    },
+    {
+      "path": "linux-5.4/arch/arm/mach-sdp/platsmp.c",
+      "size_bytes": 5736,
+      "sha256": "660b2129b2f66210a5be0b9ee3047d778e687301f6eac907bf24de4e6a6ba477",
+      "lexical_markers": {
+        "sdp_platsmp_init": [
+          {
+            "line": 68,
+            "line_sha256": "255db342f37ba56d5558827032c4939c0b8e1062817541df5dc2d1c7181c6ffe"
+          }
+        ],
+        "sdp_smp_boot_secondary": [
+          {
+            "line": 152,
+            "line_sha256": "91712079cbb15e9be56275f7a65196a577dfe1504c9bb665e4ebf2acac61899d"
+          },
+          {
+            "line": 240,
+            "line_sha256": "0b1e3cabfda9add454739229d32359490a0ac91f1adb7ea19971640281d9d177"
+          }
+        ]
+      }
+    },
+    {
       "path": "linux-5.4/arch/arm/mach-sdp/Kconfig",
       "size_bytes": 1054,
       "sha256": "1bdc448a27dd639e686f6395fd38732401900ec7b7c257f10f4269e14fb149ce",
@@ -166,6 +236,7 @@
   ],
   "files_extracted": false,
   "code_executed": false,
+  "marker_semantics": "Lexical locations only; manually review control flow and build applicability separately.",
   "target_board_and_installed_build_correspondence": "unverified",
   "nested_zip_member_crc_checked": true
 }
