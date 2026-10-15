@@ -108,3 +108,9 @@ Native Home refinement, 2026-10-15:
 - Additional real-socket tests fill both workers with stalled handshakes, verify a third connection is refused and ordinary paired reads recover after closing the stalls. A separate test confirms the peer is blocked inside binary asset input, then proves revocation completes without waiting for that input and the absolute connection watchdog closes the socket before the idle timeout. The native revision remains unchanged.
 - The scheduler now removes cancelled watchdog tasks immediately; the test verifies no pending deadlines after requests finish. Shutdown is checked for terminated worker, timer and accept threads. Accept/command threads request Android background CPU priority. These are bounded-resource and scheduling checks, not target playback or physical input-latency qualification.
 - All nine focused controller transport cases pass on API 36 ARM64 after the final changes; controller lint passes. The ordinary owner-flow test and the externally driven interop probe remain in the full CI sequence.
+
+## Prepared board collector — 2026-10-15
+
+- Seven host tests qualify the fixed normal-SDB collection path with synthetic device outputs: wrong model, offline/unauthorized/ambiguous/wrong endpoint refusal; exact command allowlist; private raw identifiers; unknown failed reads; immutable private report permissions; digest mismatch rejection; and real subprocess output, idle and continuously active wall-time limits.
+- All 42 host tests pass using Python/OpenSSL 3.5.8 with synthetic loopback listeners enabled. Tracked-file publication checks pass. Android production sources are unchanged by this collector.
+- The collector has not run against the TV. No collected board identity, SoC, target ABI or boot capability is claimed. Live use remains dependent on ordinary developer access. Raw evidence stays under ignored private storage; public output excludes arbitrary device strings and private addresses.
