@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "sanitized_retained_read_only_observations",
+  "date": "2026-10-15",
+  "new_tv_requests_during_reconciliation": false,
+  "initial_http_observation": {
+    "schema_version": 1,
+    "kind": "unauthenticated_http_device_observation",
+    "observed_utc": "2026-10-15T14:26:26.008133+00:00",
+    "reported_model_code": "QN50LS03FAFXZA",
+    "model_match": "full_sku",
+    "reported_software_build": null,
+    "developer_mode_reported": false,
+    "frame_tv_support_reported": true,
+    "reported_ui_resolution": [
+      3840,
+      2160
+    ],
+    "unique_identifiers_retained": false,
+    "raw_response_retained": false,
+    "limit": "Unauthenticated reported fields, not exact board/SoC/ABI, media quality, boot access or recovery evidence."
+  },
+  "later_http_observation": {
+    "schema_version": 1,
+    "kind": "unauthenticated_http_device_observation",
+    "observed_utc": "2026-10-15T14:43:47.207953+00:00",
+    "reported_model_code": "QN50LS03FAFXZA",
+    "model_match": "full_sku",
+    "reported_software_build": null,
+    "developer_mode_reported": true,
+    "frame_tv_support_reported": true,
+    "reported_ui_resolution": [
+      3840,
+      2160
+    ],
+    "unique_identifiers_retained": false,
+    "raw_response_retained": false,
+    "limit": "Unauthenticated reported fields, not exact board/SoC/ABI, media quality, boot access or recovery evidence."
+  },
+  "after_sdb_retry": {
+    "developer_mode_on": true,
+    "configured_host_matches_current_mac": false,
+    "configured_host_matches_supplied_address": false,
+    "developer_host_field_present": true,
+    "tcp_8001": "reachable",
+    "tcp_26101": "reachable"
+  },
+  "developer_host_comparison": {
+    "configured_host_is_valid_ipv4": true,
+    "configured_host_matches_current_mac": false,
+    "configured_host_is_tv_itself": false,
+    "configured_host_is_unspecified": false,
+    "raw_response_retained": false
+  },
+  "passive_peer_check": {
+    "tcp_connected": true,
+    "peer_closed_before_client_data": true,
+    "unsolicited_bytes_received": 0,
+    "elapsed_seconds": 0.063,
+    "application_data_sent": false,
+    "raw_bytes_retained": false
+  },
+  "sdb_tool": {
+    "official_index": "https://download.tizen.org/sdk/tizenstudio/official/pkg_list_macos-64",
+    "package": "https://download.tizen.org/sdk/tizenstudio/official/binary/sdb_4.2.36_macos-64.zip",
+    "version_in_index": "4.2.36",
+    "package_sha256": "0bd307ac8382c857be5c2106dd5b8587b10c1c91ac1e504de8432c8276bc28c5",
+    "binary_sha256": "05db410d2e36e85147f95b20bae6296a71c54dab0e1ec79f9e11b89c4b6bd2cd",
+    "installer_scripts_executed": false,
+    "tv_writes": false
+  },
+  "interpretation": "HTTP model report corroborates photographed SKU; UI resolution is not streaming quality. Developer mode and TCP reachability do not establish an SDB session. Host field comparison and passive close do not prove the failure cause. No exact board, SoC, ABI, independent boot or recovery evidence."
+}
