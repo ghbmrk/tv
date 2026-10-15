@@ -89,5 +89,7 @@
     "deflate_stream_complete": false,
     "entry_crc32_verified": false,
     "coverage": "Incomplete decompressed prefix only; not a complete upgrade.msd and not a firmware-region or partition reconstruction."
-  }
+  },
+  "historical_scope": "Original partial-range observations only; later full acquisition does not expand these recorded byte ranges.",
+  "superseded_acquisition_evidence": "research/full-update-inventory.json"
 }

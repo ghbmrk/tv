@@ -25,3 +25,9 @@ Native transaction continuation, 2026-10-15:
 
 - Pinned Android JVM/build/test-APK/lint checks pass. Twelve API 36 ARM64 TV runtime tests pass: seven journal tests and five shell tests. Coverage includes unsaved preview, cancel/apply/undo via D-pad, activity recreation, committed read-back, durable duplicate receipts, conflicting ID reuse, concurrent writers, stale undo, document/history bounds, receipt-capacity refusal, old-store migration and preservation of corrupt databases/documents.
 - Python reference suite: 14 tests pass. The native domain is not a paired network service or production agentOS integration; [native transaction semantics](NATIVE_TRANSACTIONS.md) state its exact limits.
+
+Full firmware/offline analysis continuation, 2026-10-15:
+
+- PR #3 merged after [final CI qualification](https://github.com/ghbmrk/tv/actions/runs/38730046944) passed, including all 12 API 36 x86_64 TV runtime tests. Local ARM64 proof remains separate from real-TV qualification.
+- The complete 1,465,434,949-byte official update and all five members are hashed and CRC-checked. The bounded MSDU11 parser validates outer-table count/label/range/overlap/coverage constraints without authenticating them as partitions. The reference suite now has 18 tests, adding chunk-boundary marker handling, unsafe paths, CRC damage and malformed MSDU11 tables.
+- REA 6.5.0 with Binwalk 3.1.0 passed a synthetic gzip control, then scanned two bounded firmware derivations inside an offline resource-limited Linux ARM64 container. All three reported zlib candidates failed independent decompression checks; no payload or publisher signature is accepted. Ten legacy update-key profiles yielded no recognized metadata header. See [the scoped evidence](../research/FIRMWARE_AND_BOOT_FINDINGS.md).

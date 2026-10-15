@@ -69,6 +69,17 @@
       "signature_verified": false,
       "installed_firmware_correspondence": "unverified",
       "derivation_record": "research/PONTUS_SOURCE_FINDINGS.md"
+    },
+    {
+      "path": "reference/firmware/T-PTMFAKUC-0090.zip",
+      "kind": "complete_official_update_archive_research_artifact",
+      "sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+      "size_bytes": 1465434949,
+      "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "all_zip_members_crc_checked": true,
+      "publisher_signature_verified": false,
+      "complete_device_backup": false,
+      "derivation_record": "research/full-update-inventory.json"
     }
   ]
 }

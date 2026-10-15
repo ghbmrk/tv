@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "archive_sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+  "archive_size_bytes": 1465434949,
+  "members": [
+    {
+      "size_bytes": 1,
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "marker_candidates": {
+        "msdu11": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "openssl_salted": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "elf": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "android_boot": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "avb": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "squashfs_le": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "fdt": {
+          "count": 0,
+          "first_offsets": []
+        }
+      },
+      "path": "SWU_AUTO_FLAG",
+      "zip_crc32": "83dcefb7",
+      "zip_crc_checked": true
+    },
+    {
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "marker_candidates": {
+        "msdu11": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "openssl_salted": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "elf": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "android_boot": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "avb": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "squashfs_le": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "fdt": {
+          "count": 0,
+          "first_offsets": []
+        }
+      },
+      "path": "T-PTMFAKUC-0090/",
+      "zip_crc32": "00000000",
+      "zip_crc_checked": true
+    },
+    {
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "marker_candidates": {
+        "msdu11": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "openssl_salted": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "elf": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "android_boot": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "avb": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "squashfs_le": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "fdt": {
+          "count": 0,
+          "first_offsets": []
+        }
+      },
+      "path": "T-PTMFAKUC-0090/image/",
+      "zip_crc32": "00000000",
+      "zip_crc_checked": true
+    },
+    {
+      "size_bytes": 521,
+      "sha256": "233779bb8bc3d30da9c2a5df3fe856f1bc1fe38fe023b4ea338e8a221ba2dbec",
+      "marker_candidates": {
+        "msdu11": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "openssl_salted": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "elf": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "android_boot": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "avb": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "squashfs_le": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "fdt": {
+          "count": 0,
+          "first_offsets": []
+        }
+      },
+      "path": "T-PTMFAKUC-0090/image/info.txt",
+      "zip_crc32": "102dd2a6",
+      "zip_crc_checked": true
+    },
+    {
+      "size_bytes": 1465203794,
+      "sha256": "cb0b87a332c4d4138af5bc875f535e56b6600738cb0546ba0e269bb677cbfb38",
+      "marker_candidates": {
+        "msdu11": {
+          "count": 1,
+          "first_offsets": [
+            0
+          ]
+        },
+        "openssl_salted": {
+          "count": 1,
+          "first_offsets": [
+            242
+          ]
+        },
+        "elf": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "android_boot": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "avb": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "squashfs_le": {
+          "count": 0,
+          "first_offsets": []
+        },
+        "fdt": {
+          "count": 0,
+          "first_offsets": []
+        }
+      },
+      "outer_table_candidate": {
+        "format_candidate": "MSDU11_outer_table",
+        "metadata_end": 234,
+        "headers": [
+          {
+            "label": "T-PTMFAKUC-0090",
+            "offset": 234,
+            "size_bytes": 4056
+          }
+        ],
+        "sections": [
+          {
+            "id": 1001,
+            "offset": 4290,
+            "size_bytes": 1430257680
+          },
+          {
+            "id": 1002,
+            "offset": 1430261970,
+            "size_bytes": 10472720
+          },
+          {
+            "id": 1003,
+            "offset": 1440734690,
+            "size_bytes": 8380432
+          },
+          {
+            "id": 1004,
+            "offset": 1449115122,
+            "size_bytes": 7667728
+          },
+          {
+            "id": 1005,
+            "offset": 1456782850,
+            "size_bytes": 3661840
+          },
+          {
+            "id": 1006,
+            "offset": 1460444690,
+            "size_bytes": 3137552
+          },
+          {
+            "id": 1007,
+            "offset": 1463582242,
+            "size_bytes": 1564688
+          },
+          {
+            "id": 1008,
+            "offset": 1465146930,
+            "size_bytes": 55824
+          },
+          {
+            "id": 1009,
+            "offset": 1465202754,
+            "size_bytes": 1040
+          }
+        ],
+        "ranges_in_bounds_and_nonoverlapping": true,
+        "data_ranges_cover_remainder": true,
+        "runtime_partition_mapping": "unverified",
+        "table_authenticated": false
+      },
+      "path": "T-PTMFAKUC-0090/image/upgrade.msd",
+      "zip_crc32": "dfa2256e",
+      "zip_crc_checked": true
+    }
+  ],
+  "coverage": "zip_integrity_and_raw_marker_scan",
+  "publisher_signature_verified": false,
+  "firmware_reconstructed": false,
+  "device_backup": false,
+  "code_executed": false,
+  "limit": "Marker candidates are not validated partitions, executables, encryption or boot-policy evidence."
+}
