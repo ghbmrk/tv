@@ -5,48 +5,53 @@ import android.util.AtomicFile
 import java.io.File
 import java.io.InputStream
 import java.io.FileNotFoundException
+import java.util.UUID
 
 /** Validated persistence shared by local UI and the future paired service. Call off the UI thread. */
 class ExperienceRepository(private val context: Context) {
     private val file = AtomicFile(File(context.filesDir, "experience.json"))
     private val legacy = context.getSharedPreferences("experience", Context.MODE_PRIVATE)
 
-    data class Loaded(val experience: Experience, val restoredDefault: Boolean = false)
+    data class Loaded(val experience: Experience, val restoredDefault: Boolean = false, val document: String, val revision: Long = 1, val journalUnavailable: Boolean = false)
 
-    fun load(): Loaded {
+    private fun <T> journal(operation: (ExperienceJournal) -> T): T = ExperienceJournal(context, ::legacyLoad).use(operation)
+
+    fun load(): Loaded = try { journal { it.load() } } catch (_: Exception) {
+        loaded(defaultDocument(), true).copy(revision = 0, journalUnavailable = true)
+    }
+    fun preview(baseRevision: Long, document: String): Loaded = journal { it.preview(baseRevision, document) }
+    fun apply(requestId: String, baseRevision: Long, document: String): ExperienceJournal.Receipt = journal { it.apply(requestId, baseRevision, document) }
+    fun undo(requestId: String, baseRevision: Long, restoreRevision: Long): ExperienceJournal.Receipt = journal { it.undo(requestId, baseRevision, restoreRevision) }
+    fun receipt(requestId: String): ExperienceJournal.Receipt? = journal { it.receipt(requestId) }
+    fun applyDefault(requestId: String, baseRevision: Long): ExperienceJournal.Receipt = apply(requestId, baseRevision, defaultDocument())
+
+    private fun loaded(document: String, recovered: Boolean = false): Loaded = Loaded(Experience.parse(document), recovered, document)
+
+    private fun legacyLoad(): Loaded {
         try {
-            return Loaded(Experience.parse(file.openRead().use(::readBounded)))
+            return loaded(file.openRead().use(::readBounded))
         } catch (_: FileNotFoundException) {
             // openRead also restores any legacy AtomicFile backup before deciding absence.
         } catch (_: Exception) {
-            return Loaded(Experience.parse(defaultDocument()), restoredDefault = true)
+            return loaded(defaultDocument(), true)
         }
         val previous = legacy.getString("document", null)
         if (previous != null) {
-            return runCatching { import(previous) }.getOrElse { Loaded(Experience.parse(defaultDocument()), restoredDefault = true) }
+            return runCatching { loaded(previous) }.getOrElse { loaded(defaultDocument(), true) }
         }
-        return Loaded(Experience.parse(defaultDocument()))
+        return loaded(defaultDocument())
     }
 
     fun import(stream: InputStream): Loaded = import(stream.use(::readBounded))
 
     fun import(document: String): Loaded {
-        val parsed = Experience.parse(document) // Invalid input never starts a write.
-        val output = file.startWrite()
-        try {
-            output.write(document.toByteArray(Charsets.UTF_8))
-            file.finishWrite(output)
-        } catch (failure: Exception) {
-            file.failWrite(output)
-            throw failure
-        }
-        return Loaded(parsed)
+        apply(UUID.randomUUID().toString(), load().revision, document)
+        return load()
     }
 
-    fun reset(): Loaded {
-        val restored = import(defaultDocument())
-        check(legacy.edit().clear().commit())
-        return restored
+    fun reset(baseRevision: Long = load().revision): Loaded {
+        applyDefault(UUID.randomUUID().toString(), baseRevision)
+        return load()
     }
 
     private fun defaultDocument(): String = context.assets.open("experience.json").use(::readBounded)

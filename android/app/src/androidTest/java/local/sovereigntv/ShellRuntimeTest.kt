@@ -58,9 +58,13 @@ class ShellRuntimeTest {
             Intent().setData(Uri.parse("content://local.sovereigntv.test.fixture/valid"))))
         activate("Import experience")
         waitForText("Runtime household")
+        waitForText("Unsaved preview • apply or cancel")
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("Household TV", ExperienceRepository(context).load().experience.title)
+        activate("Apply preview")
+        waitForText("Imported local experience")
         activate("Netflix")
         waitForText("No installed TV activity found for Netflix")
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("Runtime household", ExperienceRepository(context).load().experience.title)
         compose.activityRule.scenario.recreate()
         waitForText("Runtime household")
@@ -72,6 +76,26 @@ class ShellRuntimeTest {
         activate("Restore default")
         waitForText("Household TV")
         assertEquals("Household TV", ExperienceRepository(context).load().experience.title)
+    }
+
+    @Test fun cancelsPreviewAndUndoesAppliedChange() {
+        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(ActivityResult(Activity.RESULT_OK,
+            Intent().setData(Uri.parse("content://local.sovereigntv.test.fixture/valid"))))
+        activate("Import experience")
+        waitForText("Runtime household")
+        compose.activityRule.scenario.recreate()
+        waitForText("Runtime household")
+        activate("Cancel preview")
+        waitForText("Household TV")
+        activate("Import experience")
+        waitForText("Runtime household")
+        activate("Apply preview")
+        waitForText("Imported local experience")
+        compose.activityRule.scenario.recreate()
+        waitForText("Runtime household")
+        activate("Undo last change")
+        waitForText("Last change undone")
+        waitForText("Household TV")
     }
 
     @Test fun invalidPickerResultPreservesExistingExperience() {
@@ -86,12 +110,16 @@ class ShellRuntimeTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val saved = java.io.File(context.filesDir, "experience.json")
         val old = context.assets.open("experience.json").bufferedReader().use { it.readText().replace("Household TV", "Legacy household") }
-        assertTrue(saved.delete())
+        context.deleteDatabase("experience-journal.sqlite3")
+        saved.delete()
         assertTrue(context.getSharedPreferences("experience", 0).edit().putString("document", old).commit())
         val repository = ExperienceRepository(context)
         assertEquals("Legacy household", repository.load().experience.title)
         assertEquals("Legacy household", repository.load().experience.title)
+        // Once migrated, legacy stores cannot override the authoritative revision journal.
         saved.writeText("not valid JSON")
+        assertEquals("Legacy household", repository.load().experience.title)
+        context.deleteDatabase("experience-journal.sqlite3")
         val recovered = repository.load()
         assertTrue(recovered.restoredDefault)
         assertEquals("Household TV", recovered.experience.title)
