@@ -75,6 +75,26 @@ class BoardIdentityTests(unittest.TestCase):
         self.assertNotIn('PRIVATE', json.dumps(report)); self.assertEqual(report['parts'], [])
         self.assertEqual(report['reported_processor_entries'], 0)
 
+    def test_zero_exit_empty_or_unrecognized_responses_are_not_completed_identity(self):
+        for output, status, successful in ((b'', 'reads_empty', 0), (b' \n\t', 'reads_empty', 0),
+                                            (b'PRIVATE-UNRECOGNIZED-CANARY', 'reads_partial', 5)):
+            runner = FakeSdb()
+            original = runner.run
+            def run(arguments, timeout):
+                result = original(arguments, timeout)
+                if arguments[0] == '-s':
+                    result.stdout = output
+                return result
+            runner.run = run
+            report = collect('192.168.1.2', runner, identifier=self.identity)
+            public = report['public']
+            self.assertEqual(public['status'], status)
+            self.assertEqual(public['successful_reads'], successful)
+            self.assertEqual(public['validated_reads'], 0)
+            self.assertNotIn('CANARY', json.dumps(public))
+            if successful == 0:
+                self.assertIsNone(public['cpu'])
+
     def test_source_match_is_exact_bounded_and_does_not_expose_other_compatibles(self):
         self.assertTrue(source_family_match('vendor,PRIVATE-CANARY\0samsung,sdp-pontusm\0'))
         for raw in ('samsung,sdp-pontusmx\0', 'prefix-samsung,sdp-pontusm\0', 'vendor,other\0'):
