@@ -155,6 +155,14 @@
       "evidence": "research/FIRMWARE_AND_BOOT_FINDINGS.md",
       "use": "Whole archive/member hashes and CRC checks, bounded outer-table validation and REA signature scans.",
       "limit": "No authenticated table, runtime partition map, payload reconstruction, target boot/recovery or provider qualification."
+    },
+    {
+      "id": "read_only_identification_preparation",
+      "kind": "synthetic_tool_validation_and_host_network_observation",
+      "observed": "2026-10-15",
+      "evidence": "docs/READ_ONLY_IDENTIFICATION.md",
+      "use": "Bounded allowlisted GET tool prepared; standard discovery attempted on the development host.",
+      "limit": "Discovery multicast send returned OS error 65; no actual TV endpoint, response, board, ABI or access capability established."
     }
   ]
 }
