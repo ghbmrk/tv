@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-15",
+  "rea": {
+    "version": "6.5.0",
+    "source_commit_reviewed": "c9f9b83c6f5878f1d5b102ab206a2ce214749258",
+    "published_package_git_revision": null,
+    "registry_tarball": "https://registry.npmjs.org/rea-agents/-/rea-agents-6.5.0.tgz",
+    "registry_integrity": "sha512-C6BG7LyrAdR74mSjertM6PrxJkcNZ2bfQNOJornPo9erDEp2tyPRVYPnV5Yodr+1RqewCQla68WulXlVnveD+A==",
+    "installed_dependency_lock_sha256": "c805b8d5e86f0481600d50afe537fb47daaf17e3082389acd7aa56a60389516b"
+  },
+  "runtime": {
+    "node": "24.11.0",
+    "os": "linux",
+    "architecture": "arm64",
+    "image_manifest_sha256": "64fd54eb885a858b3e73bd84bc02d19d772cc034b6330e47e7a02cc7f3e09752",
+    "network": "none",
+    "capabilities": "none",
+    "root_filesystem": "read_only",
+    "input_mount": "one_read_only_file",
+    "temporary_storage_mib": 300,
+    "container_memory_gib": 2,
+    "container_cpus": 2,
+    "pid_limit": 128,
+    "upstream_qualified_architecture": "x64",
+    "arm64_qualification": "local_synthetic_control_and_observed_scans_only"
+  },
+  "reports": [
+    {
+      "input_name": "synthetic.gz",
+      "input_sha256": "ea387b9f40e84668f5fb139658e0c08ac74f4d9c3ee7597b34a130b67338708a",
+      "input_size_bytes": 95,
+      "raw_report_sha256": "3adfa97c68c01516f3360c81f4bc0f025990d70b154ebc941b57a17f0a3a1c1b",
+      "engine": {
+        "name": "binwalk",
+        "version": "3.1.0",
+        "executable_path": "/usr/local/bin/binwalk",
+        "executable_sha256": "e59ac18593d63d5cb6776860706bda4a76516f551a0635201d1ca998084b2377",
+        "source_revision": null,
+        "worker_count": 1
+      },
+      "coverage": "signature_scan",
+      "candidates": [
+        {
+          "offset": 0,
+          "reported_size": 95,
+          "signature": "gzip",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        }
+      ]
+    },
+    {
+      "input_name": "upgrade-prefix.bin",
+      "input_sha256": "0dc897ae6908a4ff3d753adb286fd9879de6ae008ad5dcf6f6d0bd2e9464946e",
+      "input_size_bytes": 261520,
+      "raw_report_sha256": "78bf8146d2446db0f863ab8007557b80cd88437a96c4e3941b0cb311cfcfef83",
+      "engine": {
+        "name": "binwalk",
+        "version": "3.1.0",
+        "executable_path": "/usr/local/bin/binwalk",
+        "executable_sha256": "e59ac18593d63d5cb6776860706bda4a76516f551a0635201d1ca998084b2377",
+        "source_revision": null,
+        "worker_count": 1
+      },
+      "coverage": "signature_scan",
+      "candidates": [
+        {
+          "offset": 242,
+          "reported_size": 255821,
+          "signature": "openssl",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "offset": 256063,
+          "reported_size": 11,
+          "signature": "zlib",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        }
+      ]
+    },
+    {
+      "input_name": "upgrade-first-mib.bin",
+      "input_sha256": "06ec9af014d7c7894ff1c6d01a0621a5baa6993e9bd0f0fc51006ae0a9c283f3",
+      "input_size_bytes": 1048576,
+      "raw_report_sha256": "34aedc06ad166cf860145e900b350a265a00b6b0efc4947286df3a57f2ceb64f",
+      "engine": {
+        "name": "binwalk",
+        "version": "3.1.0",
+        "executable_path": "/usr/local/bin/binwalk",
+        "executable_sha256": "e59ac18593d63d5cb6776860706bda4a76516f551a0635201d1ca998084b2377",
+        "source_revision": null,
+        "worker_count": 1
+      },
+      "coverage": "signature_scan",
+      "candidates": [
+        {
+          "offset": 242,
+          "reported_size": 255821,
+          "signature": "openssl",
+          "reported_confidence": 0,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "offset": 256063,
+          "reported_size": 11,
+          "signature": "zlib",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "offset": 542965,
+          "reported_size": 43,
+          "signature": "zlib",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "offset": 552614,
+          "reported_size": 9,
+          "signature": "gpg_signed",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        },
+        {
+          "offset": 792987,
+          "reported_size": 151,
+          "signature": "zlib",
+          "reported_confidence": 250,
+          "size_basis": "provider_reported_validation_unknown"
+        }
+      ]
+    }
+  ],
+  "candidate_validation": [
+    {
+      "offset": 256063,
+      "signature": "zlib",
+      "independent_bounded_decompression_complete": false
+    },
+    {
+      "offset": 542965,
+      "signature": "zlib",
+      "independent_bounded_decompression_complete": false
+    },
+    {
+      "offset": 792987,
+      "signature": "zlib",
+      "independent_bounded_decompression_complete": false
+    }
+  ],
+  "legacy_compatibility": {
+    "source": "https://github.com/bugficks/msddecrypt/tree/c5e6d661640521ab292f7cedc329b092d805906b",
+    "source_license": "GPL-2.0",
+    "upstream_script_executed": false,
+    "published_legacy_profiles_tested": 10,
+    "recognized_metadata_headers": 0,
+    "method": "bounded independent AES-CBC/MD5-IV metadata-envelope check; no device or provider DRM material"
+  },
+  "limits": [
+    "Signature candidates and provider-reported sizes are not validated file or partition boundaries.",
+    "No publisher signature verification, decryption of payloads, reconstructed firmware, boot policy, target architecture or recovery demonstrated.",
+    "Published package version and integrity do not identify an exact source revision.",
+    "Container recipe does not freeze all apt/transitive dependency resolution."
+  ]
+}

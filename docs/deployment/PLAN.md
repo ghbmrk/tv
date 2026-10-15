@@ -19,7 +19,7 @@ The host studio and Android APK are product-development artifacts. The APK canno
 
 ## Immediate work
 
-1. Source acquisition and the first bounded kernel inspection are complete; see [the hashed inventory and findings](../../research/PONTUS_SOURCE_FINDINGS.md). Reproduce with `tools/index_source.py` and `tools/inspect_kernel_source.py`; vendor archives remain outside Git.
+1. Source acquisition, bounded kernel inspection and [full update integrity/REA scans](../../research/FIRMWARE_AND_BOOT_FINDINGS.md) are complete; see [the hashed inventory and findings](../../research/PONTUS_SOURCE_FINDINGS.md). Reproduce with `tools/index_source.py` and `tools/inspect_kernel_source.py`; vendor archives remain outside Git.
 2. Correlate the release's ARMv7/Pontus configuration and controller interfaces with the exact board and non-unique runtime observations. Do not promote source configuration to observed target identity. Match listing version 1000 to installed firmware 1301.0 before selecting build inputs.
 3. Populate the integration table and storage/provenance records from exact evidence. Inspect boot trust, controller dependencies, independent implementations and practical recovery; [community root profiles](../../research/COMMUNITY_PATHS.md) do not qualify this model.
 4. Resolve the independent-boot, original-software-removal and qualifying-provider paths before investing in a large AOSP board port. Public source access alone establishes none of them.

@@ -80,8 +80,9 @@
       "id": "rea",
       "url": "https://github.com/morluto/rea",
       "kind": "primary_analysis_tool_documentation",
-      "use": "Pin reviewed release and analysis providers for bounded firmware questions",
-      "limit": "No REA analysis of owner-device artifacts has been performed"
+      "use": "Pinned source review plus REA 6.5.0/Binwalk 3.1.0 offline static scans of a synthetic control and bounded official-update derivations",
+      "limit": "No native child, reconstructed firmware or target boot analysis; Linux ARM64 local validation is separate from upstream x64 qualification.",
+      "evidence": "research/rea-firmware-inspection.json"
     },
     {
       "id": "rea_firmware",
@@ -145,6 +146,15 @@
       "observed": "2026-10-15",
       "evidence": "research/COMMUNITY_PATHS.md",
       "limit": "No upstream code executed or copied into product; no target root or independent boot demonstrated."
+    },
+    {
+      "id": "complete_official_update_integrity",
+      "url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+      "kind": "static_observation_of_complete_official_update_archive",
+      "observed": "2026-10-15",
+      "evidence": "research/FIRMWARE_AND_BOOT_FINDINGS.md",
+      "use": "Whole archive/member hashes and CRC checks, bounded outer-table validation and REA signature scans.",
+      "limit": "No authenticated table, runtime partition map, payload reconstruction, target boot/recovery or provider qualification."
     }
   ]
 }
