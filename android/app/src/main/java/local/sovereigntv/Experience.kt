@@ -3,7 +3,7 @@ package local.sovereigntv
 import org.json.JSONObject
 
 data class Tile(val id: String, val title: String, val kind: String, val target: String, val visible: Boolean)
-data class Section(val title: String, val layout: String, val items: List<Tile>)
+data class Section(val id: String, val title: String, val layout: String, val items: List<Tile>)
 data class Experience(val title: String, val theme: String, val textScale: Float, val sections: List<Section>) {
     companion object {
         private fun exact(o: JSONObject, keys: Set<String>) { require(o.keys().asSequence().toSet() == keys) }
@@ -29,7 +29,7 @@ data class Experience(val title: String, val theme: String, val textScale: Float
                 require(ids.add(id(section.get("id"))))
                 val layout = section.getString("layout"); require(layout in setOf("row", "grid"))
                 val items = section.getJSONArray("items"); require(items.length() in 1..24)
-                Section(label(section.get("title")), layout, (0 until items.length()).map { j ->
+                Section(section.getString("id"), label(section.get("title")), layout, (0 until items.length()).map { j ->
                     val item = items.getJSONObject(j)
                     exact(item, setOf("id", "title", "kind", "target", "visible"))
                     val itemId = id(item.get("id")); require(ids.add(itemId))
