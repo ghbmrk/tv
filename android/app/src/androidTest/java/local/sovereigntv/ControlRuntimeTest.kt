@@ -69,6 +69,55 @@ class ControlRuntimeTest {
     }
     @After fun release() { if (bound) context.unbindService(connection); Intents.release() }
 
+    @Test fun discoverOwnerChosenAppApplyAndLaunchThroughPhysicalNavigation() {
+        val before = state()
+        val catalog = json(control.applications(expiry()))
+        assertEquals(catalog.toString(), json(control.applications(expiry())).toString())
+        assertEquals(before.toString(), state().toString())
+        val applications = catalog.getJSONArray("applications")
+        assertTrue(applications.length() <= TvApplications.MAX_APPLICATIONS)
+        assertEquals(ExperienceJournal.sha256(applications.toString()), catalog.getString("catalog_sha256"))
+        assertFalse(catalog.getBoolean("launch_is_playback_qualification"))
+        val entries = (0 until applications.length()).map { applications.getJSONObject(it) }
+        val chosen = entries.single { it.getString("title") == "Synthetic TV app" }
+        val component = ComponentName("local.sovereigntv.controlprobe", "local.sovereigntv.controlprobe.TvFixtureActivity")
+        val target = chosen.getString("target")
+        assertEquals(TvApplications.target(component), target)
+        assertTrue(Regex("app_[a-f0-9]{60}").matches(target))
+        for (name in listOf("PrivateTv", "DisabledTv", "ProtectedTv")) {
+            val denied = TvApplications.target(ComponentName(component.packageName, component.packageName + "." + name))
+            assertTrue(entries.none { it.getString("target") == denied })
+        }
+        assertTrue(entries.none { it.getString("target") == TvApplications.target(ComponentName(context, MainActivity::class.java)) })
+        assertEquals("expired", control.applications(System.currentTimeMillis() - 1).getString("status"))
+        val document = JSONObject(before.getString("document"))
+        document.getJSONArray("sections").getJSONObject(0).getJSONArray("items").getJSONObject(0)
+            .put("target", target).put("title", "Owner selected app")
+        json(control.apply(id(), before.getLong("revision"), document.toString(), expiry()))
+        waitFor("Owner selected app")
+        intending(androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent(component)).respondWith(ActivityResult(Activity.RESULT_OK, null))
+        activate("Owner selected app")
+        compose.waitUntil(10000) { Intents.getIntents().any { it.component == component } }
+        androidx.test.espresso.intent.Intents.intended(androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent(component))
+        assertEquals(before.getLong("revision") + 1, state().getLong("revision"))
+        val probe = Uri.parse("content://local.sovereigntv.controlprobe")
+        try {
+            context.contentResolver.call(probe, "disable-tv-fixture", null, null)
+            compose.waitUntil(10000) { compose.onAllNodes(hasText("Owner selected app") and hasText("NOT INSTALLED")).fetchSemanticsNodes().isNotEmpty() }
+            val changed = json(control.applications(expiry())).getJSONArray("applications")
+            assertTrue((0 until changed.length()).none { changed.getJSONObject(it).getString("target") == target })
+            activate("Owner selected app")
+            waitFor("No installed TV activity found for Owner selected app")
+        } finally { context.contentResolver.call(probe, "enable-tv-fixture", null, null) }
+        compose.waitUntil(10000) { compose.onAllNodes(hasText("Owner selected app") and hasText("INSTALLED")).fetchSemanticsNodes().isNotEmpty() }
+        document.getJSONArray("sections").getJSONObject(0).getJSONArray("items").getJSONObject(0)
+            .put("target", "app_" + "f".repeat(60)).put("title", "Unavailable app")
+        json(control.apply(id(), before.getLong("revision") + 1, document.toString(), expiry()))
+        waitFor("Unavailable app")
+        activate("Unavailable app")
+        waitFor("No installed TV activity found for Unavailable app")
+    }
+
     @Test fun crossProcessEditReceiptRestartAndUndoUpdateVisibleHome() {
         val initial = state(); val before = initial.getLong("revision")
         val document = initial.getString("document").replace("Household TV", "Agent evening")

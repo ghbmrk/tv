@@ -88,6 +88,12 @@ def main():
                 raise RuntimeError('Read-only protocol probes changed native state')
             client.context.minimum_version = ssl.TLSVersion.TLSv1_2
             client.context.maximum_version = ssl.TLSVersion.MAXIMUM_SUPPORTED
+            catalog = call('apps.list')
+            entries = catalog.get('applications')
+            if (not isinstance(entries, list) or len(entries) > 256 or type(catalog.get('truncated')) is not bool
+                    or catalog.get('launch_is_playback_qualification') is not False
+                    or any(set(entry) != {'target', 'title', 'aliases'} for entry in entries)):
+                raise RuntimeError('Synthetic application discovery contract failed')
             before = call('state'); base = before['revision']; document = json.loads(before['document'])
             document['title'] = 'External executor qualification'
             exact = json.dumps(document, ensure_ascii=False, separators=(',', ':'))
@@ -120,7 +126,7 @@ def main():
             if process.returncode or b'OK (1 test)' not in output:
                 raise RuntimeError('Android interop assertions failed')
             print(json.dumps({'scope': 'owned Android emulator; Python OpenSSL 3 to Android Keystore TLS',
-                              'read_back': True, 'receipt': True, 'exact_retry': True, 'undo': True,
+                              'application_discovery': True, 'read_back': True, 'receipt': True, 'exact_retry': True, 'undo': True,
                               'mutual_tls_versions': ['TLSv1.2', 'TLSv1.3'],
                               'go_executor_probe': bool(args.go_executor),
                               'agentos_qualified': False, 'target_tv_qualified': False}))

@@ -70,7 +70,7 @@ object LocalProtocol {
             val operation = text(request, "operation")
             val common = setOf("v", "device_id", "operation", "expires_at_ms")
             val fields = when (operation) {
-                "capabilities", "state" -> emptySet()
+                "capabilities", "state", "apps.list" -> emptySet()
                 "preview" -> setOf("base_revision", "document")
                 "apply" -> setOf("request_id", "base_revision", "document")
                 "undo" -> setOf("request_id", "base_revision", "restore_revision")
@@ -106,6 +106,7 @@ object LocalProtocol {
                 val result: Bundle = when (operation) {
                     "capabilities" -> remote.capabilities(expiry)
                     "state" -> remote.state(expiry)
+                    "apps.list" -> remote.applications(expiry)
                     "preview" -> remote.preview(base, document, expiry)
                     "apply" -> remote.apply(id, base, document, expiry)
                     "undo" -> remote.undo(id, base, restore, expiry)

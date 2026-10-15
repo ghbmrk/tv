@@ -12,4 +12,5 @@ interface IExperienceControl {
     Bundle putArtwork(@nullable String digest, in @nullable ParcelFileDescriptor source, long expiresAtUtcMillis);
     Bundle openArtwork(@nullable String digest, long expiresAtUtcMillis);
     Bundle restoreDefault(@nullable String requestId, long baseRevision, long expiresAtUtcMillis);
+    Bundle applications(long expiresAtUtcMillis);
 }

@@ -16,7 +16,7 @@ import time
 MAX_METADATA = 512 * 1024
 MAX_ASSET = 8 * 1024 * 1024
 EFFECTS = {'apply', 'undo', 'restore_default', 'artwork.put'}
-OPERATIONS = EFFECTS | {'capabilities', 'state', 'preview', 'receipt', 'artwork.open'}
+OPERATIONS = EFFECTS | {'capabilities', 'state', 'apps.list', 'preview', 'receipt', 'artwork.open'}
 
 
 class Unavailable(RuntimeError):

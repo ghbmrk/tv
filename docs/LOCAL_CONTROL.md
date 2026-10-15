@@ -50,7 +50,7 @@ Every request contains `v=1`, the pinned certificate digest as `device_id`, `ope
 
 | Operation | Additional request fields |
 |---|---|
-| `capabilities`, `state` | None. |
+| `capabilities`, `state`, `apps.list` | None. `apps.list` returns the bounded installed-TV-app catalog described in [the native contract](NATIVE_TRANSACTIONS.md#owner-signed-native-bridge). |
 | `preview` | `base_revision`, exact `document` string. Validation only; not displayed or saved. |
 | `apply` | `request_id`, `base_revision`, exact `document` string. |
 | `undo` | `request_id`, `base_revision`, `restore_revision`. |

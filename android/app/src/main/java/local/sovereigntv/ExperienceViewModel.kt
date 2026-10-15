@@ -3,7 +3,6 @@ package local.sovereigntv
 import android.app.Application
 import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +28,7 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     private var activities by mutableStateOf(emptyMap<String, ComponentName>())
     private var catalogReady by mutableStateOf(false)
     private var catalogPending = false
+    private var catalogAgain = false
     private var refreshQueued = false
     private var refreshAgain = false
     private var externalPending = false
@@ -204,7 +204,8 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun refreshActivities() {
-        if (catalogPending) return
+        if (closed.get()) return
+        if (catalogPending) { catalogAgain = true; return }
         catalogPending = true
         worker.execute {
             val catalog = runCatching { discover() }
@@ -212,33 +213,37 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
                 if (!closed.get()) {
                     catalog.onSuccess { activities = it; catalogReady = true }
                     catalogPending = false
+                    if (catalogAgain) { catalogAgain = false; refreshActivities() }
                 }
             }
         }
     }
 
-    @Suppress("DEPRECATION")
     private fun discover(): Map<String, ComponentName> {
-        val packageManager = getApplication<Application>().packageManager
-        val installed = packageManager.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER), PackageManager.MATCH_ALL)
-        val hints = mapOf("netflix" to "com.netflix.ninja", "prime_video" to "com.amazon.amazonvideo.livingroom", "disney_plus" to "com.disney.disneyplus", "youtube" to "com.google.android.youtube.tv", "local_control" to "local.sovereigntv.control")
-        return hints.mapNotNull { (id, packageName) ->
-            installed.firstOrNull { it.activityInfo.packageName == packageName && (id != "local_control" || packageManager.checkSignatures(getApplication<Application>().packageName, packageName) == PackageManager.SIGNATURE_MATCH) && it.activityInfo.exported && it.activityInfo.enabled && it.activityInfo.applicationInfo.enabled }
-                ?.let { id to ComponentName(it.activityInfo.packageName, it.activityInfo.name) }
-        }.toMap()
+        val catalog = TvApplications(getApplication()).discover()
+        return buildMap { catalog.entries.forEach { entry ->
+            put(entry.target, entry.component)
+            entry.aliases.forEach { put(it, entry.component) }
+        } }
     }
 
     fun appAvailability(target: String): String = if (!catalogReady) "CHECKING" else if (target in activities) "INSTALLED" else "NOT INSTALLED"
 
-    fun launchIntent(tile: Tile): Intent? {
-        if (tile.kind != "app") return null
-        if (!catalogReady) { message = "Checking installed TV applications"; return null }
-        val target = activities[tile.target]
-        if (target == null) { message = "No installed TV activity found for ${tile.title}"; return null }
-        return Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER).setComponent(target)
+    /** Recheck current installed entry points off the UI thread immediately before an owner launch. */
+    fun launch(tile: Tile, start: (Intent) -> Unit) {
+        if (tile.kind != "app" || closed.get()) return
+        worker.execute {
+            val resolution = runCatching { TvApplications(getApplication()).resolve(tile.target) }
+            main.post {
+                if (!closed.get()) resolution.onSuccess { component ->
+                    if (component == null) { message = "No installed TV activity found for ${tile.title}"; refreshActivities() }
+                    else start(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER).setComponent(component))
+                }.onFailure { message = "Installed TV applications unavailable; try again" }
+            }
+        }
     }
 
-    fun controlIntent(): Intent? = launchIntent(Tile("local_control", "Household control", "app", "local_control", true))
+    fun openControl(start: (Intent) -> Unit) = launch(Tile("local_control", "Household control", "app", "local_control", true), start)
 
     fun launchFailed() { message = "Application launch failed" }
 
