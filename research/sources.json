@@ -171,6 +171,20 @@
       "evidence": "research/FEASIBILITY.md",
       "use": "Selected controller/bootmode/secure-world interface hashes and manual review; falsifiable target experiments and independently verifiable criteria.",
       "limit": "No actual board response, immutable-code provenance, independent boot, demonstrated recovery, provisioning entitlement or provider-quality playback established."
+    },
+    {
+      "kind": "author_report_not_independently_verified_device_trace",
+      "commit": "d35476ba72352178d3ca082541d5c2e837c2dc19",
+      "url": "https://raw.githubusercontent.com/TheFab21/ha-samsungtv-smart/d35476ba72352178d3ca082541d5c2e837c2dc19/notes/QN55LS03FAFXZA/ART_MODE_DECOMPILED.md",
+      "sha256": "a55c1f9a789efb68b5bd61d5b7d47562fe33c4b0a16de367a7a042e70d273d45",
+      "bytes": 20103,
+      "reported_model": "QN55LS03FAFXZA",
+      "reported_build": "T-PTMFAKUC-0090-1296.8",
+      "reported_kernel": "5.4.261 armv7l",
+      "target_applicability": "Related 55-inch model and different firmware; not owner-unit observation or boot/provenance proof.",
+      "id": "related_ls03f_art_report",
+      "observed": "2026-10-15",
+      "use": "Family-level Linux/ABI corroboration and stock application dependency research lead."
     }
   ]
 }
