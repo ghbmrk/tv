@@ -31,16 +31,22 @@ class ShellRuntimeTest {
     }
 
     private fun activate(text: String) {
+        if (text in setOf("Import experience", "Import artwork", "Restore default", "Undo last change") && compose.onAllNodesWithText(text).fetchSemanticsNodes().isEmpty()) {
+            compose.onNodeWithText("Settings").performSemanticsAction(SemanticsActions.RequestFocus) { it() }
+            compose.onNodeWithText("Settings").performKeyInput { pressKey(Key.DirectionCenter) }
+            waitForText(text)
+        }
         compose.onNodeWithText(text).performSemanticsAction(SemanticsActions.RequestFocus) { it() }
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
 
     @Before fun reset() {
         Intents.init()
-        waitForText("Restore default")
+        waitForText("Settings")
         activate("Restore default")
         waitForText("Household TV")
         waitForText("Default Home restored")
+        activate("Back to Home")
     }
     @After fun release() { Intents.release() }
 

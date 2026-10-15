@@ -12,7 +12,7 @@ An owner-controlled TV experience and an Android-first replacement project for t
 python3 -m sovereign_tv.server
 ```
 
-Open `http://127.0.0.1:8765`, read `.local/development-token` locally, and paste it into the studio. Edit the experience JSON, preview, apply, undo, or export for the Android prototype. No dependencies beyond Python 3.9+ are needed. The service stays on loopback and has no TV or provider-account privileges.
+Open `http://127.0.0.1:8765`, read `.local/development-token` locally, and paste it into the studio. Use the visual controls to edit, preview, save, undo, or export for the Android prototype. Advanced document retains direct JSON editing. No dependencies beyond Python 3.9+ are needed. The service stays on loopback and has no TV or provider-account privileges.
 
 ```sh
 python3 -m unittest discover -s tests -v

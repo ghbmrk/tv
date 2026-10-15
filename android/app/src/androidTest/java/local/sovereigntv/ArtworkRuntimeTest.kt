@@ -39,11 +39,16 @@ class ArtworkRuntimeTest {
     }
     private fun activate(text: String) {
         revealArtwork()
+        if (text in setOf("Import experience", "Import artwork", "Restore default", "Undo last change") && compose.onAllNodesWithText(text).fetchSemanticsNodes().isEmpty()) {
+            compose.onNodeWithText("Settings").performSemanticsAction(SemanticsActions.RequestFocus) { it() }
+            compose.onNodeWithText("Settings").performKeyInput { pressKey(Key.DirectionCenter) }
+            waitFor(text)
+        }
         compose.onNodeWithText(text).performSemanticsAction(SemanticsActions.RequestFocus) { it() }
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
     @Before fun reset() {
-        Intents.init(); waitFor("Restore default"); activate("Restore default"); waitFor("Default Home restored")
+        Intents.init(); waitFor("Settings"); activate("Restore default"); waitFor("Default Home restored"); activate("Back to Home")
     }
     @After fun finish() { Intents.release() }
 

@@ -26,8 +26,8 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     fun loadArtwork(id: String, width: Int, height: Int) = artwork.bitmap(id, width, height)
     private val main = Handler(Looper.getMainLooper())
     private val closed = AtomicBoolean(false)
-    private var activities = emptyMap<String, ComponentName>()
-    private var catalogReady = false
+    private var activities by mutableStateOf(emptyMap<String, ComponentName>())
+    private var catalogReady by mutableStateOf(false)
     private var catalogPending = false
     var experience by mutableStateOf<Experience?>(null)
         private set
@@ -186,6 +186,8 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
                 ?.let { id to ComponentName(it.activityInfo.packageName, it.activityInfo.name) }
         }.toMap()
     }
+
+    fun appAvailability(target: String): String = if (!catalogReady) "CHECKING" else if (target in activities) "INSTALLED" else "NOT INSTALLED"
 
     fun launchIntent(tile: Tile): Intent? {
         if (tile.kind != "app") return null
