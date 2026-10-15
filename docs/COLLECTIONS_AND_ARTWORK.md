@@ -1,13 +1,15 @@
 # Local collections and artwork
 
-The host studio and Android shell render owner-defined app/artwork collections, local PNG images and timed slideshows. Configuration uses the existing revision journal: preview is unsaved, Apply commits atomically, and Undo restores a retained revision. Android remains offline with no network permission. This is ordinary gallery presentation; low-power panel Art Mode, brightness, sensors and standby still require board integration.
+The host studio and Android shell render owner-defined app/artwork collections, local PNG images and timed slideshows. Configuration uses the existing revision journal: preview is unsaved, Save changes (Android: Apply preview) commits atomically, and Undo restores a retained revision. Android remains offline with no network permission. This is ordinary gallery presentation; low-power panel Art Mode, brightness, sensors and standby still require board integration.
 
 ## Use the feature
 
-1. Run the host studio and connect with its local development token. Choose Import artwork and a plain RGB/RGBA PNG. The upload is cached locally and a schema v2 configuration is staged as an unsaved preview.
-2. Open Local artwork, then an image. Previous/Next and Start/Pause slideshow operate on visible artwork entries. Edit titles, visibility, collection order and interval in the experience document, then Preview and Apply.
+1. Run the host studio and connect with its local development token. Choose Add artwork and a plain RGB/RGBA PNG. The upload is cached locally and a schema v2 configuration is staged as an unsaved preview.
+2. Open Local artwork, then an image. Previous/Next and Start/Pause slideshow operate on visible artwork entries. Use the visual editor to change titles, appearance, visibility, entry order and slideshow interval, then Preview changes and Save changes. Advanced document retains direct JSON editing for other changes.
 3. Export for Android downloads `experience.stv.zip` containing the **saved** document and its referenced PNGs. Transfer it to an authorized Android development target; Import experience stages it. Apply preview saves it; Cancel leaves the saved configuration intact. Android also accepts a local PNG through Import artwork.
 4. On Android, D-pad activation opens collections and images; Back returns to the collection and restores its selected entry. Undo last change restores the prior saved configuration after restart as well.
+
+Artwork controls hide after six seconds without interaction once the image has loaded; Android honors a longer accessibility timeout. A D-pad/Enter press reveals the controls without activating them. Back still returns to the collection. Browser pointer movement also reveals controls.
 
 Slideshow starts paused. The configured interval is 30–86400 seconds and begins after the image loads. Android suspends advancement outside RESUMED; the browser suspends it while the document is hidden. Resuming begins a new interval, without catching up missed frames. Images fit within the display without cropping. Android hashes, validates and decodes on its single background worker, with bitmap sampling based on the viewport.
 

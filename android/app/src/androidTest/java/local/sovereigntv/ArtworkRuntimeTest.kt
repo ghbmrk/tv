@@ -30,7 +30,15 @@ class ArtworkRuntimeTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
     private val context get() = InstrumentationRegistry.getInstrumentation().targetContext
     private fun waitFor(text: String) = compose.waitUntil(10000) { compose.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty() }
+    private fun revealArtwork() {
+        if (compose.onAllNodesWithTag("artwork-surface").fetchSemanticsNodes().isNotEmpty() && compose.onAllNodesWithText("Back to collection").fetchSemanticsNodes().isEmpty()) {
+            compose.onNodeWithTag("artwork-surface").performKeyInput { pressKey(Key.DirectionCenter) }
+            waitFor("Back to collection")
+            compose.onNodeWithTag("artwork-image").assertExists()
+        }
+    }
     private fun activate(text: String) {
+        revealArtwork()
         compose.onNodeWithText(text).performSemanticsAction(SemanticsActions.RequestFocus) { it() }
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
@@ -50,14 +58,19 @@ class ArtworkRuntimeTest {
         compose.waitUntil(10000) { compose.onAllNodesWithTag("artwork-image").fetchSemanticsNodes().isNotEmpty() }
         activate("Start slideshow"); waitFor("Pause slideshow")
         compose.mainClock.advanceTimeBy(301000)
+        revealArtwork()
         waitFor("Second artwork • 2/2 • Unsaved preview")
         compose.activityRule.scenario.moveToState(androidx.lifecycle.Lifecycle.State.STARTED)
         compose.waitForIdle()
         compose.mainClock.advanceTimeBy(301000)
         compose.activityRule.scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED)
+        revealArtwork()
         waitFor("Second artwork • 2/2 • Unsaved preview")
         activate("Pause slideshow")
         compose.mainClock.advanceTimeBy(301000)
+        compose.onNodeWithText("Back to collection").assertDoesNotExist()
+        compose.onNodeWithTag("artwork-image").assertExists()
+        revealArtwork()
         compose.onNodeWithText("Second artwork • 2/2 • Unsaved preview").assertExists()
         activate("Previous artwork"); waitFor("First artwork • 1/2 • Unsaved preview")
         activate("Next artwork"); waitFor("Second artwork • 2/2 • Unsaved preview")

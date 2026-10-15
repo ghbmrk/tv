@@ -13,16 +13,85 @@ async function api(path, data) {
   if (!response.ok) { const error = Error(result.error); error.status = response.status; throw error; }
   return result;
 }
+// Visual controls edit the same declarative document; saving still uses the revision API.
+function populateEditor(doc) {
+  const form = el('visual-editor'); const opened = new Set([...form.querySelectorAll('details[open]')].map(node => node.dataset.editorKey)); form.replaceChildren(); form.hidden = false;
+  const update = (path, value) => {
+    try {
+      const next = JSON.parse(el('document').value);
+      let target = next;
+      for (const key of path.slice(0, -1)) target = target[key];
+      target[path[path.length - 1]] = value;
+      el('document').value = JSON.stringify(next, null, 2);
+      el('preview-state').textContent = 'Unsaved edits';
+      status('Changes are local and unsaved. Preview, then save when ready.');
+    } catch { status('Correct the advanced document before using visual controls.'); }
+  };
+  const field = (parent, title, path, value, choices = null, numeric = false) => {
+    const wrapper = document.createElement('div'); wrapper.className = 'field';
+    const label = document.createElement('label'); label.textContent = title;
+    const input = document.createElement(choices ? 'select' : 'input');
+    input.setAttribute('aria-label', title);
+    if (choices) for (const [key, name] of choices) { const option = document.createElement('option'); option.value = key; option.textContent = name; input.append(option); }
+    else { input.type = numeric ? 'number' : 'text'; if (!numeric) input.maxLength = 120; }
+    if (path.at(-1) === 'text_scale') { input.min = '0.8'; input.max = '1.6'; input.step = '0.1'; }
+    if (path.at(-1) === 'artwork_interval_seconds') { input.min = '30'; input.max = '86400'; input.step = '1'; }
+    input.value = value;
+    input.oninput = () => update(path, numeric ? Number(input.value) : input.value);
+    label.append(input); wrapper.append(label); parent.append(wrapper);
+  };
+  field(form, 'Home title', ['title'], doc.title);
+  const pair = document.createElement('div'); pair.className = 'field-pair'; form.append(pair);
+  field(pair, 'Appearance', ['theme'], doc.theme, [['night','Forest night'],['warm','Warm earth'],['light','Soft daylight']]);
+  field(pair, 'Text size', ['settings','text_scale'], doc.settings.text_scale, null, true);
+  field(form, 'Artwork interval · seconds', ['settings','artwork_interval_seconds'], doc.settings.artwork_interval_seconds, null, true);
+  const list = (parent, items, path) => items.forEach((item, index) => {
+    const row = document.createElement('div'); row.className = 'entry-edit';
+    const visible = document.createElement('input'); visible.type = 'checkbox'; visible.checked = item.visible; visible.setAttribute('aria-label', `Show ${item.title}`); visible.onchange = () => update([...path,index,'visible'],visible.checked);
+    const title = document.createElement('input'); title.type = 'text'; title.value = item.title; title.maxLength = 120; title.setAttribute('aria-label', `Title for ${item.title}`); title.oninput = () => update([...path,index,'title'],title.value);
+    row.append(visible,title);
+    for (const [delta, name, symbol] of [[-1,'Move up','↑'],[1,'Move down','↓']]) {
+      const button = document.createElement('button'); button.type = 'button'; button.textContent = symbol; button.setAttribute('aria-label', `${name} ${item.title}`); button.disabled = index+delta < 0 || index+delta >= items.length;
+      button.onclick = () => {
+        try {
+          const next = JSON.parse(el('document').value); let entries = next;
+          for (const key of path) entries = entries[key];
+          if (index+delta < 0 || index+delta >= entries.length) return;
+          [entries[index],entries[index+delta]] = [entries[index+delta],entries[index]];
+          el('document').value = JSON.stringify(next,null,2); populateEditor(next);
+          el('preview-state').textContent = 'Unsaved edits'; status('Arrangement updated. Preview before saving.');
+          [...form.querySelectorAll('.entry-edit input[type=text]')].find(input => input.value === item.title)?.focus();
+        } catch { status('Correct the advanced document before arranging items.'); }
+      }; row.append(button);
+    }
+    parent.append(row);
+  });
+  for (const [index, section] of doc.sections.entries()) {
+    const disclosure = document.createElement('details'); disclosure.className = 'section-editor'; const summary = document.createElement('summary'); summary.textContent = section.title + ' · ' + section.items.length + (section.items.length === 1 ? ' item' : ' items'); disclosure.append(summary); disclosure.dataset.editorKey = 'section:' + section.id; disclosure.open = opened.has(disclosure.dataset.editorKey);
+    const group = document.createElement('fieldset'); group.className = 'editor-section'; const legend = document.createElement('legend'); legend.textContent = 'Section settings'; group.append(legend); disclosure.append(group);
+    field(group,'Section title '+(index+1),['sections',index,'title'],section.title);
+    field(group,'Section layout '+(index+1),['sections',index,'layout'],section.layout,[['row','Horizontal row'],['grid','Grid']]);
+    list(group,section.items,['sections',index,'items']); form.append(disclosure);
+  }
+  for (const [index, collection] of (doc.collections || []).entries()) {
+    const disclosure = document.createElement('details'); disclosure.className = 'section-editor'; const summary = document.createElement('summary'); summary.textContent = collection.title + ' · collection'; disclosure.append(summary); disclosure.dataset.editorKey = 'collection:' + collection.id; disclosure.open = opened.has(disclosure.dataset.editorKey);
+    const group = document.createElement('fieldset'); group.className = 'editor-section'; const legend = document.createElement('legend'); legend.textContent = 'Collection settings'; group.append(legend); disclosure.append(group);
+    field(group,'Collection title '+(index+1),['collections',index,'title'],collection.title); list(group,collection.items,['collections',index,'items']); form.append(disclosure);
+  }
+}
+el('visual-editor').addEventListener('submit', event => event.preventDefault());
+el('document').addEventListener('change', () => { try { populateEditor(JSON.parse(el('document').value)); el('preview-state').textContent = 'Unsaved edits'; } catch { status('The advanced document contains invalid JSON.'); } });
+let chromeTimer = null;
 let renderGeneration = 0;
 let slideshowTimer = null;
 let view = null;
 const imageUrls = new Map();
 function render(doc, collectionId = null, artworkId = null, playing = false) {
   view = {doc, collectionId, artworkId, playing};
-  clearTimeout(slideshowTimer);
+  clearTimeout(slideshowTimer); clearTimeout(chromeTimer);
   const generation = ++renderGeneration;
   const screen = el('screen');
-  screen.replaceChildren();
+  screen.replaceChildren(); screen.classList.remove('chrome-hidden'); screen.onkeydown = null; screen.onpointermove = null;
   screen.dataset.theme = doc.theme;
   screen.style.fontSize = `${doc.settings.text_scale}em`;
   const heading = document.createElement('h2');
@@ -33,8 +102,16 @@ function render(doc, collectionId = null, artworkId = null, playing = false) {
   const button = (title, click) => {
     const result = document.createElement('button'); result.textContent = title; result.onclick = click; return result;
   };
-  if (collectionId) screen.append(button('Back to Home', () => render(doc)));
+  if (collectionId) { const home = button('Back to Home', () => render(doc)); home.className = 'art-back'; screen.append(home); }
   if (artwork) {
+    heading.className = 'gallery-heading';
+    const reveal = () => { screen.classList.remove('chrome-hidden'); clearTimeout(chromeTimer); chromeTimer = setTimeout(() => { if (!document.hidden && generation === renderGeneration) { screen.classList.add('chrome-hidden'); if (screen.contains(document.activeElement)) screen.focus({preventScroll:true}); } }, 6000); };
+    screen.onpointermove = reveal;
+    screen.onkeydown = event => {
+      if (screen.classList.contains('chrome-hidden') && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter',' '].includes(event.key)) { event.preventDefault(); reveal(); controls.firstChild.focus(); return; }
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Enter',' '].includes(event.key)) reveal();
+      if (event.key === 'Escape') { event.preventDefault(); render(doc,collectionId); }
+    };
     const items = collection.items.filter(i => i.visible && i.kind === 'artwork');
     const index = items.findIndex(i => i.id === artworkId);
     const image = document.createElement('img'); image.className = 'artwork'; image.alt = artwork.title;
@@ -55,6 +132,7 @@ function render(doc, collectionId = null, artworkId = null, playing = false) {
       }
       if (generation !== renderGeneration) return;
       image.onload = () => {
+        reveal();
         if (generation === renderGeneration && playing && items.length > 1 && !document.hidden)
           slideshowTimer = setTimeout(() => render(doc, collectionId, items[(index + 1) % items.length].id, true), doc.settings.artwork_interval_seconds * 1000);
       };
@@ -74,7 +152,7 @@ function render(doc, collectionId = null, artworkId = null, playing = false) {
     items.className = section.layout;
     for (const item of section.items.filter(item => item.visible)) {
       const button = document.createElement('button');
-      button.className = 'tile';
+      button.className = 'tile'; button.dataset.target = item.target;
       button.textContent = item.title;
       button.onclick = () => item.kind === 'collection' ? render(doc, item.target) : item.kind === 'artwork' ? render(doc, collectionId, item.id) : status(`Preview only: app “${item.title}”. Use the native Android shell to launch installed apps.`);
       items.append(button);
@@ -87,6 +165,7 @@ document.addEventListener('visibilitychange', () => { if (view) render(view.doc,
 async function load() {
   current = await api('state');
   el('document').value = JSON.stringify(current.experience, null, 2);
+  populateEditor(current.experience); el('connection-panel').open = false; el('preview-state').textContent = 'Saved experience';
   render(current.experience);
   status(`Saved revision ${current.revision}. No TV is connected.`);
 }
@@ -94,12 +173,13 @@ const edit = () => ({request_id: crypto.randomUUID(), base_revision: current.rev
 function action(id, fn) {
   el(id).onclick = async () => {
     for (const button of document.querySelectorAll('nav button, #connect')) button.disabled = true;
+    el('visual-editor').inert = true; el('document').disabled = true;
     try { await fn(); } catch (error) { status(error.message); }
-    finally { for (const button of document.querySelectorAll('nav button, #connect')) button.disabled = false; }
+    finally { el('visual-editor').inert = false; el('document').disabled = false; for (const button of document.querySelectorAll('nav button, #connect')) button.disabled = false; }
   };
 }
 action('connect', load);
-action('preview', async () => { if (!current) throw Error('Connect first.'); const result = await api('preview', edit()); render(result.experience); status(`Unsaved preview; changed fields: ${result.changed_fields.join(', ') || 'none'}`); });
+action('preview', async () => { if (!current) throw Error('Connect first.'); const result = await api('preview', edit()); render(result.experience); el('preview-state').textContent = 'Unsaved preview'; status(`Unsaved preview; changed fields: ${result.changed_fields.join(', ') || 'none'}`); });
 async function effect(operation, request) {
   if (inFlight && (inFlight.operation !== operation || JSON.stringify(inFlight.request) !== JSON.stringify(request))) {
     throw Error('An earlier effect is unconfirmed. Retry that exact operation before starting another.');
@@ -145,6 +225,7 @@ el('artwork-file').onchange = async () => {
   const file = el('artwork-file').files[0]; el('artwork-file').value = '';
   if (!file) return;
   for (const b of document.querySelectorAll('nav button, #connect')) b.disabled = true;
+  el('visual-editor').inert = true; el('document').disabled = true;
   try {
     if (!current || inFlight || file.size > 8388608) throw Error('Image unavailable, too large, or an edit is unconfirmed');
     const data = await file.arrayBuffer();
@@ -168,13 +249,14 @@ el('artwork-file').onchange = async () => {
     if (!collection) { collection = {id: tile.target, title: tile.title, items: []}; doc.collections.push(collection); }
     if (!collection.items.some(i => i.kind === 'artwork' && i.target === id)) collection.items.push({id: 'art_' + crypto.randomUUID().replaceAll('-', ''), title: `Local artwork ${collection.items.length + 1}`, kind: 'artwork', target: id, visible: true});
     const result = await api('preview', {request_id: crypto.randomUUID(), base_revision: current.revision, experience: doc});
-    el('document').value = JSON.stringify(result.experience, null, 2);
+    el('document').value = JSON.stringify(result.experience, null, 2); populateEditor(result.experience); el('preview-state').textContent = 'Unsaved preview';
     render(result.experience, tile.target);
-    status('Unsaved artwork preview. Apply to save the collection; Undo restores the prior experience.');
+    status('Artwork is ready to preview. Save changes to keep it; Undo restores the prior experience.');
   } catch (error) { status(error.message); }
-  finally { for (const b of document.querySelectorAll('nav button, #connect')) b.disabled = false; }
+  finally { el('visual-editor').inert = false; el('document').disabled = false; for (const b of document.querySelectorAll('nav button, #connect')) b.disabled = false; }
 };
 el('screen').addEventListener('keydown', event => {
+  if (event.defaultPrevented) return;
   if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
   const tiles = [...el('screen').querySelectorAll('button')];
   if (!tiles.length) return;
