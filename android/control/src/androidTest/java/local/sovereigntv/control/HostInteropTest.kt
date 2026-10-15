@@ -29,10 +29,10 @@ class HostInteropTest {
             while (!domain.ready()) { check(SystemClock.elapsedRealtime() < until); SystemClock.sleep(20) }
             fun state() = JSONObject(domain.get().state(System.currentTimeMillis() + 10000).getString("json")!!)
             val before = state()
-            listener = LocalListener(InetAddress.getByName("127.0.0.1"), 19443, trust,
+            listener = LocalListener(InetAddress.getByName("127.0.0.1"), 0, trust,
                 LocalProtocol.Gateway(context.cacheDir, domain, Identity.pin(Identity.ensure())))
             val temporary = File(context.filesDir, "interop-ready.tmp")
-            temporary.writeText(JSONObject().put("public_certificate", Identity.pem(Identity.ensure())).toString())
+            temporary.writeText(JSONObject().put("public_certificate", Identity.pem(Identity.ensure())).put("port", listener.port).toString())
             check(temporary.renameTo(ready))
             val deadline = SystemClock.elapsedRealtime() + 40000
             while (!done.exists()) { check(SystemClock.elapsedRealtime() < deadline); SystemClock.sleep(20) }

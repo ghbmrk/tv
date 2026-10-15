@@ -28,3 +28,27 @@ The API-reported developer-host field was valid IPv4 and matched neither the cur
 No additional reboot or setting change is prescribed while off-TV implementation continues. A later access session should first reconcile the displayed Developer Mode host field with the retained comparison, then attempt one bounded official SDB connection if authorized. Preserve the outcome; do not escalate automatically to root, sideloading or firmware changes. Public records exclude all private addresses and unique device identifiers. No new TV connection was made to reconcile these documents.
 
 A subsequent read-only check at 2026-10-15 16:27 UTC again reported the full target SKU and Developer Mode enabled. Official SDB 4.2.36 connection still failed (exit 1). No TV shell command, setting change or installation was attempted. HTTP reachability does not resolve the developer-access blocker.
+
+## Prepared normal-SDB board collection
+
+`tools/collect_board_identity.py` is prepared for an authorized read-only session after ordinary SDB access is available. It has **not collected live board evidence**. Do not repeatedly run it while the known connection failure remains unresolved.
+
+```sh
+python3 tools/collect_board_identity.py TV_PRIVATE_IPV4
+```
+
+The CLI uses only the locally retained official macOS SDB 4.2.36 binary at `.local/toolchain/sdb-4.2.36/sdb`, with SHA-256 `05db410d2e36e85147f95b20bae6296a71c54dab0e1ec79f9e11b89c4b6bd2cd`. There is no executable-path or digest override. Missing or mismatched binaries are refused. The [official SDK package](https://download.tizen.org/sdk/tizenstudio/official/binary/sdb_4.2.36_macos-64.zip) is a tool provenance reference, not a TV compatibility guarantee.
+
+The collector requires the exact full-SKU HTTP report, makes one ordinary connection attempt to the supplied private IPv4 on port 26101, and requires exactly one matching `device` entry in SDB's device list. It cannot fall back to another connected device. Only then does it issue these fixed normal-user reads:
+
+1. `uname -m`
+2. `uname -r`
+3. `getconf LONG_BIT`
+4. `cat /proc/cpuinfo`
+5. `cat /proc/device-tree/compatible`
+
+Each SDK process has a five-second absolute deadline and 64 KiB stdout limit; stderr is discarded. Budget failures kill only that client process. No shell interpreter, discovery, root command, settings change, installation, reboot, firmware write, arbitrary path, or device-output-derived command is used. Some files or commands may be unavailable to the normal developer account. Failed reads stay unknown; a partial collection is not success.
+
+Each run creates a new directory under ignored `.local/board-identity`, mode 0700, with mode-0600 `private.json` and `public.json`. Existing collections cannot be overwritten. Raw CPU information can contain serials; raw reads, the supplied address and device-tree strings stay in `private.json`. Never publish that file. The public summary allows only recognized kernel architectures, a numeric kernel-version core, 32/64-bit userspace reports, numeric CPU implementer/part/architecture values and a count of reported processor entries. Unknown strings, build suffixes and raw-content hashes are omitted. Review even the allowlisted summary before publication.
+
+Kernel architecture and reported userspace bit width answer different questions. CPU implementer/part values identify CPU components, not the complete SoC or board. Processor entries do not establish physical core count. Private device-tree strings require separate provenance review and corroboration before updating the target profile. These reads cannot establish boot ownership, recovery, independent drivers or protected playback.
