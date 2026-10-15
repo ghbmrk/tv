@@ -185,6 +185,7 @@ class MainActivity : ComponentActivity() {
                             item { Text(doc.title, color = foreground, fontSize = 18.sp) }
                             item { Text("Local files. Explicit changes. Persistent undo.", color = foreground.copy(alpha = .65f), fontSize = 16.sp) }
                             item { EditingControls(focusFirst = true) }
+                            item { Button(onClick = { model.controlIntent()?.let { runCatching { startActivity(it) }.onFailure { model.launchFailed() } } }) { Text("Household control") } }
                         }
                     }
                 }
