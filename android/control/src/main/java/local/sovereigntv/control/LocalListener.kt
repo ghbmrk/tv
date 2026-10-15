@@ -11,10 +11,13 @@ import javax.net.ssl.SSLServerSocket
 import javax.net.ssl.SSLSocket
 
 /** Fixed bounded workers, no outbound connections, no TLS bypass or unauthenticated operation. */
-class LocalListener(address: InetAddress, port: Int, private val trust: PairedStore, private val gateway: LocalProtocol.Gateway) : Closeable {
+class LocalListener(address: InetAddress, port: Int, private val trust: PairedStore, private val gateway: LocalProtocol.Gateway, private val budgets: Budgets = Budgets()) : Closeable {
+    data class Budgets(val socketMillis: Int = 5000, val inputMillis: Long = 10000, val lifetimeMillis: Long = 45000) {
+        init { require(socketMillis in 100..5000 && inputMillis in 100..10000 && lifetimeMillis in 100..45000) }
+    }
     private val closed = AtomicBoolean(false)
     private val sockets = ConcurrentHashMap.newKeySet<Socket>()
-    private val timers = Executors.newSingleThreadScheduledExecutor()
+    private val timers = ScheduledThreadPoolExecutor(1).apply { removeOnCancelPolicy = true }
     private val workers = ThreadPoolExecutor(2, 2, 0L, TimeUnit.SECONDS, SynchronousQueue())
     private val certificate = Identity.ensure()
     val deviceId = Identity.pin(certificate)
@@ -26,7 +29,11 @@ class LocalListener(address: InetAddress, port: Int, private val trust: PairedSt
         bind(InetSocketAddress(address, port), 4)
     }
     val port get() = server.localPort
+    internal val pendingDeadlines get() = timers.queue.size
+    internal val activeWorkers get() = workers.activeCount
+    internal val terminated get() = workers.isTerminated && timers.isTerminated && !acceptor.isAlive
     private val acceptor = Thread({
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
         while (!closed.get()) {
             val socket = try { server.accept() as SSLSocket } catch (_: Exception) { break }
             sockets.add(socket)
@@ -35,15 +42,16 @@ class LocalListener(address: InetAddress, port: Int, private val trust: PairedSt
         }
     }, "local-control-accept").apply { start() }
     private fun serve(socket: SSLSocket) {
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
         // Absolute lifetime also bounds slow trickles and stalled output; SO_TIMEOUT alone does not.
-        val timeout = try { timers.schedule({ runCatching { socket.close() } }, 45, TimeUnit.SECONDS) }
+        val timeout = try { timers.schedule({ runCatching { socket.close() } }, budgets.lifetimeMillis, TimeUnit.MILLISECONDS) }
             catch (_: RejectedExecutionException) { sockets.remove(socket); socket.close(); return }
         try {
-            socket.soTimeout = 5000; socket.startHandshake()
+            socket.soTimeout = budgets.socketMillis; socket.startHandshake()
             val peer = socket.session.peerCertificates.single() as X509Certificate
             val pin = Identity.pin(peer)
             authenticatedConnections.incrementAndGet()
-            val readTimeout = timers.schedule({ runCatching { socket.close() } }, 10, TimeUnit.SECONDS)
+            val readTimeout = timers.schedule({ runCatching { socket.close() } }, budgets.inputMillis, TimeUnit.MILLISECONDS)
             try {
                 val request = LocalProtocol.requestJson(LocalProtocol.read(socket.inputStream, LocalProtocol.MAX_METADATA))
                 trust.authorized(pin) { Unit }

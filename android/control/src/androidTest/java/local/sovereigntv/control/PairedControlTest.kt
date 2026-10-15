@@ -170,4 +170,44 @@ class PairedControlTest {
         assertTrue(context.cacheDir.listFiles()!!.none { it.name.startsWith("asset-") })
     }
 
+    @Test fun stalledConnectionsHaveBoundedWorkersAndRecoverAfterClose() {
+        val first = java.net.Socket("127.0.0.1", server.port)
+        val second = java.net.Socket("127.0.0.1", server.port)
+        try {
+            await { server.activeWorkers == 2 }
+            assertThrows(Exception::class.java) { connect().close() }
+            assertEquals(initial.getLong("revision"), directState().getLong("revision"))
+        } finally { first.close(); second.close() }
+        await { server.activeWorkers == 0 }
+        ok(exchange(request("state")).first)
+        await { server.activeWorkers == 0 }
+        assertEquals(0, server.pendingDeadlines)
+        server.close(); await { server.terminated }
+    }
+
+    @Test fun slowAuthenticatedInputDoesNotHoldRevocationAndAbsoluteLifetimeClosesIt() {
+        server.close()
+        val gateway = LocalProtocol.Gateway(context.cacheDir, domain, Identity.pin(Identity.ensure()))
+        server = LocalListener(InetAddress.getByName("127.0.0.1"), 0, trust, gateway,
+            LocalListener.Budgets(socketMillis = 5000, inputMillis = 10000, lifetimeMillis = 2000))
+        val count = server.authenticatedConnections.get()
+        connect().use { stalled ->
+            await { server.authenticatedConnections.get() > count }
+            val upload = request("artwork.put").put("sha256", "0".repeat(64)).put("bytes", 1000)
+            LocalProtocol.write(stalled.outputStream, upload.toString().toByteArray())
+            stalled.outputStream.write(java.nio.ByteBuffer.allocate(4).putInt(1000).array()); stalled.outputStream.write('{'.code); stalled.outputStream.flush()
+            await { gateway.receivingUploads.get() == 1 } // Confirm it is blocked inside the authenticated binary read.
+            val worker = java.util.concurrent.Executors.newSingleThreadExecutor()
+            try { worker.submit { trust.revoke() }.get(1, java.util.concurrent.TimeUnit.SECONDS) }
+            finally { worker.shutdownNow() }
+            val start = SystemClock.elapsedRealtime()
+            assertThrows(Exception::class.java) { LocalProtocol.read(stalled.inputStream, LocalProtocol.MAX_METADATA) }
+            assertTrue("Absolute lifetime must close before the five-second idle read timeout", SystemClock.elapsedRealtime() - start < 3500)
+        }
+        assertNull(trust.paired())
+        assertEquals(initial.getLong("revision"), directState().getLong("revision"))
+        server.close(); await { server.terminated }
+        assertEquals(0, gateway.receivingUploads.get())
+    }
+
 }
