@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries><provider android:authorities="local.sovereigntv.controlprobe" /></queries>
     <application>
         <!-- Synthetic read-only data provider, packaged only in the test APK. -->
         <provider android:name="local.sovereigntv.FixtureProvider" android:authorities="local.sovereigntv.test.fixture" android:exported="true" />

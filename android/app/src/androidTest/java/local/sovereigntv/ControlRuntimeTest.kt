@@ -101,6 +101,7 @@ class ControlRuntimeTest {
         assertTrue(result.getBoolean("different_uid"))
         assertTrue(result.getBoolean("bind_denied"))
         assertTrue(result.getBoolean("forwarded_handle_denied"))
+        assertTrue(result.getBoolean("probe_denied"))
     }
 
     @Test fun invalidAndExpiredRequestsNeverChangeStateIncludingWriterWait() {
@@ -210,6 +211,31 @@ class ControlRuntimeTest {
         SystemClock.sleep(300)
         assertEquals(initial.getLong("revision"), state().getLong("revision"))
         assertEquals("not_found", control.receipt(request, expiry()).getString("status"))
+    }
+
+    @Test fun ownerSignedSeparateApplicationCanEditReadBackAndRetry() {
+        val initial = state()
+        val result = context.contentResolver.call(Uri.parse("content://local.sovereigntv.controlprobe"), "roundtrip", null, null)!!
+        assertNotEquals(android.os.Process.myUid(), result.getInt("caller_uid"))
+        assertTrue(result.getBoolean("remote_domain")); assertTrue(result.getBoolean("read_back"))
+        assertTrue(result.getBoolean("durable_retry")); assertTrue(result.getBoolean("restored"))
+        assertEquals(initial.getLong("revision") + 2, state().getLong("revision"))
+        assertEquals(initial.getString("document"), state().getString("document"))
+        waitFor("Household TV")
+    }
+
+    @Test fun cancellingManualPreviewReconcilesLatestExternalCommit() {
+        intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(ActivityResult(Activity.RESULT_OK,
+            Intent().setData(Uri.parse("content://local.sovereigntv.test.fixture/valid"))))
+        activate("Settings"); activate("Import experience"); waitFor("Runtime household")
+        val current = state()
+        val document = current.getString("document").replace("Household TV", "Latest saved home")
+        json(control.apply(id(), current.getLong("revision"), document, expiry()))
+        waitFor("Experience changed; reload saved before editing")
+        activate("Cancel preview")
+        waitFor("Latest saved home")
+        compose.onNodeWithText("Runtime household").assertDoesNotExist()
+        assertEquals(current.getLong("revision") + 1, state().getLong("revision"))
     }
 
 }

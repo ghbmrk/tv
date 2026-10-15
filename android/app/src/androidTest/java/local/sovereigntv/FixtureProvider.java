@@ -49,6 +49,10 @@ public class FixtureProvider extends ContentProvider {
         } catch (SecurityException denied) { result.putBoolean("forwarded_handle_denied", true);
         } catch (android.os.RemoteException error) { throw new IllegalStateException("Fixture IPC failed");
         } finally { data.recycle(); reply.recycle(); }
+        try {
+            getContext().getContentResolver().call(Uri.parse("content://local.sovereigntv.controlprobe"), "roundtrip", null, null);
+            result.putBoolean("probe_denied", false);
+        } catch (SecurityException denied) { result.putBoolean("probe_denied", true); }
         return result;
     }
     @Override public String getType(Uri uri) { return "bundle".equals(uri.getLastPathSegment()) ? "application/zip" : "application/json"; }
