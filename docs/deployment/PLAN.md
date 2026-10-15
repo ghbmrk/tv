@@ -19,9 +19,9 @@ The host studio and Android APK are product-development artifacts. The APK canno
 
 ## Immediate work
 
-1. Complete the approved Samsung source download from [the official release search](https://opensource.samsung.com/uploadSearch?searchValue=LS03F). Save the ZIP outside Git under `reference/source/25_DTV_PontusM.zip`. The browser transfer previously failed; no source archive has been acquired.
-2. Run `python3 tools/index_source.py reference/source/25_DTV_PontusM.zip --output .local/source-index.json`. This hashes and lists selected metadata paths without extracting or executing source. Review that index, then extract only needed files using a bounded, path-safe procedure. Do not blindly unpack the entire archive.
-3. Populate the integration table and storage/provenance records from actual evidence. Treat source listing version 1000 versus installed firmware 1301.0 as unresolved correspondence.
+1. Source acquisition and the first bounded kernel inspection are complete; see [the hashed inventory and findings](../../research/PONTUS_SOURCE_FINDINGS.md). Reproduce with `tools/index_source.py` and `tools/inspect_kernel_source.py`; vendor archives remain outside Git.
+2. Correlate the release's ARMv7/Pontus configuration and controller interfaces with the exact board and non-unique runtime observations. Do not promote source configuration to observed target identity. Match listing version 1000 to installed firmware 1301.0 before selecting build inputs.
+3. Populate the integration table and storage/provenance records from exact evidence. Inspect boot trust, controller dependencies, independent implementations and practical recovery; [community root profiles](../../research/COMMUNITY_PATHS.md) do not qualify this model.
 4. Resolve the independent-boot, original-software-removal and qualifying-provider paths before investing in a large AOSP board port. Public source access alone establishes none of them.
 
 ## Decision boundary

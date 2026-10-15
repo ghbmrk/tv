@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked": "2026-10-14",
+  "checked": "2026-10-15",
   "target_runtime_observations": [
     {
       "id": "owner_about_tv_photo_2026_10_14",
@@ -110,8 +110,8 @@
       "archive_file_id": "39883",
       "displayed_size": "1021.58 MB",
       "use": "Official source release groups this model family under PontusM. The firmware metadata independently contains the PontusM label.",
-      "download_status": "agreement_approved_by_owner_and_accepted_in_browser; archive_transfer_not_delivered; manual_download_handoff_ready",
-      "limit": "Family coverage is established by the listing. Source contents, exact correspondence to installed 1301.0, and Android support are not established.",
+      "download_status": "acquired_offline_size_matched_sha256_recorded_all_outer_zip_members_crc_passed",
+      "limit": "Family source contents inspected; exact correspondence to installed 1301.0, exact board/SoC/live ABI and Android support remain unverified.",
       "approval_scope": "Accept displayed source-download agreement and download 25_DTV_PontusM.zip for offline Android-port research",
       "acquisition_attempts": [
         {
@@ -128,7 +128,23 @@
         }
       ],
       "manual_destination": "reference/source/25_DTV_PontusM.zip",
-      "handoff_screenshot": "research/source-download-handoff.jpg"
+      "acquisition_result": {
+        "observed": "2026-10-15",
+        "size_bytes": 1071208323,
+        "sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+        "outer_member_count": 24883,
+        "outer_members_crc_checked": true,
+        "signature_verified": false,
+        "report": "research/PONTUS_SOURCE_FINDINGS.md",
+        "kernel_inventory": "research/pontus-kernel-inventory.json"
+      }
+    },
+    {
+      "id": "community_path_review",
+      "kind": "pinned_upstream_repository_text_inspection",
+      "observed": "2026-10-15",
+      "evidence": "research/COMMUNITY_PATHS.md",
+      "limit": "No upstream code executed or copied into product; no target root or independent boot demonstrated."
     }
   ]
 }
