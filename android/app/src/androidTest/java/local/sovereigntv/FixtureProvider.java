@@ -24,6 +24,33 @@ import org.json.JSONObject;
 /** Synthetic read-only fixtures, test APK only. Framework-only for its separate process. */
 public class FixtureProvider extends ContentProvider {
     @Override public boolean onCreate() { return true; }
+    @Override public android.os.Bundle call(String method, String arg, android.os.Bundle extras) {
+        if (!"bridge-denials".equals(method)) throw new SecurityException("Unknown fixture operation");
+        android.os.Bundle result = new android.os.Bundle();
+        try {
+            result.putBoolean("different_uid", android.os.Process.myUid() != getContext().getPackageManager().getApplicationInfo("local.sovereigntv", 0).uid);
+        } catch (Exception error) { throw new IllegalStateException("Fixture target missing"); }
+        android.content.ServiceConnection connection = new android.content.ServiceConnection() {
+            public void onServiceConnected(android.content.ComponentName name, android.os.IBinder service) { }
+            public void onServiceDisconnected(android.content.ComponentName name) { }
+        };
+        try {
+            boolean bound = getContext().bindService(new android.content.Intent().setComponent(new android.content.ComponentName("local.sovereigntv", "local.sovereigntv.ExperienceControlService")), connection, android.content.Context.BIND_AUTO_CREATE);
+            if (bound) getContext().unbindService(connection);
+            result.putBoolean("bind_denied", false);
+        } catch (SecurityException denied) { result.putBoolean("bind_denied", true); }
+        android.os.Parcel data = android.os.Parcel.obtain(), reply = android.os.Parcel.obtain();
+        try {
+            data.writeInterfaceToken("local.sovereigntv.IExperienceControl");
+            data.writeLong(System.currentTimeMillis() + 5000);
+            extras.getBinder("forwarded").transact(android.os.IBinder.FIRST_CALL_TRANSACTION, data, reply, 0);
+            reply.readException();
+            result.putBoolean("forwarded_handle_denied", false);
+        } catch (SecurityException denied) { result.putBoolean("forwarded_handle_denied", true);
+        } catch (android.os.RemoteException error) { throw new IllegalStateException("Fixture IPC failed");
+        } finally { data.recycle(); reply.recycle(); }
+        return result;
+    }
     @Override public String getType(Uri uri) { return "bundle".equals(uri.getLastPathSegment()) ? "application/zip" : "application/json"; }
     @Override public Cursor query(Uri uri, String[] projection, String selection, String[] args, String order) {
         MatrixCursor cursor = new MatrixCursor(new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE});

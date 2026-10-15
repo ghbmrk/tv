@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabaseCorruptException
 import java.io.Closeable
 import java.security.MessageDigest
 
-/** Local domain transactions. Not an exported service or an agent authorization boundary. */
+/** Local domain transactions shared by Home and the control bridge; authorization belongs to the caller. */
 class ExperienceJournal(context: Context, private val initial: () -> ExperienceRepository.Loaded) : Closeable {
     private val artwork = ArtworkStore(context)
     class Conflict(message: String) : IllegalStateException(message)
@@ -72,14 +72,14 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
         "SELECT digest,revision,previous_revision,document_sha256 FROM receipts WHERE request_id=?", arrayOf(requestId)
     ).use { if (it.moveToFirst()) it.getString(0) to Receipt(requestId, it.getLong(1), it.getLong(2), it.getString(3)) else null }
 
-    fun apply(requestId: String, baseRevision: Long, document: String): Receipt {
+    fun apply(requestId: String, baseRevision: Long, document: String, guard: () -> Unit = {}): Receipt {
         Experience.parse(document) // Reject before starting a write transaction.
-        return commit(requestId, baseRevision, "apply:$baseRevision:${sha256(document)}") { document }
+        return commit(requestId, baseRevision, "apply:$baseRevision:${sha256(document)}", guard) { document }
     }
 
-    fun undo(requestId: String, baseRevision: Long, restoreRevision: Long): Receipt {
+    fun undo(requestId: String, baseRevision: Long, restoreRevision: Long, guard: () -> Unit = {}): Receipt {
         require(restoreRevision in 1 until baseRevision)
-        return commit(requestId, baseRevision, "undo:$baseRevision:$restoreRevision") { db ->
+        return commit(requestId, baseRevision, "undo:$baseRevision:$restoreRevision", guard) { db ->
             db.rawQuery("SELECT document FROM revisions WHERE revision=?", arrayOf(restoreRevision.toString())).use {
                 require(it.moveToFirst()) { "Restore revision is no longer retained" }
                 it.getString(0)
@@ -87,10 +87,11 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
         }
     }
 
-    private fun commit(requestId: String, baseRevision: Long, fingerprint: String, document: (SQLiteDatabase) -> String): Receipt {
+    private fun commit(requestId: String, baseRevision: Long, fingerprint: String, guard: () -> Unit, document: (SQLiteDatabase) -> String): Receipt {
         require(Regex("[A-Za-z0-9._-]{1,64}").matches(requestId) && baseRevision > 0)
         val digest = sha256(fingerprint)
         return transaction { db ->
+            guard() // Recheck authority/deadline after acquiring the writer transaction.
             val prior = findReceipt(db, requestId)
             if (prior != null) {
                 if (prior.first != digest) throw Conflict("Request ID already used with different arguments")
@@ -103,6 +104,7 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
             if (receiptCount >= 10000) throw Capacity()
             val text = document(db)
             artwork.requireAssets(Experience.parse(text).artworkRefs)
+            guard() // Asset validation can be slow; recheck immediately before configuration writes.
             val revision = Math.addExact(current, 1)
             val result = Receipt(requestId, revision, current, sha256(text))
             db.execSQL("INSERT INTO revisions VALUES (?,?,0)", arrayOf<Any>(revision, text))

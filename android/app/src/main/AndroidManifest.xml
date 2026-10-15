@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <permission android:name="local.sovereigntv.permission.CONTROL_EXPERIENCE" android:protectionLevel="signature" />
+    <uses-permission android:name="local.sovereigntv.permission.CONTROL_EXPERIENCE" />
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <queries><intent><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent></queries>
     <application android:label="Sovereign TV Preview" android:icon="@drawable/banner" android:banner="@drawable/banner" android:theme="@android:style/Theme.Material.NoActionBar" android:allowBackup="false" android:supportsRtl="true">
+        <service android:name=".ExperienceControlService" android:exported="true" android:process=":domain" android:permission="local.sovereigntv.permission.CONTROL_EXPERIENCE" />
         <activity android:name=".MainActivity" android:exported="true">
             <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent-filter>
         </activity>

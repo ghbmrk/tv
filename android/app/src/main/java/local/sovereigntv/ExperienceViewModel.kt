@@ -29,6 +29,9 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     private var activities by mutableStateOf(emptyMap<String, ComponentName>())
     private var catalogReady by mutableStateOf(false)
     private var catalogPending = false
+    private var refreshQueued = false
+    private var refreshAgain = false
+    private var externalPending = false
     var experience by mutableStateOf<Experience?>(null)
         private set
     var preview by mutableStateOf<ExperienceRepository.Loaded?>(null)
@@ -69,7 +72,7 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun cancelPreview() {
-        if (!busy) { preview = null; message = "Preview cancelled; saved experience unchanged" }
+        if (!busy) { preview = null; message = "Preview cancelled; saved experience unchanged"; drainExternalChange() }
     }
 
     fun applyPreview() {
@@ -157,6 +160,44 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
                         if (failure != null) failure() else message = if (it is ExperienceJournal.Conflict) "Experience changed; reload saved before editing" else "Change refused; previous experience preserved"
                     }
                     busy = false
+                    drainExternalChange()
+                }
+            }
+        }
+    }
+
+    private fun drainExternalChange() {
+        if (externalPending && !busy && !unconfirmed) { externalPending = false; refreshSaved() }
+    }
+
+    /** Coalesced advisory notifications always reconcile from the authoritative journal. */
+    fun refreshSaved() {
+        if (closed.get()) return
+        if (busy || unconfirmed) { externalPending = true; return }
+        if (refreshQueued) { refreshAgain = true; return }
+        refreshQueued = true
+        worker.execute {
+            val loaded = runCatching { repository.load() }
+            main.post {
+                refreshQueued = false
+                val again = refreshAgain; refreshAgain = false
+                if (!closed.get()) {
+                    if (busy || unconfirmed) { externalPending = true; return@post }
+                    loaded.onSuccess {
+                        if (it.journalUnavailable) {
+                            revision = 0
+                            message = "Local journal unreadable; default Home available • editing disabled"
+                        } else if (it.revision != revision) {
+                            if (preview != null) {
+                                externalPending = true
+                                message = "Experience changed; reload saved before editing"
+                            } else {
+                                experience = it.experience; revision = it.revision
+                                message = "Saved experience loaded"
+                            }
+                        }
+                    }.onFailure { message = "Saved experience unavailable; current view preserved" }
+                    if (again) refreshSaved()
                 }
             }
         }
