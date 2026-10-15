@@ -2,3 +2,5 @@
 
 @media(min-width:761px){.preview-area{position:sticky;top:28px;align-self:start}nav{position:sticky;top:12px;z-index:2;background:#101210f5;padding:10px 0}.section-editor .editor-section{border:0;margin:10px 0 0;padding:8px 0}}
 .workspace{min-width:0}@media(max-width:760px){#screen{width:100%;min-height:0;aspect-ratio:16/9}}
+
+#screen h2{font-size:calc(clamp(22px,2.6vw,40px)*var(--text-scale,1))}#screen h3{font-size:calc(10px*var(--text-scale,1))}#screen .tile{font-size:calc(clamp(12px,1.2vw,18px)*var(--text-scale,1))}

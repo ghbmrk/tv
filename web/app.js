@@ -93,7 +93,7 @@ function render(doc, collectionId = null, artworkId = null, playing = false) {
   const screen = el('screen');
   screen.replaceChildren(); screen.classList.remove('chrome-hidden'); screen.onkeydown = null; screen.onpointermove = null;
   screen.dataset.theme = doc.theme;
-  screen.style.fontSize = `${doc.settings.text_scale}em`;
+  screen.style.setProperty('--text-scale', doc.settings.text_scale);
   const heading = document.createElement('h2');
   const collection = (doc.collections || []).find(c => c.id === collectionId);
   const artwork = collection?.items.find(item => item.id === artworkId && item.visible && item.kind === 'artwork');
