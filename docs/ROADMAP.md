@@ -2,7 +2,7 @@
 
 The first vertical slice is the local experience format, revision store, editing API/studio, and native TV shell import path. The final system also requires the board port, qualified native playback, production agentOS control, and recovery. Completion of one workstream is not evidence for another.
 
-Owner-authorized off-TV implementation continues while developer access is unavailable. [The decisive feasibility experiments](../research/FEASIBILITY.md) still govern the board port: original-board boot ownership, Samsung-component replaceability, recovery and legitimate provider-quality integration remain installation gates.
+Owner-authorized off-TV implementation continues. Normal SDB transport now works, but shell/root switching is disabled and fixed Unix queries returned no board identity. [The decisive feasibility experiments](../research/FEASIBILITY.md) still govern the board port: original-board boot ownership, Samsung-component replaceability, recovery and legitimate provider-quality integration remain installation gates.
 
 | Next package | Deliverable | Acceptance |
 |---|---|---|
