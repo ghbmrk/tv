@@ -16,6 +16,8 @@ import java.net.InetAddress
 class HostInteropTest {
     @Test fun externalExecutorRoundTrip() {
         assumeTrue(InstrumentationRegistry.getArguments().getString("host_interop") == "true")
+        val expectedDelta = (InstrumentationRegistry.getArguments().getString("expected_revision_delta") ?: "2").toLong()
+        require(expectedDelta == 2L || expectedDelta == 4L)
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val incoming = File(context.filesDir, "interop-client-public.pem")
         val ready = File(context.filesDir, "interop-ready.json")
@@ -38,7 +40,7 @@ class HostInteropTest {
             while (!done.exists()) { check(SystemClock.elapsedRealtime() < deadline); SystemClock.sleep(20) }
             val after = state()
             assertEquals(before.getString("document"), after.getString("document"))
-            assertEquals(before.getLong("revision") + 2, after.getLong("revision"))
+            assertEquals(before.getLong("revision") + expectedDelta, after.getLong("revision"))
         } finally {
             listener?.close(); domain.close(); trust.revoke()
             listOf(incoming, ready, done, File(context.filesDir, "interop-ready.tmp")).forEach { it.delete() }

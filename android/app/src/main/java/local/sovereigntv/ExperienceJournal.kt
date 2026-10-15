@@ -12,7 +12,7 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
     private val artwork = ArtworkStore(context)
     class Conflict(message: String) : IllegalStateException(message)
     class Capacity : IllegalStateException("Journal receipt capacity reached; owner maintenance required")
-    data class Receipt(val requestId: String, val revision: Long, val previousRevision: Long, val documentSha256: String)
+    data class Receipt(val requestId: String, val revision: Long, val previousRevision: Long, val documentSha256: String, val operationSha256: String)
     private val helper = object : SQLiteOpenHelper(context, "experience-journal.sqlite3", null, 1, {
         // Android's default handler deletes corrupt databases. Preserve receipts/evidence instead.
         throw SQLiteDatabaseCorruptException("Experience journal corrupt; owner recovery required")
@@ -70,7 +70,7 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
 
     private fun findReceipt(db: SQLiteDatabase, requestId: String): Pair<String, Receipt>? = db.rawQuery(
         "SELECT digest,revision,previous_revision,document_sha256 FROM receipts WHERE request_id=?", arrayOf(requestId)
-    ).use { if (it.moveToFirst()) it.getString(0) to Receipt(requestId, it.getLong(1), it.getLong(2), it.getString(3)) else null }
+    ).use { if (it.moveToFirst()) it.getString(0) to Receipt(requestId, it.getLong(1), it.getLong(2), it.getString(3), it.getString(0)) else null }
 
     fun apply(requestId: String, baseRevision: Long, document: String, guard: () -> Unit = {}): Receipt {
         Experience.parse(document) // Reject before starting a write transaction.
@@ -106,7 +106,7 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
             artwork.requireAssets(Experience.parse(text).artworkRefs)
             guard() // Asset validation can be slow; recheck immediately before configuration writes.
             val revision = Math.addExact(current, 1)
-            val result = Receipt(requestId, revision, current, sha256(text))
+            val result = Receipt(requestId, revision, current, sha256(text), digest)
             db.execSQL("INSERT INTO revisions VALUES (?,?,0)", arrayOf<Any>(revision, text))
             db.execSQL("INSERT INTO receipts VALUES (?,?,?,?,?)", arrayOf<Any>(requestId, digest, revision, current, result.documentSha256))
             db.execSQL("DELETE FROM revisions WHERE revision < ?", arrayOf(maxOf(1L, revision - 127)))

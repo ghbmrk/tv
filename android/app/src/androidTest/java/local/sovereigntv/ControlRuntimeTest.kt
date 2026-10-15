@@ -73,6 +73,7 @@ class ControlRuntimeTest {
         val initial = state(); val before = initial.getLong("revision")
         val document = initial.getString("document").replace("Household TV", "Agent evening")
         val capabilities = json(control.capabilities(expiry()))
+        assertTrue(capabilities.getBoolean("receipt_operation_sha256"))
         assertFalse(capabilities.getBoolean("network_endpoint")); assertFalse(capabilities.getBoolean("agentos_qualified"))
         assertFalse(json(control.preview(before, document, expiry())).getBoolean("saved"))
         assertEquals(before, state().getLong("revision"))
@@ -81,6 +82,7 @@ class ControlRuntimeTest {
         val receipt = json(control.apply(request, before, document, expiry())).getJSONObject("receipt")
         waitFor("Agent evening")
         assertEquals(before + 1, receipt.getLong("revision"))
+        assertEquals(ExperienceJournal.sha256("apply:$before:${ExperienceJournal.sha256(document)}"), receipt.getString("operation_sha256"))
         assertEquals(receipt.toString(), json(control.apply(request, before, document, expiry())).getJSONObject("receipt").toString())
         assertEquals("conflict", control.apply(request, before, document + " ", expiry()).getString("status"))
         val process = context.getSystemService(ActivityManager::class.java).runningAppProcesses.single { it.processName == context.packageName + ":domain" }
@@ -89,7 +91,8 @@ class ControlRuntimeTest {
         control = requireNotNull(connected.poll(15, TimeUnit.SECONDS))
         assertEquals(receipt.toString(), json(control.receipt(request, expiry())).toString())
         assertEquals(document, state().getString("document"))
-        json(control.undo(id(), before + 1, before, expiry()))
+        val undoReceipt = json(control.undo(id(), before + 1, before, expiry())).getJSONObject("receipt")
+        assertEquals(ExperienceJournal.sha256("undo:${before + 1}:$before"), undoReceipt.getString("operation_sha256"))
         waitFor("Household TV")
     }
 

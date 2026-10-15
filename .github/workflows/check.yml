@@ -27,6 +27,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.8'
+          cache-dependency-path: executor/go.sum
+      - name: Check the TV-owned agentOS executor
+        working-directory: executor
+        env:
+          GOTOOLCHAIN: local
+        run: |
+          go test -mod=readonly -race ./...
+          go vet -mod=readonly ./...
+          mkdir -p ../.local
+          go build -mod=readonly -o ../.local/tv-executor-interop ./cmd/interop
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -52,7 +65,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader -no-snapshot -no-audio -no-boot-anim -no-metrics
           script: |
             gradle -p android :app:connectedDebugAndroidTest :control:connectedDebugAndroidTest --no-daemon
-            python tools/qualify_control_interop.py --serial emulator-5554
+            python tools/qualify_control_interop.py --serial emulator-5554 --go-executor .local/tv-executor-interop
       - uses: actions/upload-artifact@v4
         with:
           name: sovereign-tv-debug
