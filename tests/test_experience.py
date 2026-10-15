@@ -28,6 +28,25 @@ class ExperienceTests(unittest.TestCase):
         doc['sections'][0]['items'][0]['visible'] = False
         return {'request_id': name, 'base_revision': base, 'experience': doc}
 
+    def test_malformed_unicode_is_refused_without_a_revision_or_receipt(self):
+        for index, title in enumerate(('Bad \ud800', 'Bad \ud801', 'Bad \udc00')):
+            request = self.request(name='unicode-' + str(index))
+            request['experience']['title'] = title
+            with self.assertRaises(Invalid):
+                self.store.apply(request)
+            self.assertIsNone(self.store.receipt(request['request_id']))
+            self.assertEqual(self.store.state()['revision'], 1)
+        boundary = self.request()['experience']
+        boundary['title'] = '\U0001f3ac' * 120
+        validate(boundary)
+        boundary['title'] += '\U0001f3ac'
+        with self.assertRaises(Invalid):
+            validate(boundary)
+        request = self.request(name='valid-unicode')
+        request['experience']['title'] = 'Film \U0001f3ac'
+        self.store.apply(request)
+        self.assertEqual(self.store.state()['experience']['title'], request['experience']['title'])
+
     def test_preview_does_not_apply_and_application_survives_restart(self):
         request = self.request()
         self.assertFalse(self.store.preview(request)['applied'])

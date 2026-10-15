@@ -41,6 +41,9 @@ class ExperienceControlService : Service() {
         } catch (_: SecurityException) { return result("unauthorized")
         } catch (_: ExperienceJournal.Conflict) { return result("conflict")
         } catch (_: ExperienceJournal.Capacity) { return result("capacity")
+        } catch (_: org.json.JSONException) { return result("invalid")
+        } catch (_: java.util.zip.DataFormatException) { return result("invalid")
+        } catch (_: ArithmeticException) { return result("invalid")
         } catch (_: IllegalArgumentException) { return result("invalid")
         } catch (_: Exception) { return result(if (effect) "unknown" else "unavailable")
         } finally { Binder.restoreCallingIdentity(identity) }

@@ -12,9 +12,10 @@ data class Experience(val title: String, val theme: String, val textScale: Float
     val artworkRefs get() = collections.flatMap { it.items }.filter { it.kind == "artwork" }.map { it.target }.toSet()
     companion object {
         private fun exact(o: JSONObject, keys: Set<String>) { require(o.keys().asSequence().toSet() == keys) }
-        private fun label(value: Any): String { require(value is String && value.length in 1..120 && value.none { it.code < 32 }); return value }
+        private fun label(value: Any): String { require(value is String && value.codePointCount(0, value.length) in 1..120 && value.none { it.code < 32 } && Charsets.UTF_8.newEncoder().canEncode(value)); return value }
         private fun id(value: Any): String { require(value is String && Regex("[a-z][a-z0-9_-]{0,63}").matches(value)); return value }
         fun parse(text: String): Experience {
+            require(Charsets.UTF_8.newEncoder().canEncode(text)) { "Well-formed Unicode required" }
             require(text.toByteArray(Charsets.UTF_8).size <= 65536)
             val root = JSONObject(text)
             require(root.get("schema_version") is Int && root.getInt("schema_version") in 1..2)

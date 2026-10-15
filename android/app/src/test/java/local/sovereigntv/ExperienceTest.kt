@@ -15,4 +15,30 @@ class ExperienceTest {
             assertThrows(Exception::class.java) { Experience.parse(text) }
         }
     }
+    @Test fun malformedUnicodeCannotAliasAnExactDocumentFingerprint() {
+        val first = sample.replace("Household TV", "Bad " + 0xD800.toChar())
+        val second = sample.replace("Household TV", "Bad " + 0xD801.toChar())
+        assertArrayEquals(first.toByteArray(Charsets.UTF_8), second.toByteArray(Charsets.UTF_8))
+        assertThrows(IllegalArgumentException::class.java) { Experience.parse(first) }
+        assertThrows(IllegalArgumentException::class.java) { Experience.parse(second) }
+        assertThrows(IllegalArgumentException::class.java) { Experience.parse(sample.replace("Household TV", "Bad " + "\\ud800")) }
+        assertThrows(IllegalArgumentException::class.java) { Experience.parse(sample.replace("Household TV", "Bad " + 0xDC00.toChar())) }
+        val valid = "Film " + String(Character.toChars(0x1F3AC))
+        assertEquals(valid, Experience.parse(sample.replace("Household TV", valid)).title)
+        val emoji = String(Character.toChars(0x1F3AC))
+        assertEquals(emoji.repeat(120), Experience.parse(sample.replace("Household TV", emoji.repeat(120))).title)
+        assertThrows(IllegalArgumentException::class.java) { Experience.parse(sample.replace("Household TV", emoji.repeat(121))) }
+    }
+
+    @Test fun fileImportsRejectMalformedUtf8InsteadOfReplacingBytes() {
+        val invalid = sample.replace("Household TV", "Malformed ").toByteArray(Charsets.UTF_8)
+        val index = invalid.indexOf('M'.code.toByte())
+        invalid[index] = 0xC0.toByte() // Invalid UTF-8 lead byte, formerly silently replaced.
+        assertThrows(java.nio.charset.CharacterCodingException::class.java) {
+            ExperienceRepository.readBounded(invalid.inputStream())
+        }
+        val valid = sample.replace("Household TV", "Film " + String(Character.toChars(0x1F3AC)))
+        assertEquals(valid, ExperienceRepository.readBounded(valid.toByteArray(Charsets.UTF_8).inputStream()))
+    }
+
 }

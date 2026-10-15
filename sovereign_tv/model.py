@@ -13,7 +13,7 @@ def fields(value, required):
 
 
 def label(value):
-    if not isinstance(value, str) or not 1 <= len(value) <= 120 or any(ord(c) < 32 for c in value):
+    if not isinstance(value, str) or not 1 <= len(value) <= 120 or any(ord(c) < 32 or 0xD800 <= ord(c) <= 0xDFFF for c in value):
         raise Invalid('labels must contain 1–120 printable characters')
 
 
