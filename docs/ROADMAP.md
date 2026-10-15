@@ -4,7 +4,7 @@ The first vertical slice is the local experience format, revision store, editing
 
 | Next package | Deliverable | Acceptance |
 |---|---|---|
-| Native shell qualification | Compile/test/lint debug APK and run Android TV emulator tests. | Import, restart persistence, remote focus, invalid-file rejection, default recovery, installed-app launch. |
+| Native shell qualification | Local APK/JVM/lint and four API 36 TV emulator tests pass; Linux CI qualification is in PR #1. | D-pad/focus, import callback, persisted read-back, invalid files and reset/recovery covered. Actual system picker, physical remote and provider launch remain separate qualification work. |
 | Experience composition | Component catalog, local artwork collections, timers, content sources and scene transactions. | New screens/layouts/content through the API, offline rendering, bounded resources, preview/apply/undo and regression tests. |
 | Paired control service | Android service with pinned identity and typed domain operations separate from renderer. | No unpaired calls, narrow privilege bridge, durable receipts, state reconciliation and physical-remote priority. |
 | agentOS device integration | Qualified device declaration, executor, broker operation classification, grants, events, audience/capture enforcement. | End-to-end household editing and provider control through agentOS without direct guest LAN access. Backend changes follow the agentOS owning team's lane/review process. |

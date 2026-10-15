@@ -2,7 +2,7 @@
 
 An owner-controlled TV experience and an Android-first replacement project for the original Samsung The Frame LS03F hardware, fully editable through the household's agentOS agent.
 
-**Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell imports the same format; its local build, two JVM unit tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
+**Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell imports the same format; its local build, two JVM unit tests, four Android TV emulator runtime tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
 
 ## Run the first slice
 
