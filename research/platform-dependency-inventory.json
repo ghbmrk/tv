@@ -1,0 +1,426 @@
+{
+  "schema_version": 1,
+  "source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+  "packages": [
+    {
+      "member": "tztv-bootmode.zip",
+      "sha256": "94325a6970406f11a79e434c9850dd8056f1402d677a1e8d82b8600b7a5087f8",
+      "size_bytes": 3548,
+      "member_count": 3,
+      "declared_expanded_bytes": 7953,
+      "selected_files": [
+        {
+          "path": "tztv-bootmode.c",
+          "size_bytes": 4877,
+          "sha256": "5f0b360a055018a786cb016c65c8c983d8ccf4f743dea4d406ee238d40b7be72",
+          "lexical_markers": {
+            "boot_mode_observation": [
+              {
+                "line": 69,
+                "line_sha256": "e3599c9e0fdf9f69e4527776a2cda388eb82298cb78d7dbaad67a52078607ba4"
+              },
+              {
+                "line": 90,
+                "line_sha256": "c82a324a65ca23022b1ebde41d7cf926a64def61cf9db2c89048e63300f39cef"
+              },
+              {
+                "line": 100,
+                "line_sha256": "9ed0cf5601af58552a50e737ab00c1e4676bbfe7f130d798b74bfb6739bdca53"
+              },
+              {
+                "line": 116,
+                "line_sha256": "3477e0098182bd23872e5ac82f8ad149176d6143dde359c142e09f941362a598"
+              }
+            ],
+            "boot_mode_proc_read": [
+              {
+                "line": 51,
+                "line_sha256": "a955ba46a237bc5125c1911bb5fa384b096dec9f132bcd7e7087969b4f518088"
+              },
+              {
+                "line": 56,
+                "line_sha256": "851f3b6cf53d81d3240651179d2ee4cdf17714173b6d95550efb536b73f3df98"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "member": "tztv-micom.zip",
+      "sha256": "6c3effac14c5cd5cbb16f0cd9564be69a8a16689e0e6bf97ba4cd1d50688b644",
+      "size_bytes": 4704539,
+      "member_count": 235,
+      "declared_expanded_bytes": 7696643,
+      "selected_files": [
+        {
+          "path": "tztv-micom/tztv-micom/Makefile",
+          "size_bytes": 4337,
+          "sha256": "93b4f2d48103b3eead6be708adbe57bea5ee6f045235818e5316649a38b5f20a",
+          "lexical_markers": {
+            "pontus_build_branch": [
+              {
+                "line": 89,
+                "line_sha256": "093edd400dfa93df72964683fde45a0ed4da6971cf436437b35eed03a56e6bdd"
+              }
+            ],
+            "controller_upgrade_build": [
+              {
+                "line": 82,
+                "line_sha256": "308a5dbb60941b3a6a6eb985d43bc6920d6e481f8849a7e9786fce8040a96d73"
+              },
+              {
+                "line": 126,
+                "line_sha256": "9a45f07936e52706c73c81b87891d5b00235273ed566ac71edc9d72ce26bcc12"
+              },
+              {
+                "line": 128,
+                "line_sha256": "e863100cc0de8d40dc7dc0810e2b3f1a60ed069b684106b5bcf4b04ca5494100"
+              },
+              {
+                "line": 130,
+                "line_sha256": "4eecb61f0583de5bbefd6f62218d1eb0ab2cb7967b769f6947b2e8f47c682294"
+              },
+              {
+                "line": 132,
+                "line_sha256": "aef30dd8c163c92aa7c25aae15884267d5bebb8b91488a26994635b1db85229b"
+              }
+            ]
+          }
+        },
+        {
+          "path": "tztv-micom/tztv-micom/rc-wt61p807.c",
+          "size_bytes": 10937,
+          "sha256": "06d13028885e12fbbf54fdaa938c405f036e37322146f0fe171ccd732549dd12",
+          "lexical_markers": {
+            "remote_input": [
+              {
+                "line": 173,
+                "line_sha256": "e4eb65c835b177a1bd227268d7de80ca2c2bd7ed82ede627c3f1c46b7b05f0bd"
+              },
+              {
+                "line": 175,
+                "line_sha256": "28619532e2142f525214c362172bfb8d284fd9c57b86f6fbaa82ec7f1eb62d35"
+              },
+              {
+                "line": 181,
+                "line_sha256": "721234a8d8b34eb3ce99aaeaa0f075360c4fd0dd35d329290cae4232c7e57bac"
+              },
+              {
+                "line": 183,
+                "line_sha256": "322361c11ba582c5ae384405d154810acbd4ec2d49eb886a33920c049d319b3e"
+              },
+              {
+                "line": 192,
+                "line_sha256": "c8dffd56f10d26acc7fc0b6ef0c25c93bf2e8aa354b88e4e9578cd3d5334938b"
+              },
+              {
+                "line": 194,
+                "line_sha256": "baafb5e3ccf87b598adb0e6f136e8c731f4436a2031865ffdf3ae250fb3fafce"
+              },
+              {
+                "line": 236,
+                "line_sha256": "cf30e9f809df9c10d5685981003c10d4e806d6541d3fcaa2d56a9893b9285cb3"
+              },
+              {
+                "line": 238,
+                "line_sha256": "ab95ca4be7b0982d67c0a5e6b023a63b7771b0910ded61a162b2847efebbd6f8"
+              },
+              {
+                "line": 255,
+                "line_sha256": "a045624d2b380948033eaefee43e2805e83dcf6fa4e74a4278dbeb9c26bfcc43"
+              },
+              {
+                "line": 257,
+                "line_sha256": "42939fee70a7dcb58a073697e26967451ac65fe2637576289477d7e6ddc8a1ed"
+              },
+              {
+                "line": 298,
+                "line_sha256": "0dd7e80d531d87da6447d55da725bc54bb19e5e1bd57284217b4b5d0d4d5577d"
+              },
+              {
+                "line": 300,
+                "line_sha256": "df8e26d64dfab7d8134a9312edf234eeb239e030cc81cd5b64b47586bb8aa2da"
+              },
+              {
+                "line": 336,
+                "line_sha256": "4ba7a87bb9b169071f0cda85e7f85df5c650aa1cfcc7bcd381eb244eef895fc8"
+              }
+            ]
+          }
+        },
+        {
+          "path": "tztv-micom/tztv-micom/sdp_micom.h",
+          "size_bytes": 12580,
+          "sha256": "904c64da09672c3286fb42dbbc3d1587a3cd322a5d35ccd17c84cb5872726bcc",
+          "lexical_markers": {
+            "controller_transport": [
+              {
+                "line": 22,
+                "line_sha256": "9e57dc9902b2a9372513b273380fcf0bd53d7603ac235f8fa32f13c0d3c64a0b"
+              },
+              {
+                "line": 23,
+                "line_sha256": "031b5f8b3fdee72c7ba03cfc0077594c2ceaf8e7661c75e4b1e29884477cab77"
+              },
+              {
+                "line": 34,
+                "line_sha256": "1387dadde717d868e1303cfc6b429b3f665be7d42558079a6102c6289c91373e"
+              },
+              {
+                "line": 35,
+                "line_sha256": "fa99fa6ab1a9b75a4d1e8334c0b1a20576b3bc1ef5da30e1410b6ec75789cd73"
+              },
+              {
+                "line": 41,
+                "line_sha256": "5f543d89ba15954008b840ddfa47e19f5e70e6b8f4ea4324ec68b297230808ce"
+              },
+              {
+                "line": 42,
+                "line_sha256": "e81a2c77d02d367b43261b1f0740ab3dead3dfe723fc1d11440f869af6408290"
+              }
+            ],
+            "controller_power_commands": [
+              {
+                "line": 61,
+                "line_sha256": "31718470add7ed7f614f90447a7541c2972295442ac489fd770c14ae7f1dc383"
+              },
+              {
+                "line": 78,
+                "line_sha256": "d0b80ae22c95a9b367cff4038f303e4f319f84950bba8d7a58b3b63fb464f579"
+              },
+              {
+                "line": 82,
+                "line_sha256": "d50205a315440b3900156e6c99566b09d3147d3a01a899c2057076442b86ae95"
+              }
+            ]
+          }
+        },
+        {
+          "path": "tztv-micom/tztv-micom/sdp_micom_messagebox.c",
+          "size_bytes": 50202,
+          "sha256": "7a0c3a7a499c04de07031a20d7b022aa40970d46cef6d013a70fec8a978b2ffb",
+          "lexical_markers": {
+            "controller_transport": [
+              {
+                "line": 76,
+                "line_sha256": "5844895a8c58337e1ada49a0db512a9a14f2052ea4e31dc17118446e89883cee"
+              },
+              {
+                "line": 80,
+                "line_sha256": "92159a39e4a972425ec68d01c813650120aad246072cad948a53d9223a467148"
+              },
+              {
+                "line": 226,
+                "line_sha256": "b36180c87552227a7aa97364deefcbf0bf16e42ba06274514f7c6f7913dff778"
+              },
+              {
+                "line": 243,
+                "line_sha256": "253e757724287cb100302d64d59f55cd6055080409c0994b477e962b6da08703"
+              }
+            ],
+            "restart_hook": [
+              {
+                "line": 67,
+                "line_sha256": "d78fc824596401c62562178c8d99477a673b1c223f24f2875cb8c5e3b0b8c0ff"
+              },
+              {
+                "line": 68,
+                "line_sha256": "0568fe146da857ec8b0875cedae1508fd877a03119354aa523c71e151d4fe448"
+              },
+              {
+                "line": 70,
+                "line_sha256": "9ab881695ff621020f9d9e3391bb9dde7c254e6543876740114a306c136fbbd5"
+              },
+              {
+                "line": 71,
+                "line_sha256": "d940887d72da69593ab8ae5830bca372ca59b8ca002c3757c8e219169b772a0c"
+              },
+              {
+                "line": 1643,
+                "line_sha256": "067f2a1fa10077b389e85f303e1b52d260104143c7508021728cd3de059020e1"
+              },
+              {
+                "line": 1644,
+                "line_sha256": "681f8f31a30a3c9a7ba837bde8c2e7f36e4f3f7d2fbf448e9805709441b00855"
+              }
+            ],
+            "controller_power_commands": [
+              {
+                "line": 196,
+                "line_sha256": "339e5ea5e1a03e4e159d55d10297700f76ba36a207830eba65c60c7267b2a62d"
+              },
+              {
+                "line": 743,
+                "line_sha256": "6d6b7cc6f9807bad4671e9b880176ac48ea1148a117d3b1186ffdf4bcf6dba38"
+              },
+              {
+                "line": 1192,
+                "line_sha256": "f70f3eb6554ac6b03f37a3598bf941cdd3e046f1ad76a5ee56eabd928a94f6ce"
+              },
+              {
+                "line": 1474,
+                "line_sha256": "5244babab5d6fd172f588ebca74b180913c094241dfe655c9813e65c4178cd1e"
+              },
+              {
+                "line": 1508,
+                "line_sha256": "45c550baf839eed781aa1bd2ab9e30d06be12564194e605202258736cd3c0233"
+              },
+              {
+                "line": 1514,
+                "line_sha256": "c8f22e5fc3bb064b40a3a17fec6336c17b650716883feb63ac7c710650bb82f9"
+              }
+            ]
+          }
+        },
+        {
+          "path": "tztv-micom/tztv-micom/tztv-micom-upgrade.c",
+          "size_bytes": 13545,
+          "sha256": "6470a5c56dbdac14c92b1ed91048de7f9f5065ac4a95d5aa054a7211c8993cdb",
+          "lexical_markers": {
+            "controller_upgrade_reference": [
+              {
+                "line": 338,
+                "line_sha256": "283aeaa3e3eaebf60e06618b696de5d9db77af226e1e210151536c047a010647"
+              },
+              {
+                "line": 340,
+                "line_sha256": "d7da7a3c41a855d0da863e12e9a3591c7b30a87af3b7fc1b625c8d99470d91ea"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "member": "tztv-hdmi-sw.zip",
+      "sha256": "3362edcf079ec21fb398357064afe6137f5df14640a68aad9ea934d7d8bea9d0",
+      "size_bytes": 217363,
+      "member_count": 40,
+      "declared_expanded_bytes": 1066540,
+      "selected_files": [
+        {
+          "path": "include/tztv_hdmi_switch_init.h",
+          "size_bytes": 25061,
+          "sha256": "9227df8de78f7aa932d65d1ca99cf7efc85875b6981583b8cfa9df4af6618a2c",
+          "lexical_markers": {
+            "hdmi_firmware_interface": [
+              {
+                "line": 604,
+                "line_sha256": "e5bdfdf05c31769d4fb3caa7f6bb709cfb8b1a4def0635fbc4221c10d709f65c"
+              },
+              {
+                "line": 605,
+                "line_sha256": "a251dc818df51645eb5f03ac2785d89132f89ce200bc3c02152a562d33082b33"
+              }
+            ]
+          }
+        },
+        {
+          "path": "include/vd_kernel-interfaces/video/frc_tcon_tztv.h",
+          "size_bytes": 47527,
+          "sha256": "41fb1b290ce0e5cb092dfdba31eb58b994d9ca017a091ad91b0d7916d99b4e3f",
+          "lexical_markers": {
+            "panel_firmware_interface": [
+              {
+                "line": 1229,
+                "line_sha256": "0f79076fcb8890b8cc3417b331691ed293e68d7a53d8e2003bb3beb09de907b6"
+              },
+              {
+                "line": 1256,
+                "line_sha256": "3017878d9b4953a52e7889eca042f105242ad06c581bd908806315e51eee8730"
+              },
+              {
+                "line": 1346,
+                "line_sha256": "421f2550f97e67ac9b5fc55c42896474507ede9b9740ae10db038a966668160c"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "member": "trustzone-drivers.tar.gz",
+      "sha256": "7a396a87fd714cceb8271dbfbc749e71e181d2ba4cc33730003a696b89fc53f2",
+      "size_bytes": 97571,
+      "member_count": 73,
+      "declared_expanded_bytes": 453997,
+      "selected_files": [
+        {
+          "path": "trustzone-drivers/source/tzdev/smc_call.S",
+          "size_bytes": 2150,
+          "sha256": "d7d27328195d7f945c84ac588a9c588db1481a308ccf46cbe9dd1078487d4ac8",
+          "lexical_markers": {
+            "secure_monitor_instruction": [
+              {
+                "line": 14,
+                "line_sha256": "779608464c78b1d63abdcf7d56b9dce06f756d91b873a3b402f5c3a311617671"
+              },
+              {
+                "line": 44,
+                "line_sha256": "779608464c78b1d63abdcf7d56b9dce06f756d91b873a3b402f5c3a311617671"
+              }
+            ]
+          }
+        },
+        {
+          "path": "trustzone-drivers/source/tzdev/ssdev_rpmb.c",
+          "size_bytes": 13587,
+          "sha256": "94815091ecdfa8f8bc16ec269aa8d2f0463652e67d790c45d51f94baf0565d2a",
+          "lexical_markers": {
+            "rpmb_operations": [
+              {
+                "line": 173,
+                "line_sha256": "0b40019323bddd311ff9d4dfcd35cd4815bfb3b71bd3da0e1409073eb85b876b"
+              },
+              {
+                "line": 174,
+                "line_sha256": "13453a0e9b301c725a8eaea27fb565cf659e1919c79a7b781247eec9684806e9"
+              },
+              {
+                "line": 221,
+                "line_sha256": "c82321821259cc8d6530595435c7f9358c9e06a2a0ef81550a154d56052f7509"
+              },
+              {
+                "line": 229,
+                "line_sha256": "de54915315588a9397301028b35950261fc4810146adbec82129b0010094e959"
+              },
+              {
+                "line": 383,
+                "line_sha256": "56adf7ca8d5b8990da479ec7426c2e707689db143efd3275db519195dc674fd4"
+              },
+              {
+                "line": 435,
+                "line_sha256": "01c9de570583990d9e8b362d51584145af28cebfe4e095190c4d613aea313b11"
+              }
+            ]
+          }
+        },
+        {
+          "path": "trustzone-drivers/source/tzdev/tzdev_antirollback.c",
+          "size_bytes": 2349,
+          "sha256": "87c76ce3ddd603eae08cefe44328b8af12d9e13b2513f2888d766ccba73cabc9",
+          "lexical_markers": {
+            "secure_rollback_query": [
+              {
+                "line": 66,
+                "line_sha256": "17c1a6ef28791e4c70f0b128ee977a97fa9a0d0783299b5bdd7410e763dbb51e"
+              }
+            ]
+          }
+        },
+        {
+          "path": "trustzone-drivers/source/tzdev/tzdev_smc.c",
+          "size_bytes": 16330,
+          "sha256": "da0ba275e675f1d784cef72028a86afef4854e70d1fe3b1b07e6328b6d315fd4",
+          "lexical_markers": {}
+        }
+      ]
+    }
+  ],
+  "files_extracted": false,
+  "code_executed": false,
+  "source_text_redistributed": false,
+  "target_applicability": "family_source_only; exact_board_and_build_unverified",
+  "marker_semantics": "lexical locations only; not control-flow, active-branch, absence, or runtime proof"
+}

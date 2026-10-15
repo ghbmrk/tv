@@ -2,6 +2,8 @@
 
 The first vertical slice is the local experience format, revision store, editing API/studio, and native TV shell import path. The final system also requires the board port, qualified native playback, production agentOS control, and recovery. Completion of one workstream is not evidence for another.
 
+Current sequencing follows [the decisive feasibility experiments](../research/FEASIBILITY.md). Defer new product features until original-board boot ownership, Samsung-component replaceability, recovery and a legitimate provider-quality integration route are established. The packages below describe workstreams, not permission to bypass those gates.
+
 | Next package | Deliverable | Acceptance |
 |---|---|---|
 | Native shell qualification | Local APK/JVM/lint and 12 API 36 TV runtime tests pass; Linux x86_64 TV CI passed; PR #3 merged. | D-pad/focus, import callback, persisted read-back, invalid files and reset/recovery covered. Actual system picker, physical remote and provider launch remain separate qualification work. |
