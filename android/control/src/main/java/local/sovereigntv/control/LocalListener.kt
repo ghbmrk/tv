@@ -23,10 +23,14 @@ class LocalListener(address: InetAddress, port: Int, private val trust: PairedSt
     val deviceId = Identity.pin(certificate)
     internal val authenticatedConnections = java.util.concurrent.atomic.AtomicInteger()
     private val server = (Identity.context(Identity.DEVICE_ALIAS, trust::trusts).serverSocketFactory.createServerSocket() as SSLServerSocket).apply {
-        enabledProtocols = supportedProtocols.filter { it == "TLSv1.2" || it == "TLSv1.3" }.toTypedArray()
-        needClientAuth = true
-        reuseAddress = false
-        bind(InetSocketAddress(address, port), 4)
+        try {
+            enabledProtocols = supportedProtocols.filter { it == "TLSv1.2" || it == "TLSv1.3" }.toTypedArray()
+            needClientAuth = true
+            // Permit an explicit restart while earlier accepted sockets finish TCP teardown.
+            // SO_REUSEADDR is not SO_REUSEPORT: another live listener remains excluded.
+            reuseAddress = true
+            bind(InetSocketAddress(address, port), 4)
+        } catch (error: Exception) { runCatching { close() }; throw error }
     }
     val port get() = server.localPort
     internal val pendingDeadlines get() = timers.queue.size

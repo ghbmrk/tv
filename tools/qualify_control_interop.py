@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import ssl
 import sys
 import tempfile
 import time
@@ -60,13 +61,27 @@ def main():
                     raise RuntimeError('Synthetic listener did not become ready; inspect private interop diagnostics')
                 time.sleep(.2)
             device = directory / 'device-public.pem'; device.write_text(ready['public_certificate'])
-            port = int(adb('forward', 'tcp:0', 'tcp:19443').stdout)
+            remote_port = ready['port']
+            if type(remote_port) is not int or not 1 <= remote_port <= 65535:
+                raise RuntimeError('Invalid synthetic listener port')
+            port = int(adb('forward', 'tcp:0', 'tcp:' + str(remote_port)).stdout)
             client = Client('127.0.0.1', port, device, certificate, directory / 'executor/client-key.pem', allow_loopback=True)
             def call(operation, arguments=None):
                 response, _ = client.request(operation, arguments, expires_at_ms=int(time.time() * 1000) + 10000)
                 if response['status'] != 'ok':
                     raise RuntimeError('Synthetic operation refused')
                 return response['result']
+            # A default successful handshake proves only its negotiated version. Qualify both
+            # enabled versions through the real Keystore endpoint, including client authentication.
+            version_states = []
+            for version in (ssl.TLSVersion.TLSv1_2, ssl.TLSVersion.TLSv1_3):
+                client.context.minimum_version = version
+                client.context.maximum_version = version
+                version_states.append(call('state'))
+            if version_states[0] != version_states[1]:
+                raise RuntimeError('Read-only protocol probes changed native state')
+            client.context.minimum_version = ssl.TLSVersion.TLSv1_2
+            client.context.maximum_version = ssl.TLSVersion.MAXIMUM_SUPPORTED
             before = call('state'); base = before['revision']; document = json.loads(before['document'])
             document['title'] = 'External executor qualification'
             exact = json.dumps(document, ensure_ascii=False, separators=(',', ':'))
@@ -87,6 +102,7 @@ def main():
                 raise RuntimeError('Android interop assertions failed')
             print(json.dumps({'scope': 'owned Android emulator; Python OpenSSL 3 to Android Keystore TLS',
                               'read_back': True, 'receipt': True, 'exact_retry': True, 'undo': True,
+                              'mutual_tls_versions': ['TLSv1.2', 'TLSv1.3'],
                               'agentos_qualified': False, 'target_tv_qualified': False}))
         finally:
             if process is not None and process.poll() is None:

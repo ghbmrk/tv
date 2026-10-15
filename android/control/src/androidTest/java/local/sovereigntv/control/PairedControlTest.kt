@@ -137,6 +137,32 @@ class PairedControlTest {
         assertEquals(device, server.deviceId)
         ok(exchange(request("state")).first)
     }
+
+    @Test fun immediateRestartPreservesEndpointIdentityAndExclusiveBinding() {
+        val endpoint = server.port
+        val device = server.deviceId
+        repeat(3) {
+            connect().use { socket ->
+                LocalProtocol.write(socket.outputStream, request("state").toString().toByteArray())
+                ok(LocalProtocol.json(LocalProtocol.read(socket.inputStream, LocalProtocol.MAX_METADATA)))
+                // Keep the client open through rebinding, so its accepted connection has not
+                // completed TCP teardown when the owner enables the listener again.
+                assertEquals(-1, socket.inputStream.read())
+                await { server.activeWorkers == 0 }
+                assertThrows(java.net.BindException::class.java) {
+                    LocalListener(InetAddress.getByName("127.0.0.1"), endpoint, trust,
+                        LocalProtocol.Gateway(context.cacheDir, domain, device))
+                }
+                server.close()
+                await { server.terminated }
+                server = LocalListener(InetAddress.getByName("127.0.0.1"), endpoint, trust,
+                    LocalProtocol.Gateway(context.cacheDir, domain, device))
+                assertEquals(device, server.deviceId)
+            }
+        }
+        ok(exchange(request("state")).first)
+        assertEquals(initial.getLong("revision"), directState().getLong("revision"))
+    }
     @Test fun corruptTrustCannotBeSilentlyReplaced() {
         server.close()
         val file = java.io.File(context.noBackupFilesDir, "paired-controller.der")
