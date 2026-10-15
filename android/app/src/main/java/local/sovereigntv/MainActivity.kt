@@ -1,6 +1,11 @@
 package local.sovereigntv
 
 import android.os.Bundle
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.core.content.ContextCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.compose.BackHandler
@@ -43,8 +48,14 @@ class MainActivity : ComponentActivity() {
         if (uri != null) model.importArtwork(uri)
     }
 
+    private val savedChangeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) { model.refreshSaved() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ContextCompat.registerReceiver(this, savedChangeReceiver, IntentFilter(ExperienceControlService.CHANGED),
+            ExperienceControlService.PERMISSION, null, ContextCompat.RECEIVER_NOT_EXPORTED)
         setContent {
             MaterialTheme {
                 val doc = model.preview?.experience ?: model.experience
@@ -184,6 +195,12 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         model.refreshActivities()
+        model.refreshSaved()
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(savedChangeReceiver)
+        super.onDestroy()
     }
 
     @Composable private fun TileButton(tile: Tile, textScale: Float, light: Boolean, restore: Boolean, focusEnabled: Boolean, generation: Int, activate: () -> Unit, focused: () -> Unit) {

@@ -8,13 +8,15 @@ import android.system.OsConstants
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.io.RandomAccessFile
+import android.os.ParcelFileDescriptor
 import java.nio.ByteBuffer
 import java.util.zip.CRC32
 import java.util.zip.Inflater
 
 /** App-private, content-addressed assets. Never downloads or executes image content. */
 class ArtworkStore(context: Context) {
-    private val directory = File(context.filesDir, "artwork").apply { check(isDirectory || mkdirs()) }
+    private val directory = File(context.filesDir, "artwork").apply { check(isDirectory || mkdirs() || isDirectory) }
     data class Info(val width: Int, val height: Int)
 
     private fun path(id: String): File {
@@ -32,11 +34,20 @@ class ArtworkStore(context: Context) {
         refs.forEach { bytes += read(it).size; require(bytes <= 32L * 1024 * 1024) { "Experience artwork exceeds 32 MiB" } }
     }
 
-    fun import(stream: InputStream): String {
-        val bytes = stream.use(::readBounded)
+    fun import(stream: InputStream): String = put(stream.use(::readBounded))
+
+    fun openReadOnly(id: String): ParcelFileDescriptor {
+        read(id) // Verify immutable content before handing out a read-only descriptor.
+        return ParcelFileDescriptor.open(path(id), ParcelFileDescriptor.MODE_READ_ONLY)
+    }
+
+    fun put(bytes: ByteArray, expectedDigest: String? = null, guard: () -> Unit = {}): String {
+        require(bytes.size <= MAX_BYTES)
         inspect(bytes)
         val digest = ExperienceJournal.sha256Bytes(bytes)
-        synchronized(lock) {
+        require(expectedDigest == null || digest == expectedDigest) { "Artwork digest mismatch" }
+        synchronized(lock) { RandomAccessFile(File(directory, ".store.lock"), "rw").channel.use { channel -> channel.lock().use {
+            guard()
             val destination = path(digest)
             if (destination.exists()) read(digest) else {
                 val used = directory.listFiles()?.filter { it.name.endsWith(".png") }?.sumOf { it.length() } ?: 0L
@@ -49,7 +60,7 @@ class ArtworkStore(context: Context) {
             }
             val fd = Os.open(directory.absolutePath, OsConstants.O_RDONLY, 0)
             try { Os.fsync(fd) } finally { Os.close(fd) }
-        }
+        } } }
         return digest
     }
 

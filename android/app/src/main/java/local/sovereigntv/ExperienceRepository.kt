@@ -42,10 +42,10 @@ class ExperienceRepository(private val context: Context) {
         val digest = artwork.import(stream)
         return preview(baseRevision, Experience.withArtwork(current.document, digest))
     }
-    fun apply(requestId: String, baseRevision: Long, document: String): ExperienceJournal.Receipt = journal { it.apply(requestId, baseRevision, document) }
-    fun undo(requestId: String, baseRevision: Long, restoreRevision: Long): ExperienceJournal.Receipt = journal { it.undo(requestId, baseRevision, restoreRevision) }
+    fun apply(requestId: String, baseRevision: Long, document: String, guard: () -> Unit = {}): ExperienceJournal.Receipt = journal { it.apply(requestId, baseRevision, document, guard) }
+    fun undo(requestId: String, baseRevision: Long, restoreRevision: Long, guard: () -> Unit = {}): ExperienceJournal.Receipt = journal { it.undo(requestId, baseRevision, restoreRevision, guard) }
     fun receipt(requestId: String): ExperienceJournal.Receipt? = journal { it.receipt(requestId) }
-    fun applyDefault(requestId: String, baseRevision: Long): ExperienceJournal.Receipt = apply(requestId, baseRevision, defaultDocument())
+    fun applyDefault(requestId: String, baseRevision: Long, guard: () -> Unit = {}): ExperienceJournal.Receipt = apply(requestId, baseRevision, defaultDocument(), guard)
 
     private fun loaded(document: String, recovered: Boolean = false): Loaded = Loaded(Experience.parse(document), recovered, document)
 
