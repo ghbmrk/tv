@@ -129,18 +129,25 @@ def collect(host, runner, *, identifier=identify):
                 raise ValueError('SDB output exceeds budget')
             raw = result.stdout.decode('utf-8', errors='replace')
             private['reads'].append({'command': list(command), 'returncode': result.returncode, 'stdout': raw})
-            if result.returncode == 0:
+            # Some retail-TV SDB sessions report exit 0 with no shell output.
+            # Transport success alone is not a successful identity read.
+            if result.returncode == 0 and raw.strip():
                 outputs[command] = raw.strip()
         arch = outputs.get(READS[0])
         release = re.fullmatch(r'([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,4})(?:[-+].*)?', outputs.get(READS[1], ''))
         bits = outputs.get(READS[2])
-        public.update(status='reads_completed' if len(outputs) == len(READS) else 'reads_partial',
+        cpu = public_cpu(outputs[READS[3]]) if READS[3] in outputs else None
+        family_match = source_family_match(outputs.get(READS[4]))
+        validated = sum((arch in ARCHITECTURES, release is not None, bits in ('32', '64'),
+                         cpu is not None and cpu['reported_processor_entries'] > 0,
+                         family_match is not None))
+        public.update(status='reads_completed' if validated == len(READS) else 'reads_partial' if outputs else 'reads_empty',
                       kernel_architecture=arch if arch in ARCHITECTURES else None,
                       kernel_release_core=release.group(1) if release else None,
                       reported_userspace_bits=int(bits) if bits in ('32', '64') else None,
-                      cpu=public_cpu(outputs[READS[3]]) if READS[3] in outputs else None,
-                      source_family_compatible_match=source_family_match(outputs.get(READS[4])),
-                      successful_reads=len(outputs))
+                      cpu=cpu,
+                      source_family_compatible_match=family_match,
+                      successful_reads=len(outputs), validated_reads=validated)
     except Exception:
         # SDK/server errors may contain device IDs. Retain no exception strings.
         public['status'] = 'collection_unavailable'

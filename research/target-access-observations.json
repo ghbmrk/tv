@@ -69,7 +69,7 @@
     "installer_scripts_executed": false,
     "tv_writes": false
   },
-  "interpretation": "HTTP model report corroborates photographed SKU; UI resolution is not streaming quality. Developer mode and TCP reachability do not establish an SDB session. Host field comparison and passive close do not prove the failure cause. No exact board, SoC, ABI, independent boot or recovery evidence.",
+  "interpretation": "Historical failed connections are superseded by the host-corrected session: normal SDB transport works. Fixed Unix shell reads returned empty output despite exit 0; shell/root switching capabilities are disabled. SDK reports Tizen 9.0 and armv7, not independently verified board/SoC identity. No independent boot, recovery, or media qualification.",
   "subsequent_read_only_retry": {
     "http": {
       "schema_version": 1,
@@ -103,5 +103,34 @@
       "actual_addresses_retained": false,
       "limit": "Reported API field may differ from the displayed Developer Mode setting; mismatch alone does not prove failure cause."
     }
+  },
+  "host_corrected_session": {
+    "observed_utc": "2026-10-15T21:04:13.666618+00:00",
+    "owner_reported_previous_host_entry_incorrect": true,
+    "official_sdb_connection_confirmed": true,
+    "matching_device_state": "device",
+    "http_full_sku_confirmed_before_reads": true,
+    "fixed_shell_queries": 5,
+    "zero_exit_queries": 5,
+    "nonempty_query_responses": 0,
+    "board_identity_obtained": false,
+    "capability_report": {
+      "intershell_support": "disabled",
+      "rootonoff_support": "disabled",
+      "cpu_arch": "armv7",
+      "profile_name": "tv",
+      "platform_version": "9.0"
+    },
+    "diagnostic_repeat": {
+      "command": [
+        "uname",
+        "-m"
+      ],
+      "returncode": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "settings_or_software_changed_by_tools": false,
+    "limit": "SDB transport and SDK-reported capabilities do not establish Unix shell execution, exact board/SoC, boot ownership, recovery, or protected playback. No further shell retries prescribed."
   }
 }

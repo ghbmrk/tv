@@ -31,7 +31,11 @@ A subsequent read-only check at 2026-10-15 16:27 UTC again reported the full tar
 
 ## Prepared normal-SDB board collection
 
-`tools/collect_board_identity.py` is prepared for an authorized read-only session after ordinary SDB access is available. It has **not collected live board evidence**. Do not repeatedly run it while the known connection failure remains unresolved.
+On 2026-10-15 at 21:04 UTC, after the owner corrected the Developer Mode host entry, official SDB connected and the HTTP endpoint again confirmed the full SKU. All five fixed Unix shell queries returned exit 0 with **empty output**; an additional fixed `uname -m` diagnostic also had empty stdout and stderr. No board identity was obtained. A separate standard `sdb capability` read reported `intershell_support: disabled`, `rootonoff_support: disabled`, `cpu_arch: armv7`, `profile_name: tv`, and `platform_version: 9.0`. These are SDK-reported capabilities, not independent kernel/SoC/board evidence. Connection setup is resolved; do not prescribe more owner setup or repeat these shell reads without a new evidence-backed reason. No installation, root, reboot or persistent write was performed by the tools.
+
+The original collector classified five zero exits as completed reads. That was incorrect: empty results now produce `reads_empty`, zero successful/validated reads and unknown CPU data. Nonempty unrecognized output is partial; completion requires all five parsed results. Earlier private reports remain immutable and must be interpreted with this correction.
+
+Samsung documents shell restrictions in its [debugging FAQ](https://developer.samsung.com/tizen/Smart-TV/FAQ/Smart-TV/How-to-debug.html), but that page specifically discusses 2018 models; it is context, not exact-model proof. The current TV capability report and empty responses are the applicable observations. No assumption is made that enabling Developer Mode enables a general Unix shell.
 
 ```sh
 python3 tools/collect_board_identity.py TV_PRIVATE_IPV4
@@ -47,7 +51,7 @@ The collector requires the exact full-SKU HTTP report, makes one ordinary connec
 4. `cat /proc/cpuinfo`
 5. `cat /proc/device-tree/compatible`
 
-Each SDK process has a five-second absolute deadline and 64 KiB stdout limit; stderr is discarded. Budget failures kill only that client process. No shell interpreter, discovery, root command, settings change, installation, reboot, firmware write, arbitrary path, or device-output-derived command is used. Some files or commands may be unavailable to the normal developer account. Failed reads stay unknown; a partial collection is not success.
+Each SDK process has a five-second absolute deadline and 64 KiB stdout limit; stderr is discarded. Budget failures kill only that client process. No shell interpreter, discovery, root command, settings change, installation, reboot, firmware write, arbitrary path, or device-output-derived command is used. Some files or commands may be unavailable to the normal developer account. Failed or empty reads stay unknown; a partial or empty collection is not success. `successful_reads` counts nonempty exit-zero responses, while `validated_reads` counts recognized results; neither proves physical board identity.
 
 Each run creates a new directory under ignored `.local/board-identity`, mode 0700, with mode-0600 `private.json` and `public.json`. Existing collections cannot be overwritten. Raw CPU information can contain serials; raw reads, the supplied address and device-tree strings stay in `private.json`. Never publish that file. The public summary allows only recognized kernel architectures, a numeric kernel-version core, 32/64-bit userspace reports, numeric CPU implementer/part/architecture values a count of reported processor entries, and `source_family_compatible_match` (`true`, `false` or `null`). The last field compares a bounded, NUL-terminated string list with the manually reviewed family-source machine fingerprint `samsung,sdp-pontusm`; malformed or unavailable reads remain `null`. It does not identify the board or establish boot support. Unknown strings, build suffixes and raw-content hashes are omitted. Review even the allowlisted summary before publication.
 
