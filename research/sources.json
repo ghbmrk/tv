@@ -163,6 +163,14 @@
       "evidence": "docs/READ_ONLY_IDENTIFICATION.md",
       "use": "Bounded allowlisted GET tool prepared; standard discovery attempted on the development host.",
       "limit": "Discovery multicast send returned OS error 65; no actual TV endpoint, response, board, ABI or access capability established."
+    },
+    {
+      "id": "decisive_feasibility_investigation",
+      "kind": "family_source_static_review_and_primary_integration_documentation",
+      "observed": "2026-10-15",
+      "evidence": "research/FEASIBILITY.md",
+      "use": "Selected controller/bootmode/secure-world interface hashes and manual review; falsifiable target experiments and independently verifiable criteria.",
+      "limit": "No actual board response, immutable-code provenance, independent boot, demonstrated recovery, provisioning entitlement or provider-quality playback established."
     }
   ]
 }

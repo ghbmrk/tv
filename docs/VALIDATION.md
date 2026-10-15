@@ -1,5 +1,12 @@
 # Validation evidence
 
+Feasibility investigation, 2026-10-15:
+
+- The [selected dependency inspector](../tools/inspect_platform_dependencies.py) ran against the previously hashed family source, recording 12 files in four packages without extraction or execution. The [inventory](../research/platform-dependency-inventory.json) provides nested/file hashes and lexical marker locations; [the verdict](../research/FEASIBILITY.md) separates manually reviewed source behavior from exact-board unknowns.
+- All 25 Python tests pass, including four new dependency-inspection cases for legacy source bytes, metadata-only output, unsafe paths, expansion limits, missing files, selected symlinks and duplicate selected tar entries. The initial sandboxed full-suite attempt could not bind four synthetic HTTP servers; the complete permitted rerun passed.
+- Pinned offline Android JVM/build/lint checks pass, with Gradle reusing unchanged build/test outputs. No Android product code changed; existing emulator results remain historical and are not rerun or promoted to target evidence.
+- A fixed read-only request to the Bonjour-discovered Samsung candidate still failed with OS error 65 under host-network permission. Its identity and the underlying failure cause remain unverified. Raw responses and endpoint details are excluded from public findings.
+
 Development host, 2026-10-14:
 
 - Python reference/API/source-index suite: 11 passing tests. Covers persistence/restart, stale revisions, concurrent writers, request deduplication, conflicting reuse, undo, invalid document bounds/code/URLs, authentication/Host/Origin, malformed requests, and archive path safety.
