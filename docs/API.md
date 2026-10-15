@@ -4,7 +4,7 @@ Run `python3 -m sovereign_tv.server` from the repository root, then open `http:/
 
 This is a loopback development service, not the production LAN service or a qualified agentOS adapter. It intentionally has no hardware or provider account privileges. It binds only `127.0.0.1`, checks Host/Origin, authenticates every API request and never enables CORS. Do not expose it through a tunnel or reverse proxy. Production requires the paired identity, operation-scoped grants and broker enforcement in `agentos-integration.md`.
 
-Every API call uses `Authorization: Bearer <local-token>`; every POST also uses `Content-Type: application/json`. Maximum POST body size is 65536 bytes.
+Every API call uses `Authorization: Bearer <local-token>`; every POST also uses `Content-Type: application/json`. Maximum POST body size is 65536 bytes. Experience labels contain 1–120 Unicode code points, excluding control characters and surrogate code points. Valid supplementary characters (including emoji) count as one. Android applies the same label rule and rejects malformed UTF-8 imports instead of substituting replacement characters.
 
 | Endpoint | Result |
 |---|---|

@@ -108,9 +108,16 @@ class ControlRuntimeTest {
         val initial = state(); val before = initial.getLong("revision"); val document = initial.getString("document")
         assertEquals("expired", control.apply(id(), before, document, System.currentTimeMillis() - 1).getString("status"))
         assertEquals("invalid", control.state(System.currentTimeMillis() + 60000).getString("status"))
+        assertEquals("invalid", control.state(Long.MIN_VALUE).getString("status"))
+        assertEquals("invalid", control.apply(id(), before, "{", expiry()).getString("status"))
         assertEquals("invalid", control.apply(id(), before, "x".repeat(65537), expiry()).getString("status"))
         assertEquals("invalid", control.apply(null, before, document, expiry()).getString("status"))
         assertEquals("invalid", control.preview(before, null, expiry()).getString("status"))
+        for (suffix in listOf(0xD800.toChar().toString(), 0xD801.toChar().toString(), "\\ud800")) {
+            val badId = id()
+            assertEquals("invalid", control.apply(badId, before, document.replace("Household TV", "Bad " + suffix), expiry()).getString("status"))
+            assertEquals("not_found", control.receipt(badId, expiry()).getString("status"))
+        }
         assertEquals("not_found", control.receipt(id(), expiry()).getString("status"))
         val request = id()
         val pool = Executors.newSingleThreadExecutor()
@@ -144,6 +151,14 @@ class ControlRuntimeTest {
         val opened = control.openArtwork(digest, expiry()); json(opened)
         @Suppress("DEPRECATION") val descriptor = opened.getParcelable<ParcelFileDescriptor>("file")!!
         ParcelFileDescriptor.AutoCloseInputStream(descriptor).use { assertArrayEquals(bytes, it.readBytes()) }
+        val malformed = bytes.copyOf()
+        val compressedSize = java.nio.ByteBuffer.wrap(malformed, 33, 4).int
+        malformed[41] = 0 // Invalid zlib header with a correct PNG chunk CRC.
+        val crc = java.util.zip.CRC32().apply { update(malformed, 37, compressedSize + 4) }
+        java.nio.ByteBuffer.wrap(malformed, 41 + compressedSize, 4).putInt(crc.value.toInt())
+        file.writeBytes(malformed)
+        assertEquals("invalid", upload(ExperienceJournal.sha256Bytes(malformed)).getString("status"))
+        file.writeBytes(bytes)
         val pipe = ParcelFileDescriptor.createPipe()
         try { assertEquals("invalid", control.putArtwork(digest, pipe[0], expiry()).getString("status")) }
         finally { pipe.forEach { it.close() } }

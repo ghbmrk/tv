@@ -89,7 +89,7 @@ class ExperienceRepository(private val context: Context) {
                 count += n
             }
             require(count <= 65536) { "Experience exceeds 64 KiB" }
-            return buffer.copyOf(count).toString(Charsets.UTF_8)
+            return Charsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(buffer, 0, count)).toString()
         }
     }
 }
