@@ -52,10 +52,18 @@ class MainActivity : ComponentActivity() {
         override fun onReceive(context: Context, intent: Intent) { model.refreshSaved() }
     }
 
+    private val packageChangeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) { model.refreshActivities() }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ContextCompat.registerReceiver(this, savedChangeReceiver, IntentFilter(ExperienceControlService.CHANGED),
             ExperienceControlService.PERMISSION, null, ContextCompat.RECEIVER_NOT_EXPORTED)
+        ContextCompat.registerReceiver(this, packageChangeReceiver, IntentFilter().apply {
+            addAction(Intent.ACTION_PACKAGE_ADDED); addAction(Intent.ACTION_PACKAGE_REMOVED); addAction(Intent.ACTION_PACKAGE_CHANGED)
+            addDataScheme("package")
+        }, ContextCompat.RECEIVER_EXPORTED) // Protected system broadcasts; payloads only trigger a fresh query.
         setContent {
             MaterialTheme {
                 val doc = model.preview?.experience ?: model.experience
@@ -99,7 +107,7 @@ class MainActivity : ComponentActivity() {
                     when (tile.kind) {
                         "collection" -> { collectionId = tile.target; entryId = null }
                         "artwork" -> { entryId = tile.id; artworkId = tile.id }
-                        else -> model.launchIntent(tile)?.let { intent -> runCatching { startActivity(intent) }.onFailure { model.launchFailed() } }
+                        else -> model.launch(tile) { intent -> runCatching { startActivity(intent) }.onFailure { model.launchFailed() } }
                     }
                 }
                 val background = when (doc.theme) { "warm" -> Color(0xff2a211c); "light" -> Color(0xffe7e8e0); else -> Color(0xff141c18) }
@@ -185,7 +193,7 @@ class MainActivity : ComponentActivity() {
                             item { Text(doc.title, color = foreground, fontSize = 18.sp) }
                             item { Text("Local files. Explicit changes. Persistent undo.", color = foreground.copy(alpha = .65f), fontSize = 16.sp) }
                             item { EditingControls(focusFirst = true) }
-                            item { Button(onClick = { model.controlIntent()?.let { runCatching { startActivity(it) }.onFailure { model.launchFailed() } } }) { Text("Household control") } }
+                            item { Button(onClick = { model.openControl { runCatching { startActivity(it) }.onFailure { model.launchFailed() } } }) { Text("Household control") } }
                         }
                     }
                 }
@@ -201,6 +209,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         unregisterReceiver(savedChangeReceiver)
+        unregisterReceiver(packageChangeReceiver)
         super.onDestroy()
     }
 

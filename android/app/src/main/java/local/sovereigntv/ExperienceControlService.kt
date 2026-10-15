@@ -78,11 +78,15 @@ class ExperienceControlService : Service() {
         }
         override fun capabilities(expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) {
             result("ok", JSONObject().put("mode", "signature-protected-native-domain")
-                .put("operations", JSONArray(listOf("state", "preview", "apply", "undo", "receipt", "artwork.put", "artwork.open", "restore_default")))
+                .put("operations", JSONArray(listOf("state", "apps.list", "preview", "apply", "undo", "receipt", "artwork.put", "artwork.open", "restore_default")))
                 .put("network_endpoint", false).put("paired_service", false).put("agentos_qualified", false)
                 .put("hardware_control", false).put("capture", false).put("max_deadline_ms", 30000)
                 .put("max_document_bytes", 65536).put("max_artwork_bytes", ArtworkStore.MAX_BYTES)
                 .put("receipt_operation_sha256", true))
+        }
+        override fun applications(expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) { guard ->
+            val catalog = TvApplications(this@ExperienceControlService).discover(); guard()
+            result("ok", catalog.json())
         }
         override fun state(expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) { result("ok", stateJson(repository.load())) }
         override fun preview(baseRevision: Long, document: String?, expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) { guard ->

@@ -22,6 +22,16 @@ public final class ControllerProbe extends ContentProvider {
     }
     @Override public Bundle call(String method, String argument, Bundle extras) {
         getContext().enforceCallingPermission("local.sovereigntv.permission.CONTROL_EXPERIENCE", "Owner-signed test caller required");
+        if ("enable-tv-fixture".equals(method) || "disable-tv-fixture".equals(method)) {
+            long own = Binder.clearCallingIdentity();
+            try {
+                boolean enabled = "enable-tv-fixture".equals(method);
+                getContext().getPackageManager().setComponentEnabledSetting(new ComponentName(getContext(), TvFixtureActivity.class),
+                    enabled ? android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT : android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                    android.content.pm.PackageManager.DONT_KILL_APP);
+                Bundle result = new Bundle(); result.putBoolean("enabled", enabled); return result;
+            } finally { Binder.restoreCallingIdentity(own); }
+        }
         if (!"roundtrip".equals(method)) throw new IllegalArgumentException("Unknown probe");
         final long identity = Binder.clearCallingIdentity();
         final LinkedBlockingQueue<IBinder> connected = new LinkedBlockingQueue<>();

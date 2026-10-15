@@ -1,7 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-permission android:name="local.sovereigntv.permission.CONTROL_EXPERIENCE" />
     <queries><package android:name="local.sovereigntv" /></queries>
-    <application android:testOnly="true" android:allowBackup="false" android:label="Control test fixture" android:supportsRtl="true">
+    <application android:banner="@drawable/banner" android:icon="@drawable/banner" android:testOnly="true" android:allowBackup="false" android:label="Control test fixture" android:supportsRtl="true">
+        <activity android:name=".TvFixtureActivity" android:exported="true" android:label="Synthetic TV app">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent-filter>
+        </activity>
+        <activity-alias android:name=".PrivateTv" android:targetActivity=".TvFixtureActivity" android:exported="false" android:label="Private TV fixture">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent-filter>
+        </activity-alias>
+        <activity-alias android:name=".DisabledTv" android:targetActivity=".TvFixtureActivity" android:exported="true" android:enabled="false" android:label="Disabled TV fixture">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent-filter>
+        </activity-alias>
+        <activity-alias android:name=".ProtectedTv" android:targetActivity=".TvFixtureActivity" android:exported="true" android:permission="android.permission.MANAGE_USERS" android:label="Protected TV fixture">
+            <intent-filter><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LEANBACK_LAUNCHER" /></intent-filter>
+        </activity-alias>
         <provider android:name=".ControllerProbe" android:authorities="local.sovereigntv.controlprobe" android:exported="true"
             android:permission="local.sovereigntv.permission.CONTROL_EXPERIENCE" />
     </application>

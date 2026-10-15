@@ -30,6 +30,7 @@ Android's default corrupt-database handler can delete evidence. This journal ins
 | AIDL operation | Contract |
 |---|---|
 | `capabilities(expiry)` | API version, declared operations, resource bounds and explicit unavailable capabilities. |
+| `applications(expiry)` | Read-only installed TV entry points, opaque targets, bounded titles, compatibility aliases, catalog digest and explicit truncation. |
 | `state(expiry)` | Current revision, exact saved document string, its SHA-256 and recovery flag. |
 | `preview(base, document, expiry)` | Validated candidate; neither saved nor displayed on TV. Manual on-TV preview remains a separate UI workflow. |
 | `apply(id, base, document, expiry)` | Revision-checked journal transaction; receipt and fresh saved-state read-back. |
@@ -38,6 +39,10 @@ Android's default corrupt-database handler can delete evidence. This journal ins
 | `receipt(id, expiry)` | Durable receipt or `not_found`. |
 | `putArtwork(digest, descriptor, expiry)` | Verified SHA-256 and bounded PNG upload from a regular-file descriptor; pipes/devices refused. |
 | `openArtwork(digest, expiry)` | Integrity-checked asset through a read-only descriptor. This returns image content: an eventual agentOS route must apply capture and private-data policy. |
+
+Installed-app discovery selects enabled, exported `MAIN`/`LEANBACK_LAUNCHER` activities the launcher can enter, excludes Home itself, and verifies the owner controller's signing identity. Private, disabled and permission-inaccessible activities are excluded. At most 256 distinct entry points are returned in deterministic component order; `truncated=true` signals an incomplete catalog. Targets are `app_` followed by 60 hex characters derived from the component; the document still contains no component, intent, URL or shell. Titles are untrusted app labels bounded to 120 Unicode code points. Existing provider and local-controller aliases remain compatible.
+
+Home uses the same discovery implementation, coalesces fresh queries after package add/remove/change broadcasts, and re-queries installed entry points off the UI thread immediately before a physical-remote launch. Launch revalidation does not load app labels or presentation resources. Missing targets leave Home available. Discovery and launching do not change the experience revision, establish playback compatibility, install software, or enforce household access restrictions. Targets identify entry points, not code-signing identities or grants; upgrades may change them. Catalog metadata is private household information. No agent launch operation is added by this change; production discovery routing and provider actions still require broker qualification.
 
 Every response is a Bundle with `api_version=1` and `status`. Success metadata is a JSON string under `json`; asset read success also includes `file`, a caller-owned `ParcelFileDescriptor` that must be closed. JSON state contains the exact saved document string, not a normalized replacement. Effect success contains `receipt` and `state`; another writer may already have advanced that state beyond the receipt. Compare revisions and hashes. Request IDs are `[A-Za-z0-9._-]{1,64}` and exact retries preserve the original document bytes. Uploads can safely retry the same content hash. Neither descriptor paths nor arbitrary intents, URLs or shell commands are accepted.
 
