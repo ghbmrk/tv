@@ -13,11 +13,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.io.DataOutputStream;
+import java.util.zip.CRC32;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /** Synthetic read-only fixtures, test APK only. Framework-only for its separate process. */
 public class FixtureProvider extends ContentProvider {
     @Override public boolean onCreate() { return true; }
-    @Override public String getType(Uri uri) { return "application/json"; }
+    @Override public String getType(Uri uri) { return "bundle".equals(uri.getLastPathSegment()) ? "application/zip" : "application/json"; }
     @Override public Cursor query(Uri uri, String[] projection, String selection, String[] args, String order) {
         MatrixCursor cursor = new MatrixCursor(new String[]{OpenableColumns.DISPLAY_NAME, OpenableColumns.SIZE});
         cursor.addRow(new Object[]{"experience.json", 1024});
@@ -26,7 +33,7 @@ public class FixtureProvider extends ContentProvider {
     @Override public ParcelFileDescriptor openFile(Uri uri, String mode) throws java.io.FileNotFoundException {
         if (!"r".equals(mode)) throw new SecurityException("Read only");
         String name = uri.getLastPathSegment();
-        if (!"valid".equals(name) && !"invalid".equals(name) && !"oversized".equals(name)) throw new SecurityException("Unknown fixture");
+        if (!"valid".equals(name) && !"invalid".equals(name) && !"oversized".equals(name) && !"bundle".equals(name)) throw new SecurityException("Unknown fixture");
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             try (InputStream stream = getContext().getAssets().open("experience.json")) {
@@ -34,6 +41,11 @@ public class FixtureProvider extends ContentProvider {
                 while ((count = stream.read(buffer)) != -1) bytes.write(buffer, 0, count);
             }
             String sample = bytes.toString("UTF-8");
+            if ("bundle".equals(name)) {
+                File file = new File(getContext().getCacheDir(), "fixture-bundle.zip");
+                try (FileOutputStream stream = new FileOutputStream(file)) { stream.write(bundle(sample)); }
+                return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+            }
             String content;
             if ("valid".equals(name)) content = sample.replace("Household TV", "Runtime household")
                 .replace("\"id\": \"watch\"", "\"id\": \"header\"")
@@ -49,4 +61,51 @@ public class FixtureProvider extends ContentProvider {
     @Override public Uri insert(Uri uri, ContentValues values) { throw new SecurityException("Read only"); }
     @Override public int delete(Uri uri, String selection, String[] args) { throw new SecurityException("Read only"); }
     @Override public int update(Uri uri, ContentValues values, String selection, String[] args) { throw new SecurityException("Read only"); }
+
+    public static byte[] png(int red, int green, int blue) throws IOException {
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        result.write(new byte[]{(byte)137,80,78,71,13,10,26,10});
+        ByteArrayOutputStream header = new ByteArrayOutputStream();
+        DataOutputStream fields = new DataOutputStream(header);
+        fields.writeInt(2); fields.writeInt(2); fields.write(new byte[]{8,2,0,0,0});
+        chunk(result, "IHDR", header.toByteArray());
+        ByteArrayOutputStream compressed = new ByteArrayOutputStream();
+        try (DeflaterOutputStream z = new DeflaterOutputStream(compressed)) {
+            for (int row = 0; row < 2; row++) { z.write(0); for (int col = 0; col < 2; col++) z.write(new byte[]{(byte)red,(byte)green,(byte)blue}); }
+        }
+        chunk(result, "IDAT", compressed.toByteArray()); chunk(result, "IEND", new byte[0]);
+        return result.toByteArray();
+    }
+    private static void chunk(ByteArrayOutputStream result, String kind, byte[] payload) throws IOException {
+        byte[] type = kind.getBytes(StandardCharsets.US_ASCII);
+        DataOutputStream out = new DataOutputStream(result); out.writeInt(payload.length); out.write(type); out.write(payload);
+        CRC32 crc = new CRC32(); crc.update(type); crc.update(payload); out.writeInt((int)crc.getValue());
+    }
+    public static byte[] bundle(String sample) throws IOException {
+        try {
+            byte[] first = png(50,120,180), second = png(180,100,50);
+            String a = digest(first), b = digest(second);
+            JSONObject root = new JSONObject(sample).put("schema_version", 2).put("title", "Runtime gallery");
+            JSONArray items = new JSONArray();
+            items.put(new JSONObject().put("id","first_art").put("title","First artwork").put("kind","artwork").put("target",a).put("visible",true));
+            items.put(new JSONObject().put("id","second_art").put("title","Second artwork").put("kind","artwork").put("target",b).put("visible",true));
+            items.put(new JSONObject().put("id","hidden_art").put("title","Hidden artwork").put("kind","artwork").put("target",a).put("visible",false));
+            root.put("collections", new JSONArray().put(new JSONObject().put("id","artwork").put("title","Local artwork").put("items",items)));
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            try (ZipOutputStream zip = new ZipOutputStream(output)) {
+                zip.putNextEntry(new ZipEntry("experience.json")); zip.write(root.toString().getBytes(StandardCharsets.UTF_8)); zip.closeEntry();
+                zip.putNextEntry(new ZipEntry("artwork/" + a + ".png")); zip.write(first); zip.closeEntry();
+                zip.putNextEntry(new ZipEntry("artwork/" + b + ".png")); zip.write(second); zip.closeEntry();
+            }
+            return output.toByteArray();
+        } catch (org.json.JSONException error) { throw new IOException(error); }
+    }
+    private static String digest(byte[] data) throws IOException {
+        try {
+            byte[] hash = java.security.MessageDigest.getInstance("SHA-256").digest(data);
+            StringBuilder result = new StringBuilder();
+            for (byte value : hash) result.append(String.format(java.util.Locale.ROOT, "%02x", value));
+            return result.toString();
+        } catch (java.security.NoSuchAlgorithmException error) { throw new IOException(error); }
+    }
 }

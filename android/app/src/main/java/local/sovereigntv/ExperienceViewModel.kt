@@ -15,11 +15,15 @@ import androidx.lifecycle.AndroidViewModel
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.UUID
+import kotlinx.coroutines.asCoroutineDispatcher
 
 /** Disk, parsing and package discovery never run on the navigation/frame path. */
 class ExperienceViewModel(application: Application) : AndroidViewModel(application) {
     private val repository by lazy(LazyThreadSafetyMode.NONE) { ExperienceRepository(application) }
     private val worker = Executors.newSingleThreadExecutor()
+    val diskDispatcher = worker.asCoroutineDispatcher()
+    private val artwork by lazy(LazyThreadSafetyMode.NONE) { ArtworkStore(application) }
+    fun loadArtwork(id: String, width: Int, height: Int) = artwork.bitmap(id, width, height)
     private val main = Handler(Looper.getMainLooper())
     private val closed = AtomicBoolean(false)
     private var activities = emptyMap<String, ComponentName>()
@@ -45,12 +49,22 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     fun importDocument(uri: Uri) {
         val base = revision
         work("Preparing preview", {
-            val document = (getApplication<Application>().contentResolver.openInputStream(uri) ?: error("File unavailable"))
-                .use(ExperienceRepository::readBounded)
-            repository.preview(base, document)
+            val stream = getApplication<Application>().contentResolver.openInputStream(uri) ?: error("File unavailable")
+            repository.previewImport(base, stream)
         }) {
             preview = it
             message = "Unsaved preview • apply or cancel"
+        }
+    }
+
+    fun importArtwork(uri: Uri) {
+        val base = revision
+        work("Preparing artwork preview", {
+            val stream = getApplication<Application>().contentResolver.openInputStream(uri) ?: error("Image unavailable")
+            repository.previewArtwork(base, stream)
+        }, failure = { message = "Artwork import refused • use plain 8-bit RGB/RGBA PNG within the size limits; saved experience preserved" }) {
+            preview = it
+            message = "Unsaved artwork preview • apply or cancel"
         }
     }
 
@@ -174,7 +188,7 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun launchIntent(tile: Tile): Intent? {
-        if (tile.kind != "app") { message = "Collection renderer pending: ${tile.title}"; return null }
+        if (tile.kind != "app") return null
         if (!catalogReady) { message = "Checking installed TV applications"; return null }
         val target = activities[tile.target]
         if (target == null) { message = "No installed TV activity found for ${tile.title}"; return null }

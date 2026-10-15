@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "title": "Household TV",
+  "theme": "night",
+  "sections": [
+    {
+      "id": "watch",
+      "title": "Watch",
+      "layout": "row",
+      "items": [
+        {
+          "id": "netflix",
+          "title": "Netflix",
+          "kind": "app",
+          "target": "netflix",
+          "visible": true
+        },
+        {
+          "id": "prime",
+          "title": "Prime Video",
+          "kind": "app",
+          "target": "prime_video",
+          "visible": true
+        },
+        {
+          "id": "disney",
+          "title": "Disney+",
+          "kind": "app",
+          "target": "disney_plus",
+          "visible": true
+        },
+        {
+          "id": "youtube",
+          "title": "YouTube",
+          "kind": "app",
+          "target": "youtube",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "local",
+      "title": "At home",
+      "layout": "grid",
+      "items": [
+        {
+          "id": "art",
+          "title": "Local artwork",
+          "kind": "collection",
+          "target": "artwork",
+          "visible": true
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "text_scale": 1.0,
+    "artwork_interval_seconds": 300
+  },
+  "collections": [
+    {
+      "id": "artwork",
+      "title": "Local artwork",
+      "items": []
+    }
+  ]
+}

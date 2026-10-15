@@ -13,6 +13,9 @@ Every API call uses `Authorization: Bearer <local-token>`; every POST also uses 
 | `POST /api/preview` | Validate against current revision and return changed top-level fields without applying. |
 | `POST /api/apply` | Atomically save the full experience and durable request receipt. |
 | `GET /api/receipts/<request_id>` | Reconcile an uncertain effect. A missing receipt alone is not permission to create a new request ID. |
+| `PUT /api/assets/<sha256>` | Upload a bounded PNG with `Content-Type: image/png`; immutable content hash, safe identical retry. |
+| `GET /api/assets/<sha256>` | Authenticated integrity-checked PNG. |
+| `GET /api/export` | Saved experience and referenced artwork as a portable ZIP. |
 | `POST /api/undo` | Restore an earlier revision only if the current revision matches the requested base. |
 
 Apply/preview request:
@@ -29,6 +32,6 @@ Undo request:
 
 Reuse the exact apply/undo request ID and arguments after a lost response. Deduplication persists across process restarts. A reused ID with different arguments or a stale base returns 409. Invalid documents return 400. Request IDs are not authority: the development token currently authorizes the complete editing surface. Profile grants, media state, subscription events, expiry and production pairing are planned, not implemented.
 
-The first format supports title, three themes, row/grid sections, app/collection references, visibility, text scale and artwork interval. Collection contents, artwork rendering/timers, arbitrary widget composition, account controls and actual TV settings are future work. Visibility is Home curation only; it does not enforce a launch restriction. The Android shell currently imports exports manually; it is not live-connected to this host service.
+Schema v1 remains accepted. Schema v2 adds app/artwork collection contents and local slideshow rendering; see [the format and asset limits](COLLECTIONS_AND_ARTWORK.md). Upload all referenced artwork before preview/apply; missing or corrupt assets reject the configuration transaction. Arbitrary widget composition, account controls and actual TV settings remain future work. Visibility is Home curation only; it does not enforce a launch restriction. The Android shell currently imports exports manually; it is not live-connected to this host service.
 
 The Android file-import path now has its own transactional preview/apply/cancel, durable receipts and undo. See [native domain semantics](NATIVE_TRANSACTIONS.md); no live transport between the two implementations is implied.
