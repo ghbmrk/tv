@@ -53,12 +53,16 @@ def main():
                     except ValueError:
                         pass
                 if time.monotonic() >= deadline or process.poll() is not None:
+                    startup = 'deadline'
                     if process.poll() is not None:
                         output, error = process.communicate()
                         logs = ROOT / '.local'
                         logs.mkdir(mode=0o700, exist_ok=True)
                         (logs / 'control-interop-last.log').write_bytes(output + error)
-                    raise RuntimeError('Synthetic listener did not become ready; inspect private interop diagnostics')
+                        # Only fixed categories may enter hosted output; retain raw diagnostics
+                        # locally, never in public CI artifacts or exception messages.
+                        startup = 'bind_failed' if b'java.net.BindException' in output + error else 'fixture_exited'
+                    raise RuntimeError('Synthetic listener unavailable (' + startup + '); inspect private interop diagnostics')
                 time.sleep(.2)
             device = directory / 'device-public.pem'; device.write_text(ready['public_certificate'])
             remote_port = ready['port']
