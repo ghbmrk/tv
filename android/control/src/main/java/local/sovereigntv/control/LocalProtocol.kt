@@ -61,6 +61,7 @@ object LocalProtocol {
     fun exact(o: JSONObject, fields: Set<String>) = require(o.keys().asSequence().toSet() == fields)
 
     class Gateway(private val cache: File, private val domain: DomainConnection, private val device: String) {
+        internal val receivingUploads = java.util.concurrent.atomic.AtomicInteger()
         data class Reply(val body: JSONObject, val asset: ByteArray? = null)
         private fun response(status: String, value: JSONObject? = null) = JSONObject().put("v", 1).put("device_id", device).put("status", status).apply { if (value != null) put("result", value) }
         fun invalid() = Reply(response("invalid"))
@@ -94,7 +95,9 @@ object LocalProtocol {
             val digest = if ("sha256" in fields) text(request, "sha256").also { require(Regex("[a-f0-9]{64}").matches(it)) } else ""
             val upload = if (operation == "artwork.put") {
                 val size = integer(request, "bytes"); require(size in 1..MAX_ASSET.toLong())
-                read(input, MAX_ASSET).also { require(it.size.toLong() == size && Identity.digest(it) == digest) }
+                receivingUploads.incrementAndGet()
+                try { read(input, MAX_ASSET).also { require(it.size.toLong() == size && Identity.digest(it) == digest) } }
+                finally { receivingUploads.decrementAndGet() }
             } else null
             // All transport validation/read failures precede invocation. Exceptions after this
             // boundary close the connection; they can never be mislabeled as a definite refusal.
