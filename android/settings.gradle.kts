@@ -4,3 +4,5 @@ rootProject.name = "SovereignTV"
 include(":app")
 
 include(":control-probe")
+
+include(":control")

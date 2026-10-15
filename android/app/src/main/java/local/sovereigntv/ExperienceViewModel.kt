@@ -221,9 +221,9 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     private fun discover(): Map<String, ComponentName> {
         val packageManager = getApplication<Application>().packageManager
         val installed = packageManager.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER), PackageManager.MATCH_ALL)
-        val hints = mapOf("netflix" to "com.netflix.ninja", "prime_video" to "com.amazon.amazonvideo.livingroom", "disney_plus" to "com.disney.disneyplus", "youtube" to "com.google.android.youtube.tv")
+        val hints = mapOf("netflix" to "com.netflix.ninja", "prime_video" to "com.amazon.amazonvideo.livingroom", "disney_plus" to "com.disney.disneyplus", "youtube" to "com.google.android.youtube.tv", "local_control" to "local.sovereigntv.control")
         return hints.mapNotNull { (id, packageName) ->
-            installed.firstOrNull { it.activityInfo.packageName == packageName && it.activityInfo.exported && it.activityInfo.enabled && it.activityInfo.applicationInfo.enabled }
+            installed.firstOrNull { it.activityInfo.packageName == packageName && (id != "local_control" || packageManager.checkSignatures(getApplication<Application>().packageName, packageName) == PackageManager.SIGNATURE_MATCH) && it.activityInfo.exported && it.activityInfo.enabled && it.activityInfo.applicationInfo.enabled }
                 ?.let { id to ComponentName(it.activityInfo.packageName, it.activityInfo.name) }
         }.toMap()
     }
@@ -237,6 +237,8 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
         if (target == null) { message = "No installed TV activity found for ${tile.title}"; return null }
         return Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER).setComponent(target)
     }
+
+    fun controlIntent(): Intent? = launchIntent(Tile("local_control", "Household control", "app", "local_control", true))
 
     fun launchFailed() { message = "Application launch failed" }
 

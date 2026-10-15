@@ -14,6 +14,7 @@ android {
 kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }
 dependencies {
     androidTestUtil(project(mapOf("path" to ":control-probe", "configuration" to "probeApk")))
+    androidTestUtil(project(mapOf("path" to ":control", "configuration" to "controllerApk")))
     androidTestImplementation(platform("androidx.compose:compose-bom:2025.08.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
@@ -26,3 +27,6 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.tv:tv-material:1.0.1")
 }
+
+val domainApk by configurations.creating { isCanBeConsumed = true; isCanBeResolved = false }
+artifacts.add(domainApk.name, layout.buildDirectory.file("outputs/apk/debug/app-debug.apk")) { builtBy("assembleDebug") }

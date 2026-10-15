@@ -24,6 +24,9 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -32,7 +35,7 @@ jobs:
         with:
           gradle-version: '8.13'
       - run: sdkmanager 'platforms;android-36' 'build-tools;35.0.0'
-      - run: gradle -p android :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug :control-probe:lintDebug
+      - run: gradle -p android :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug :control-probe:lintDebug :control:assembleDebug :control:assembleDebugAndroidTest :control:lintDebug
       - name: Enable KVM for the test emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -45,12 +48,17 @@ jobs:
           arch: x86_64
           profile: tv_1080p
           ram-size: 2048M
+          emulator-port: 5554
           emulator-options: -no-window -gpu swiftshader -no-snapshot -no-audio -no-boot-anim -no-metrics
-          script: gradle -p android :app:connectedDebugAndroidTest --no-daemon
+          script: |
+            gradle -p android :app:connectedDebugAndroidTest :control:connectedDebugAndroidTest --no-daemon
+            python tools/qualify_control_interop.py --serial emulator-5554
       - uses: actions/upload-artifact@v4
         with:
           name: sovereign-tv-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/app-debug.apk
+            android/control/build/outputs/apk/debug/control-debug.apk
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -58,3 +66,5 @@ jobs:
           path: |
             android/app/build/reports/
             android/app/build/outputs/androidTest-results/
+            android/control/build/reports/
+            android/control/build/outputs/androidTest-results/
