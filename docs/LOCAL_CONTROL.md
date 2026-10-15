@@ -40,6 +40,8 @@ Effects require a caller-supplied stable request ID. An uncertain transport resu
 
 This client is for the owner/isolated executor. An agentOS guest must not receive its profile, key, socket access or direct invocation capability. Broker dispatch, operation classification, grants, audience/private-data routing, capture policy and event integration still require the owning agentOS team's reviewed implementation. No agentOS repository files are changed here.
 
+The [TV-owned Go adapter](../executor/README.md) now implements the actual pinned agentOS `journal.Executor` interface for apply/undo, with operation-bound receipt verification and reconciliation. It adds no guest tool or production broker registration.
+
 ## Protocol and limits
 
 The provisional transport is one typed request per TLS connection, using TLS 1.2/1.3 and an exact pinned self-signed identity at each end. A four-byte unsigned network-order length precedes each UTF-8 JSON frame. Request metadata is a strict flat JSON object; duplicate fields, nonstandard syntax, undeclared fields and trailing content are rejected. JSON metadata is bounded to 512 KiB to accommodate an escaped 64 KiB document. No paths, intents, executable payloads, URLs or shell commands are accepted.

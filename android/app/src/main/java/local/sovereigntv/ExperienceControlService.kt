@@ -57,6 +57,7 @@ class ExperienceControlService : Service() {
     private fun receiptJson(receipt: ExperienceJournal.Receipt) = JSONObject()
         .put("request_id", receipt.requestId).put("revision", receipt.revision)
         .put("previous_revision", receipt.previousRevision).put("document_sha256", receipt.documentSha256)
+        .put("operation_sha256", receipt.operationSha256)
     private fun committed(receipt: ExperienceJournal.Receipt): Bundle {
         val saved = repository.load()
         if (saved.revision == receipt.revision) check(ExperienceJournal.sha256(saved.document) == receipt.documentSha256)
@@ -80,7 +81,8 @@ class ExperienceControlService : Service() {
                 .put("operations", JSONArray(listOf("state", "preview", "apply", "undo", "receipt", "artwork.put", "artwork.open", "restore_default")))
                 .put("network_endpoint", false).put("paired_service", false).put("agentos_qualified", false)
                 .put("hardware_control", false).put("capture", false).put("max_deadline_ms", 30000)
-                .put("max_document_bytes", 65536).put("max_artwork_bytes", ArtworkStore.MAX_BYTES))
+                .put("max_document_bytes", 65536).put("max_artwork_bytes", ArtworkStore.MAX_BYTES)
+                .put("receipt_operation_sha256", true))
         }
         override fun state(expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) { result("ok", stateJson(repository.load())) }
         override fun preview(baseRevision: Long, document: String?, expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) { guard ->

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-10-14",
+  "updated": "2026-10-15",
   "objective": "Equivalent-quality, locally controlled and modifiable custom software replacement on the original Samsung 50-inch LS03F hardware",
   "selected_path": {
     "platform": "AOSP with television features and native provider TV applications",
@@ -78,7 +78,7 @@
     "required": true,
     "repository": "https://github.com/ghbmrk/agentOS",
     "inspected_revision": "76ec0022012664e734aba22f281b88d9c0aa23f1",
-    "status": "architecture_defined_not_implemented",
+    "status": "tv_executor_adapter_implemented_production_broker_route_unqualified",
     "architecture": "broker_controlled_device_executor_to_paired_local_tv_service",
     "guest_direct_lan_access": false,
     "owner_software_semantic_control_parity": true,
@@ -129,7 +129,8 @@
       "arbitrary_executable_ui": "owner_controlled_build_and_update_pipeline",
       "availability": "distinguish_home_visibility_from_enforced_launch_and_content_access_policy",
       "provider_boundary": "custom_shell_and_supported_provider_operations_no_claim_of_rewriting_provider_internals"
-    }
+    },
+    "executor_contract_public_revision": "c17b5a92b95c97272c3f138f40a39b28608928b3"
   },
   "remote_control": {
     "existing_physical_samsung_remote_required": true,

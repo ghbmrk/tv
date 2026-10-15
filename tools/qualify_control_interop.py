@@ -20,6 +20,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--adb', default='adb')
     parser.add_argument('--serial', required=True)
+    parser.add_argument('--go-executor', type=Path, help='Built owned-emulator Go interop probe; never a guest command')
     args = parser.parse_args()
     command = [args.adb, '-s', args.serial]
     def adb(*parts, input=None, check=True):
@@ -41,7 +42,8 @@ def main():
         if transferred != certificate.read_bytes():
             raise RuntimeError('Public certificate fixture transfer was incomplete')
         try:
-            process = subprocess.Popen(command + ['shell', 'am', 'instrument', '-w', '-e', 'host_interop', 'true', '-e', 'class',
+            expected_delta = 4 if args.go_executor else 2
+            process = subprocess.Popen(command + ['shell', 'am', 'instrument', '-w', '-e', 'host_interop', 'true', '-e', 'expected_revision_delta', str(expected_delta), '-e', 'class',
                 'local.sovereigntv.control.HostInteropTest', 'local.sovereigntv.control.test/androidx.test.runner.AndroidJUnitRunner'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             deadline = time.monotonic() + 30
             while True:
@@ -100,6 +102,19 @@ def main():
             after = call('state')
             if after['document'] != before['document'] or after['revision'] != base + 2:
                 raise RuntimeError('Synthetic undo mismatch')
+            if args.go_executor:
+                try:
+                    probe = subprocess.run([str(args.go_executor.resolve()), '--port', str(port), '--device-certificate', str(device),
+                        '--client-certificate', str(certificate), '--client-key', str(directory / 'executor/client-key.pem')],
+                        env=dict(os.environ, SOVEREIGN_OWNED_EMULATOR='1'), capture_output=True, timeout=20)
+                except subprocess.TimeoutExpired:
+                    raise RuntimeError('Owned-emulator Go executor deadline exceeded; reconcile from native evidence') from None
+                if probe.returncode or json.loads(probe.stdout) != {'go_executor': True, 'operation_receipt_verified': True,
+                        'reconcile': True, 'exact_retry': True, 'undo': True, 'agentos_qualified': False}:
+                    raise RuntimeError('Owned-emulator Go executor assertions failed; no raw output printed')
+                after = call('state')
+                if after['document'] != before['document'] or after['revision'] != base + expected_delta:
+                    raise RuntimeError('Go executor native journal verification failed')
             adb('shell', '-T', 'run-as', 'local.sovereigntv.control', 'dd', 'of=files/interop-done', input=b'done')
             output, error = process.communicate(timeout=15)
             if process.returncode or b'OK (1 test)' not in output:
@@ -107,6 +122,7 @@ def main():
             print(json.dumps({'scope': 'owned Android emulator; Python OpenSSL 3 to Android Keystore TLS',
                               'read_back': True, 'receipt': True, 'exact_retry': True, 'undo': True,
                               'mutual_tls_versions': ['TLSv1.2', 'TLSv1.3'],
+                              'go_executor_probe': bool(args.go_executor),
                               'agentos_qualified': False, 'target_tv_qualified': False}))
         finally:
             if process is not None and process.poll() is None:

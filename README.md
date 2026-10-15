@@ -2,7 +2,7 @@
 
 An owner-controlled TV experience and an Android-first replacement project for the original Samsung The Frame LS03F hardware, fully editable through the household's agentOS agent.
 
-**Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell previews and applies the same format with persistent undo; its local build, two JVM unit tests, native Android TV emulator runtime tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
+**Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell previews and applies the same format with persistent undo; its local build, four JVM unit tests, native Android TV emulator runtime tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
 
 **Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Owner-authorized off-TV implementation continues while device access is unavailable; the board-port gates remain mandatory before installation.
 
@@ -65,6 +65,8 @@ Full interaction through [agentOS](https://github.com/ghbmrk/agentOS) is a relea
 The household agent can author layouts, navigation, themes and widgets; curate displayed content and sources; manage available apps and collections; and change artwork, schedules, and TV settings. Use a versioned local experience document with preview, atomic application, persistence, and undo. Owner-delegated standing grants enable routine edits without repeated approvals. Enforced household access restrictions are separate from hiding content on Home.
 
 Use an agentOS device executor connected to a paired TV control service. The guest reaches broker tools, and the executor alone reaches the pinned TV endpoint. Keep provider playback native and give the control service no access to DRM keys or protected video frames. The TV remains usable by physical remote when agentOS is unavailable. The [integration design and acceptance cases](docs/agentos-integration.md) define the boundary, operation coverage, provider testing, and outstanding agentOS dependencies.
+
+The [TV-owned Go executor](executor/README.md) implements the pinned agentOS journal interface for native apply/undo with stable attempt IDs and verified receipts. Production broker wiring and policy qualification remain required before household agents can use it.
 
 ## Media integration
 
