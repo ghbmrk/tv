@@ -9,6 +9,7 @@ import java.security.MessageDigest
 
 /** Local domain transactions. Not an exported service or an agent authorization boundary. */
 class ExperienceJournal(context: Context, private val initial: () -> ExperienceRepository.Loaded) : Closeable {
+    private val artwork = ArtworkStore(context)
     class Conflict(message: String) : IllegalStateException(message)
     class Capacity : IllegalStateException("Journal receipt capacity reached; owner maintenance required")
     data class Receipt(val requestId: String, val revision: Long, val previousRevision: Long, val documentSha256: String)
@@ -55,6 +56,7 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
 
     fun preview(baseRevision: Long, document: String): ExperienceRepository.Loaded {
         val parsed = Experience.parse(document)
+        artwork.requireAssets(parsed.artworkRefs)
         return transaction { db ->
             if (state(db).revision != baseRevision) throw Conflict("Experience changed; read and rebase")
             ExperienceRepository.Loaded(parsed, document = document, revision = baseRevision)
@@ -100,7 +102,7 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
             val receiptCount = db.rawQuery("SELECT COUNT(*) FROM receipts", null).use { it.moveToFirst(); it.getLong(0) }
             if (receiptCount >= 10000) throw Capacity()
             val text = document(db)
-            Experience.parse(text)
+            artwork.requireAssets(Experience.parse(text).artworkRefs)
             val revision = Math.addExact(current, 1)
             val result = Receipt(requestId, revision, current, sha256(text))
             db.execSQL("INSERT INTO revisions VALUES (?,?,0)", arrayOf<Any>(revision, text))
@@ -113,7 +115,8 @@ class ExperienceJournal(context: Context, private val initial: () -> ExperienceR
     override fun close() = helper.close()
 
     companion object {
-        fun sha256(text: String): String = MessageDigest.getInstance("SHA-256").digest(text.toByteArray(Charsets.UTF_8))
+        fun sha256(text: String): String = sha256Bytes(text.toByteArray(Charsets.UTF_8))
+        fun sha256Bytes(bytes: ByteArray): String = MessageDigest.getInstance("SHA-256").digest(bytes)
             .joinToString("") { "%02x".format(it) }
     }
 }

@@ -4,7 +4,7 @@ import hashlib
 import json
 import re
 import sqlite3
-from .model import Invalid, canonical, fields, validate
+from .model import Invalid, artwork_refs, canonical, fields, validate
 
 
 class Conflict(ValueError):
@@ -12,8 +12,9 @@ class Conflict(ValueError):
 
 
 class Store:
-    def __init__(self, path, initial):
+    def __init__(self, path, initial, artwork=None):
         validate(initial)
+        self.artwork = artwork
         self.path = str(path)
         with self.connect() as db:
             db.executescript('''
@@ -60,12 +61,23 @@ class Store:
 
     def preview(self, request):
         self.check_request(request)
+        self.check_assets(request['experience'])
         state = self.state()
         if state['revision'] != request['base_revision']:
             raise Conflict('state changed; read and rebase')
         return {'base_revision': state['revision'], 'experience': request['experience'],
-                'changed_fields': [key for key in request['experience'] if request['experience'][key] != state['experience'][key]],
+                'changed_fields': [key for key in sorted(set(request['experience']) | set(state['experience'])) if request['experience'].get(key) != state['experience'].get(key)],
                 'applied': False}
+
+    def check_assets(self, document):
+        references = artwork_refs(document)
+        if references and self.artwork is None:
+            raise Invalid('artwork store unavailable')
+        if self.artwork is not None:
+            try:
+                self.artwork.require(references)
+            except OSError as error:
+                raise Invalid('referenced artwork unavailable') from error
 
     def apply(self, request, undo=False):
         self.check_request(request, undo)
@@ -87,6 +99,7 @@ class Store:
                 doc = row[0]
             else:
                 doc = canonical(request['experience'])
+            self.check_assets(json.loads(doc))
             revision = current + 1
             db.execute('INSERT INTO revisions VALUES (?, ?)', (revision, doc))
             result = {'request_id': request['request_id'], 'status': 'applied', 'revision': revision,

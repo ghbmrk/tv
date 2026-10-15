@@ -9,6 +9,7 @@ import java.util.UUID
 
 /** Validated persistence shared by local UI and the future paired service. Call off the UI thread. */
 class ExperienceRepository(private val context: Context) {
+    private val artwork by lazy { ArtworkStore(context) }
     private val file = AtomicFile(File(context.filesDir, "experience.json"))
     private val legacy = context.getSharedPreferences("experience", Context.MODE_PRIVATE)
 
@@ -20,6 +21,27 @@ class ExperienceRepository(private val context: Context) {
         loaded(defaultDocument(), true).copy(revision = 0, journalUnavailable = true)
     }
     fun preview(baseRevision: Long, document: String): Loaded = journal { it.preview(baseRevision, document) }
+    fun previewImport(baseRevision: Long, stream: InputStream): Loaded = stream.buffered().use { input ->
+        input.mark(4)
+        val prefix = ByteArray(4)
+        var count = 0
+        while (count < prefix.size) {
+            val read = input.read(prefix, count, prefix.size - count)
+            if (read < 0) break
+            check(read > 0) { "Input made no progress" }
+            count += read
+        }
+        input.reset()
+        val document = if (count == 4 && prefix[0] == 80.toByte() && prefix[1] == 75.toByte())
+            ArtworkBundle.read(context, artwork, input) else readBounded(input)
+        preview(baseRevision, document)
+    }
+    fun previewArtwork(baseRevision: Long, stream: InputStream): Loaded {
+        val current = load()
+        if (current.revision != baseRevision) throw ExperienceJournal.Conflict("Experience changed; read and rebase")
+        val digest = artwork.import(stream)
+        return preview(baseRevision, Experience.withArtwork(current.document, digest))
+    }
     fun apply(requestId: String, baseRevision: Long, document: String): ExperienceJournal.Receipt = journal { it.apply(requestId, baseRevision, document) }
     fun undo(requestId: String, baseRevision: Long, restoreRevision: Long): ExperienceJournal.Receipt = journal { it.undo(requestId, baseRevision, restoreRevision) }
     fun receipt(requestId: String): ExperienceJournal.Receipt? = journal { it.receipt(requestId) }

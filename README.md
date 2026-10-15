@@ -4,7 +4,7 @@ An owner-controlled TV experience and an Android-first replacement project for t
 
 **Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell previews and applies the same format with persistent undo; its local build, two JVM unit tests, native Android TV emulator runtime tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
 
-**Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Additional Home features are deferred while these gates remain unresolved.
+**Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Owner-authorized off-TV implementation continues while device access is unavailable; the board-port gates remain mandatory before installation.
 
 ## Run the first slice
 
@@ -21,7 +21,7 @@ python3 tools/check_public.py
 
 See [the API](docs/API.md), [native Android shell build/install](android/README.md), [deployment on the actual TV](docs/deployment/PLAN.md), and [agentOS interaction design](docs/agentos-integration.md). CI tests the reference implementation and builds/lints a development APK. The native shell has passed local build/test/lint and runtime tests on ARM64 and CI x86_64 TV emulators; [validation evidence](docs/VALIDATION.md) distinguishes these from actual-TV qualification.
 
-The implemented format currently covers title, themes, row/grid sections, app/collection references, visibility, text scale, and an artwork interval setting. Artwork rendering, profile enforcement, broader widgets/settings, the paired TV service, and agentOS executor are planned. The APK and host studio exchange files manually in this slice.
+The implemented format covers title, themes, row/grid sections, app and artwork collections, visibility, text scale, local PNG artwork and timed slideshows. Import artwork as an unsaved preview, apply it, and export a portable ZIP for Android. [Collections and artwork](docs/COLLECTIONS_AND_ARTWORK.md) describes the format, limits and workflow. Profile enforcement, broader widgets/settings, the paired TV service and agentOS executor remain pending. The APK and host studio exchange files manually.
 
 ## Target architecture and requirements
 
