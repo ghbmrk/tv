@@ -6,7 +6,7 @@ The archive includes `linux.tgz`, media source and separate MICOM, HDMI, audio-a
 
 ## Concrete observations
 
-The bounded nested inspection traversed 71,624 kernel members (913,044,593 declared expanded bytes), reading four selected text files in memory. [The machine-readable inventory](pontus-kernel-inventory.json) records their hashes and selected metadata; no source is redistributed or executed.
+The bounded nested inspection traversed 71,624 kernel members (913,044,593 declared expanded bytes), reading seven selected text files in memory after the board-contract extension. [The machine-readable inventory](pontus-kernel-inventory.json) records their hashes and selected metadata; no source is redistributed or executed.
 
 | Evidence | Observation | Consequence |
 |---|---|---|
@@ -17,6 +17,14 @@ The bounded nested inspection traversed 71,624 kernel members (913,044,593 decla
 | Media source paths | Multiple platform directories and embedded DSP firmware arrays/binaries occur in the release | Presence does not prove which variant the owner's board uses, that complete source is available, or that blobs satisfy the no-Samsung-software requirement. Treat this package as research evidence. |
 
 The source does not yet establish board revision, exact SoC/GPU, live ABI, storage layout, installed configuration, controller identities, boot-ROM policy, independent boot, recovery, or protected-provider provisioning. Those fields remain unverified in the device profile. No stock firmware, kernel, driver or microcode from this release has been incorporated into the product.
+
+## Machine fingerprint and CPU bring-up boundary
+
+The selected `arch/arm/mach-sdp/board-pontus-dt.c` is 4,910 bytes, SHA-256 `cf83256d707d45d0bfe2b3e383394a00ada79c8a29796bfba16cd99dc86462dd`. Manual review finds `samsung,sdp-pontusm` in its machine-compatible array and that array referenced by the machine registration. The expanded inventory also hashes the machine Makefile and `platsmp.c` and records allowlisted marker line hashes. Marker locations alone are lexical evidence; the control-flow interpretation comes from reading the identified files.
+
+The Pontus path registers Linux SMP power operations. Its entry-install function selects the secondary CPU startup routine; `platsmp.c` invokes that operation from the secondary-CPU boot path. These are running-kernel CPU bring-up hooks, not proof of primary cold-boot acceptance, an owner signing authority, recovery or an alternate-OS loader. No register operation, driver build or vendor code is executed or incorporated into the product.
+
+The existing fixed read of `/proc/device-tree/compatible` can now check for an exact match to this source-family string. A match corroborates this machine-family hypothesis only; it cannot identify board revision, prove installed-source correspondence, select drivers, or pass an installation gate. A nonmatch records that this specific fingerprint was not observed, not universal incompatibility. Failed, unterminated or malformed string-list reads remain unknown. Raw runtime strings stay private; the public collector adds only a nullable match boolean. Live board collection is still unavailable.
 
 ## Reproduction
 

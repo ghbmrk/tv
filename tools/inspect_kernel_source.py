@@ -14,7 +14,12 @@ SELECTED = {
     'linux-5.4/arch/arm/configs/PONTUSM_release_defconfig',
     'linux-5.4/arch/arm/mach-sdp/Kconfig',
     'linux-5.4/drivers/soc/sdp/Kconfig',
+    'linux-5.4/arch/arm/mach-sdp/Makefile',
+    'linux-5.4/arch/arm/mach-sdp/board-pontus-dt.c',
+    'linux-5.4/arch/arm/mach-sdp/platsmp.c',
 }
+BOOT_MARKERS = ('samsung,sdp-pontusm', 'DT_MACHINE_START', 'sdp_platsmp_init',
+                '_sdp_pontus_set_entry', 'sdp_secondary_startup', 'sdp_smp_boot_secondary')
 SYMBOLS = ('CONFIG_ARM', 'CONFIG_ARM64', 'CONFIG_ARCH_SDP', 'CONFIG_ARCH_SDP_PONTUS',
            'CONFIG_CPU_V7', 'CONFIG_CPU_V8', 'CONFIG_CPU_ARM_CORTEX_A15', 'CONFIG_AEABI', 'CONFIG_HIGHMEM',
            'CONFIG_ANDROID', 'CONFIG_ANDROID_BINDER_IPC', 'CONFIG_ANDROID_BINDERFS',
@@ -54,12 +59,19 @@ def inspect(stream, *, expanded_limit=4 * 1024**3, member_limit=200000):
             elif member.name == 'linux-5.4/Makefile':
                 record['version_fields'] = dict(re.findall(
                     r'^(VERSION|PATCHLEVEL|SUBLEVEL|EXTRAVERSION)[ \t]*=[ \t]*([^\n]*)', text, re.MULTILINE))
+            elif member.name.endswith(('board-pontus-dt.c', 'platsmp.c', 'mach-sdp/Makefile')):
+                lines = data.split(b'\n')
+                record['lexical_markers'] = {marker: [
+                    {'line': index + 1, 'line_sha256': hashlib.sha256(line).hexdigest()}
+                    for index, line in enumerate(lines) if marker.encode('ascii') in line]
+                    for marker in BOOT_MARKERS if marker.encode('ascii') in data}
             else:
                 record['declared_symbols'] = re.findall(r'^config (\w+)', text, re.MULTILINE)
             records.append(record)
     return {'schema_version': 1, 'nested_member': 'linux.tgz', 'member_count': count,
             'declared_expanded_bytes': total, 'selected_metadata': records,
             'files_extracted': False, 'code_executed': False,
+            'marker_semantics': 'Lexical locations only; manually review control flow and build applicability separately.',
             'target_board_and_installed_build_correspondence': 'unverified'}
 
 

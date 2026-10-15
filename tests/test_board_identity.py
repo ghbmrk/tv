@@ -7,7 +7,7 @@ import sys
 import time
 import unittest
 from unittest.mock import patch
-from tools.collect_board_identity import collect, public_cpu, write_report, PinnedSdb
+from tools.collect_board_identity import collect, public_cpu, write_report, PinnedSdb, source_family_match
 
 
 class FakeSdb:
@@ -74,6 +74,33 @@ class BoardIdentityTests(unittest.TestCase):
         report = public_cpu('Serial : PRIVATE\nHardware : PRIVATE\nCPU implementer : PRIVATE\nCPU part : PRIVATE\nCPU architecture : PRIVATE\nprocessor : PRIVATE\n')
         self.assertNotIn('PRIVATE', json.dumps(report)); self.assertEqual(report['parts'], [])
         self.assertEqual(report['reported_processor_entries'], 0)
+
+    def test_source_match_is_exact_bounded_and_does_not_expose_other_compatibles(self):
+        self.assertTrue(source_family_match('vendor,PRIVATE-CANARY\0samsung,sdp-pontusm\0'))
+        for raw in ('samsung,sdp-pontusmx\0', 'prefix-samsung,sdp-pontusm\0', 'vendor,other\0'):
+            self.assertFalse(source_family_match(raw))
+        for raw in (None, '', 'samsung,sdp-pontusm', '\0', 'samsung,sdp-pontusm\0\0', 'bad\nvalue\0', 'a' * 4097 + '\0'):
+            self.assertIsNone(source_family_match(raw))
+        runner = FakeSdb()
+        original = runner.run
+        def run(arguments, timeout):
+            result = original(arguments, timeout)
+            if tuple(arguments[3:]) == ('cat', '/proc/device-tree/compatible'):
+                result.stdout = b'vendor,PRIVATE-CANARY\0samsung,sdp-pontusm\0'
+            return result
+        runner.run = run
+        report = collect('192.168.1.2', runner, identifier=self.identity)
+        self.assertTrue(report['public']['source_family_compatible_match'])
+        self.assertNotIn('PRIVATE-CANARY', json.dumps(report['public']))
+        self.assertIn('PRIVATE-CANARY', json.dumps(report['private']))
+        def fail(arguments, timeout):
+            result = run(arguments, timeout)
+            if tuple(arguments[3:]) == ('cat', '/proc/device-tree/compatible'):
+                result.returncode = 1
+            return result
+        runner.run = fail
+        report = collect('192.168.1.2', runner, identifier=self.identity)
+        self.assertIsNone(report['public']['source_family_compatible_match'])
 
     def test_unpinned_executable_is_refused_before_execution(self):
         with tempfile.TemporaryDirectory() as directory:

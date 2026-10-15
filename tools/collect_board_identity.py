@@ -22,6 +22,8 @@ SDB_SHA256 = '05db410d2e36e85147f95b20bae6296a71c54dab0e1ec79f9e11b89c4b6bd2cd'
 MAX_OUTPUT = 65536
 READS = (('uname', '-m'), ('uname', '-r'), ('getconf', 'LONG_BIT'),
          ('cat', '/proc/cpuinfo'), ('cat', '/proc/device-tree/compatible'))
+# Manually reviewed family-source machine registration; not an exact-board identifier.
+FAMILY_COMPATIBLE = 'samsung,sdp-pontusm'
 ARCHITECTURES = {'armv7l', 'armv8l', 'aarch64', 'x86_64', 'i686', 'mips', 'mipsel'}
 
 
@@ -80,6 +82,16 @@ def public_cpu(raw):
             'reported_processor_entries': len(processors)}
 
 
+def source_family_match(raw):
+    # The DT string-list must be terminated and structurally bounded. Failed/malformed reads stay unknown.
+    if not isinstance(raw, str) or not raw.endswith('\0') or len(raw) > 4096:
+        return None
+    values = raw[:-1].split('\0')
+    if not 1 <= len(values) <= 32 or any(not re.fullmatch(r'[A-Za-z0-9,._+-]{1,128}', value) for value in values):
+        return None
+    return FAMILY_COMPATIBLE in values
+
+
 def collect(host, runner, *, identifier=identify):
     address = ipaddress.IPv4Address(host)
     if not any(address in network for network in PRIVATE_NETWORKS):
@@ -127,6 +139,7 @@ def collect(host, runner, *, identifier=identify):
                       kernel_release_core=release.group(1) if release else None,
                       reported_userspace_bits=int(bits) if bits in ('32', '64') else None,
                       cpu=public_cpu(outputs[READS[3]]) if READS[3] in outputs else None,
+                      source_family_compatible_match=source_family_match(outputs.get(READS[4])),
                       successful_reads=len(outputs))
     except Exception:
         # SDK/server errors may contain device IDs. Retain no exception strings.
