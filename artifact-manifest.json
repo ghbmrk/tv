@@ -57,6 +57,18 @@
       "complete_firmware_image": false,
       "signature_verified": false,
       "derivation_record": "research/firmware-archive-index.json"
+    },
+    {
+      "path": "reference/source/25_DTV_PontusM.zip",
+      "kind": "offline_official_family_source_research_artifact",
+      "sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+      "size_bytes": 1071208323,
+      "source_url": "https://opensource.samsung.com/uploadSearch?searchValue=LS03F",
+      "complete_zip_archive": true,
+      "all_outer_members_crc_checked": true,
+      "signature_verified": false,
+      "installed_firmware_correspondence": "unverified",
+      "derivation_record": "research/PONTUS_SOURCE_FINDINGS.md"
     }
   ]
 }

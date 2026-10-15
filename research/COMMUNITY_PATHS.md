@@ -1,0 +1,17 @@
+# Community research applicability
+
+Checked against upstream repositories on 2026-10-15. Local clones were read as text only; no installers, exploits, root commands or TV connections were run. Commit pins make these observations reproducible. No upstream implementation was copied into the MIT product.
+
+| Primary repository and inspected revision | Established upstream scope | Application to this project |
+|---|---|---|
+| [chris-ritsen/samsung-tv-root](https://github.com/chris-ritsen/samsung-tv-root/tree/4ad2c4d3b0d0e0da4b5b7ebe4a787e94596f416b), Unlicense | Tested QN90B ARMv7 and QN90F AArch64 profiles; volatile root, host-side reacquisition, remote/native controls and diagnostics. | Useful examples of typed capability inventories and lifecycle reconciliation. Neither tested family is the owner's T-PTMFAKUC LS03F. A matching firmware number such as 1301 is insufficient. Root is not independently booting Android or replacement of Samsung software. |
+| [invaliddayta/samsung-s90c-toolkit](https://github.com/invaliddayta/samsung-s90c-toolkit/tree/d3b99a4955049597976806218bf7140e9cc94db5), MIT | One tested QE77S90C, Tizen 7 ARMv7, firmware 2000.2; uses the archive bootstrap above. No custom boot service; SMACK/UEP/read-only restrictions remain. | Plan/apply/verify and protected-component boundaries are useful design references. Its successful reboot/root cycle is not recovery evidence for an LS03F. The README's clone alias differs from the reachable repository name; use the pinned repository link. |
+| [rfaile313/samsucks](https://github.com/rfaile313/samsucks/tree/8ea8d72df90d43215da08cd2be291f8048a13ab6), GPL-3.0 | Tizen Plex client. Code in `app/js/ui/grid.js`, `row.js`, `backdrop.js` and `input.js` implements bounded tile pools, a small WebGL backdrop and frame-coalesced directional input. | Apply bounded rendering and input-backlog principles independently to the native shell. Benchmark on actual hardware. Reported launch/frame/direct-play measurements are the author's Q60B results, not independent LS03F measurements or qualification of Netflix/Prime/Disney/YouTube. |
+
+The supplied @iampiny posts remain an unverified lead: no inspectable original post/repository establishing the exact model, implementation or boot scope was obtained. Apps2Samsung, TizenBrew, Jellyfin and other sideloading projects can assist an explicitly chosen stock-Tizen experiment; their availability does not satisfy the final replacement requirement. They are not dependencies of the current AOSP shell.
+
+## Architectural decision
+
+Continue the original-board AOSP investigation and the portable local experience model. Use community work to reduce uncertainty about interfaces and performance. Keep stock-Tizen experiments as separately labelled research artifacts. Do not replace the target with a root-dependent launcher merely because that is easier to demonstrate.
+
+For the native renderer, bounded lazy composition already exists. Future artwork decoding must be size-aware and off the UI thread, caches must have explicit memory limits, and held remote keys must not create a queue of stale focus movements. Preserve first-press and release semantics; measure before adding custom input throttling because Android's native focus system already schedules input. Add performance qualification for the actual worst-case experience document and return-from-provider path, rather than transplanting a browser renderer optimization into Compose.
