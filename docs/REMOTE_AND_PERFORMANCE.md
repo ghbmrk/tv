@@ -49,3 +49,9 @@ Measure p50/p95 and worst observed latency with sample count and conditions, not
 Exercise Home ↔ each of Netflix, Prime Video, Disney+ and YouTube; app ↔ app through Home; settings/overlays during playback; artwork ↔ viewing; standby/wake; and navigation during household-agent edits. Repeat offline local operation, cold boot, warm use, memory pressure, background updates and sustained UHD/HDR playback. Check responsiveness, dropped/repeated keys, focus continuity, audio, HDR transitions, frame cadence, memory pressure, temperatures and standby consumption together.
 
 A faster benchmark does not pass if it loses settings, breaks the existing remote, leaves a stale secure surface, restarts playback unnecessarily, or compromises current picture/audio quality. Publish measured results only after target testing; no such results exist yet.
+
+## Native prototype diagnostics
+
+The native Home remains composed while Settings is open; its layer is hidden, its semantic descendants are cleared, and focus is disabled until return. The shared header preserves experience identity and operation feedback independently of scroll position. Settings has an explicit Down route into its first action; Back restores the selected Home/collection tile. These are implementation mechanisms, not target timing guarantees.
+
+`HomeExperienceTest` checks 30 repeated round trips, ordinary D-pad movement within Settings, activity recreation and a rendered focus-color pixel. Its synthetic [raw emulator diagnostics](../research/native-home-emulator-diagnostics.json) include total/component frame durations, report-drop count, sample counts, percentile summaries and APK identity. Test round trips include harness focus, key injection and idle waits; they cannot be compared directly with physical-remote budgets above. No physical-TV latency measurement is available.
