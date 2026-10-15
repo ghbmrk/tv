@@ -9,10 +9,12 @@ import android.os.Handler
 import android.os.Looper
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.UUID
 
 /** Disk, parsing and package discovery never run on the navigation/frame path. */
 class ExperienceViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,6 +27,14 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
     private var catalogPending = false
     var experience by mutableStateOf<Experience?>(null)
         private set
+    var preview by mutableStateOf<ExperienceRepository.Loaded?>(null)
+        private set
+    var revision by mutableLongStateOf(0L)
+        private set
+    var unconfirmed by mutableStateOf(false)
+        private set
+    private data class Change(val requestId: String, val base: Long, val document: String? = null, val restore: Long? = null, val success: String)
+    private var pending: Change? = null
     var busy by mutableStateOf(false)
         private set
     var message by mutableStateOf("Loading local Home")
@@ -32,14 +42,96 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
 
     init { update("Loading local Home", "Local Home • no agentOS connection") { repository.load() } }
 
-    fun importDocument(uri: Uri) = update("Importing experience", "Imported local experience") {
-        val stream = getApplication<Application>().contentResolver.openInputStream(uri) ?: error("File unavailable")
-        repository.import(stream)
+    fun importDocument(uri: Uri) {
+        val base = revision
+        work("Preparing preview", {
+            val document = (getApplication<Application>().contentResolver.openInputStream(uri) ?: error("File unavailable"))
+                .use(ExperienceRepository::readBounded)
+            repository.preview(base, document)
+        }) {
+            preview = it
+            message = "Unsaved preview • apply or cancel"
+        }
     }
 
-    fun reset() = update("Restoring default Home", "Default Home restored") { repository.reset() }
+    fun cancelPreview() {
+        if (!busy) { preview = null; message = "Preview cancelled; saved experience unchanged" }
+    }
+
+    fun applyPreview() {
+        val candidate = preview ?: return
+        change(Change(UUID.randomUUID().toString(), candidate.revision, document = candidate.document, success = "Imported local experience"))
+    }
+
+    fun undo() {
+        val base = revision
+        if (base < 2) return
+        change(Change(UUID.randomUUID().toString(), base, restore = base - 1, success = "Last change undone"))
+    }
+
+    fun reset() {
+        val base = revision
+        change(Change(UUID.randomUUID().toString(), base, success = "Default Home restored"))
+    }
+
+    fun reload() = update("Loading saved experience", "Saved experience loaded") { repository.load() }
+
+    fun retryChange() { pending?.let { change(it, retry = true) } }
+
+    private fun change(request: Change, retry: Boolean = false) {
+        if (busy || (pending != null && !retry)) return
+        pending = request
+        work("Applying local change", {
+            var refusal: Exception? = null
+            val receipt = try {
+                when {
+                    request.restore != null -> repository.undo(request.requestId, request.base, request.restore)
+                    request.document != null -> repository.apply(request.requestId, request.base, request.document)
+                    else -> repository.applyDefault(request.requestId, request.base)
+                }
+            } catch (error: Exception) {
+                val prior = repository.receipt(request.requestId)
+                if (prior == null) {
+                    if (error is ExperienceJournal.Conflict || error is ExperienceJournal.Capacity || error is IllegalArgumentException) refusal = error else throw error
+                }
+                prior
+            }
+            val loaded = repository.load()
+            check(!loaded.journalUnavailable)
+            if (receipt != null && loaded.revision == receipt.revision) check(ExperienceJournal.sha256(loaded.document) == receipt.documentSha256)
+            Triple(loaded, receipt, refusal)
+        }, failure = {
+            unconfirmed = true
+            message = "Result unconfirmed • retry the same change"
+        }) { (loaded, receipt, refusal) ->
+            experience = loaded.experience
+            revision = loaded.revision
+            preview = null
+            pending = null
+            unconfirmed = false
+            message = when {
+                refusal is ExperienceJournal.Capacity -> "Local edit history full; owner maintenance required"
+                refusal != null -> "Change refused; saved experience reloaded"
+                receipt?.revision != loaded.revision -> "Change applied; newer saved experience loaded"
+                else -> request.success
+            }
+        }
+    }
 
     private fun update(progress: String, success: String, operation: () -> ExperienceRepository.Loaded) {
+        work(progress, operation) {
+            experience = it.experience
+            revision = it.revision
+            preview = null
+            message = when {
+                it.journalUnavailable -> "Local journal unreadable; default Home available • editing disabled"
+                it.restoredDefault -> "Saved experience unreadable; default Home loaded"
+                else -> success
+            }
+        }
+    }
+
+    private fun <T> work(progress: String, operation: () -> T, failure: (() -> Unit)? = null, success: (T) -> Unit) {
         if (busy) return
         busy = true
         message = progress
@@ -47,10 +139,9 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
             val loaded = runCatching(operation)
             main.post {
                 if (!closed.get()) {
-                    loaded.onSuccess {
-                        experience = it.experience
-                        message = if (it.restoredDefault) "Saved experience unreadable; default Home loaded" else success
-                    }.onFailure { message = "Change refused; previous experience preserved" }
+                    loaded.onSuccess(success).onFailure {
+                        if (failure != null) failure() else message = if (it is ExperienceJournal.Conflict) "Experience changed; reload saved before editing" else "Change refused; previous experience preserved"
+                    }
                     busy = false
                 }
             }

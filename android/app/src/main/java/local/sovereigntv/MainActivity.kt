@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                val doc = model.experience
+                val doc = model.preview?.experience ?: model.experience
                 if (doc == null) {
                     Box(Modifier.fillMaxSize().background(Color(0xff101b28)).padding(40.dp)) { Text(model.message, color = Color.White) }
                     return@MaterialTheme
@@ -51,18 +51,29 @@ class MainActivity : ComponentActivity() {
                 val restoreId = focusedId?.takeIf { it in visibleIds } ?: visibleIds.firstOrNull()
                 val background = when (doc.theme) { "warm" -> Color(0xff2a211c); "light" -> Color(0xffe7e8e0); else -> Color(0xff101b28) }
                 val foreground = if (doc.theme == "light") Color(0xff17292d) else Color.White
-                LazyColumn(Modifier.fillMaxSize().background(background).padding(40.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                LazyColumn(Modifier.fillMaxSize().background(background), contentPadding = PaddingValues(40.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
                     item(key = "header") { Text(doc.title, color = foreground, fontSize = (34 * doc.textScale).sp) }
                     item(key = "status") { Text(model.message, color = foreground) }
                     item(key = "controls") { Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        Button(enabled = !model.busy, onClick = { importer.launch(arrayOf("application/json", "text/plain")) }) { Text("Import experience") }
-                        Button(enabled = !model.busy, onClick = { model.reset() }) { Text("Restore default") }
+                        if (model.unconfirmed) {
+                            Button(enabled = !model.busy, onClick = { model.retryChange() }) { Text("Retry change") }
+                        } else if (model.preview != null) {
+                            Button(enabled = !model.busy, onClick = { model.applyPreview() }) { Text("Apply preview") }
+                            Button(enabled = !model.busy, onClick = { model.cancelPreview() }) { Text("Cancel preview") }
+                        } else {
+                            Button(enabled = !model.busy && model.revision > 0, onClick = { importer.launch(arrayOf("application/json", "text/plain")) }) { Text("Import experience") }
+                            Button(enabled = !model.busy && model.revision > 0, onClick = { model.reset() }) { Text("Restore default") }
+                            Button(enabled = !model.busy && model.revision > 1, onClick = { model.undo() }) { Text("Undo last change") }
+                        }
                     } }
+                    if (model.message == "Experience changed; reload saved before editing") {
+                        item(key = "reload") { Button(enabled = !model.busy, onClick = { model.reload() }) { Text("Reload saved") } }
+                    }
                     items(doc.sections, key = { "section:${it.id}" }) { section ->
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             Text(section.title, color = foreground, fontSize = (24 * doc.textScale).sp)
                             if (section.layout == "row") {
-                                LazyRow(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
+                                LazyRow(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(18.dp)) {
                                     items(section.items.filter { it.visible }, key = { it.id }) { tile ->
                                         TileButton(tile, tile.id == restoreId, resumeGeneration) { focusedId = tile.id }
                                     }
