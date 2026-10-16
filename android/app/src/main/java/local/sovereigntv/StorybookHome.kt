@@ -49,12 +49,13 @@ private val Ink = Color(0xff302c24)
         .then(if (!enabled) Modifier.clearAndSetSemantics { } else Modifier)) {
         val unit = maxWidth / 960f
         background?.let { Image(it, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop) }
-        val tileWidth = unit * 128f
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(start = unit * 60f, end = unit * 60f,
             top = unit * 150f, bottom = unit * 72f), verticalArrangement = Arrangement.spacedBy(unit * 30f)) {
             items(doc.sections, key = { it.id }) { section ->
                 val movies = section.items.any { it.kind == "movie" }
-                if (section.layout == "row") LazyRow(horizontalArrangement = Arrangement.spacedBy(unit * 12f),
+                val tileWidth = unit * if (movies) 128f else 104f
+                val arrangement = Arrangement.spacedBy(unit * 12f, if (movies) Alignment.Start else Alignment.CenterHorizontally)
+                if (section.layout == "row") LazyRow(Modifier.fillMaxWidth(), horizontalArrangement = arrangement,
                     contentPadding = PaddingValues(horizontal = unit * 5f, vertical = unit * 8f)) {
                     items(section.items.filter { it.visible }, key = { it.id }) { tile ->
                         StorybookTile(tile, tileWidth, if (movies) unit * 190f else unit * 72f, posters, background,
@@ -63,7 +64,7 @@ private val Ink = Color(0xff302c24)
                     }
                 } else Column(verticalArrangement = Arrangement.spacedBy(unit * 12f)) {
                     section.items.filter { it.visible }.chunked(6).forEach { row ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(unit * 12f), modifier = Modifier.padding(5.dp)) {
+                        Row(horizontalArrangement = arrangement, modifier = Modifier.fillMaxWidth().padding(5.dp)) {
                             row.forEach { tile -> key(tile.id) {
                                 StorybookTile(tile, tileWidth, if (movies) unit * 190f else unit * 72f, posters, background,
                                     tile.id == restoreId, enabled, generation, availability(tile.target),

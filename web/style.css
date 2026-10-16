@@ -19,3 +19,8 @@
 .story-row[data-layout=grid]{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.story-row[data-layout=grid] .story-tile{width:100%}#screen.storybook{overflow-y:auto;scrollbar-width:none}.story-tile:not(.story-poster){background-image:url('/storybook/background.png');background-size:350%;background-position:50% 50%;background-blend-mode:multiply}
 
 .story-tile:focus-visible,.story-tile:focus{border-color:#fff1c4;box-shadow:0 0 0 4px #fff1c4,0 0 12px 5px #e6c37e80,0 5px 12px #291b1b55}
+
+/* A shorter, centered app band beneath the full-width movie carousel. */
+.story-row[data-movies=false]{justify-content:safe center}
+.story-row[data-movies=false] .story-tile{flex-basis:12.6%;aspect-ratio:13/9}
+.story-row[data-movies=false][data-layout=grid]{grid-template-columns:repeat(6,minmax(0,12.6%))}
