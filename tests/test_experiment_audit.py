@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -84,6 +85,14 @@ class ExperimentAuditTests(unittest.TestCase):
             p = copy.deepcopy(self.packet); p['artifact']['bytes'] = size
             with self.assertRaises(ValueError):
                 audit(p, self.root)
+
+    def test_cli_rejects_special_file_without_reading_or_connecting(self):
+        path = self.root / 'pipe'
+        os.mkfifo(path)
+        result = subprocess.run([sys.executable, str(ROOT / 'tools/audit_experiment.py'), str(path)],
+                                capture_output=True, text=True, timeout=5)
+        self.assertEqual(result.returncode, 3)
+        self.assertFalse(json.loads(result.stdout)['device_accessed'])
 
 
 if __name__ == '__main__':

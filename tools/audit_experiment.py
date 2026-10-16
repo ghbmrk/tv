@@ -111,13 +111,15 @@ def main():
     parser.add_argument('--evidence-root', type=Path)
     args = parser.parse_args()
     try:
-        if args.packet.stat().st_size > 512 * 1024:
-            raise ValueError('packet exceeds budget')
+        info = args.packet.stat()
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 512 * 1024:
+            raise ValueError('packet must be a bounded regular file')
         packet = json.loads(args.packet.read_text(), object_pairs_hook=unique_object)
         result = audit(packet, (args.evidence_root or args.packet.parent).resolve())
     except (ValueError, OSError, TypeError, KeyError, RecursionError):
         print(json.dumps({'review_packet_complete': False, 'authorization_granted': False,
-                          'hardware_safety_verified': False, 'error': 'invalid packet or unavailable/mismatched evidence'}))
+                          'hardware_safety_verified': False, 'device_accessed': False,
+                          'error': 'invalid packet or unavailable/mismatched evidence'}))
         raise SystemExit(3)
     print(json.dumps(result, indent=2))
     raise SystemExit(0 if result['review_packet_complete'] else 2)
