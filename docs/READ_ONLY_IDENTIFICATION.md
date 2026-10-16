@@ -1,5 +1,7 @@
 # Read-only target identification
 
+Collection permission is about the reviewed operation's actual effects, not whether a command is named `cat` or a file has read-only permissions. The [family media-source review](../research/MEDIA_SOURCE_FINDINGS.md) found a readable debug callback that stops controller cores and transfers microcode. Do not enumerate/read unreviewed debugfs, sysfs, procfs or device nodes, invoke vendor diagnostics, or use register/RPMB interfaces as a fallback to missing identity. The fixed operations documented below do not grant broader diagnostic access.
+
 `tools/identify_tv.py` makes one fixed `GET /api/v2/` request on port 8001 at an owner-supplied private LAN IPv4 address. It performs no discovery, authentication attempt, shell command, remote-key action, setting change, sideload or firmware write. Public addresses, hostnames, subnets and implicit loopback are refused. Redirects are not followed; JSON/body bounds and socket timeouts apply.
 
 Replace `TV_PRIVATE_IPV4` with the actual address shown in the TV's ordinary network settings:

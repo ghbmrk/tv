@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "target": {
+    "model": "QN50LS03FAFXZA",
+    "installed_build": "T-PTMFAKUC-0090-1301.0",
+    "board_id": null,
+    "board_revision": null
+  },
+  "artifact": null,
+  "gates": [
+    {
+      "id": "identity",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "boot_trust",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "software_provenance",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "build_reproduction",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "bench_rehearsal",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "recovery",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "stock_baseline",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    },
+    {
+      "id": "provider_route",
+      "status": "unverified",
+      "scope": null,
+      "evidence": []
+    }
+  ]
+}

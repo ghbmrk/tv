@@ -6,6 +6,8 @@ An owner-controlled TV experience and an Android-first replacement project for t
 
 **Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Owner-authorized off-TV implementation continues; ordinary SDB now connects but does not expose board identity; the board-port gates remain mandatory before installation.
 
+The [off-TV execution plan](docs/deployment/OFF_TV_READINESS.md) requires matching-lab rehearsal and independent recovery review before a household experiment. `python3 tools/audit_experiment.py docs/deployment/experiment-packet.json` reports the current missing evidence and exits 2. It never connects to the TV or authorizes writes. New [source findings](research/MEDIA_SOURCE_FINDINGS.md) show why readable diagnostic permissions alone do not establish safe collection.
+
 ## Initial Home
 
 The [storybook Home](docs/STORYBOOK_HOME.md) renders a manually curated movie carousel and six app marks without visible text. Its local document supports deliberate add/remove/reorder/hide, local posters, preview/apply/undo and accessibility labels. No recommendation feeds or Home autoplay exist. Movie handoff remains disabled until exact-title playback and stop-at-end can be qualified; app launches remain explicit. The read-only design preview is at `/preview` on the local studio server. Existing saved experiences are preserved.

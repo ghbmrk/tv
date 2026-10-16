@@ -4,6 +4,8 @@ The first vertical slice is the local experience format, revision store, editing
 
 Owner-authorized off-TV implementation continues. Normal SDB transport now works, but shell/root switching is disabled and fixed Unix queries returned no board identity. [The decisive feasibility experiments](../research/FEASIBILITY.md) still govern the board port: original-board boot ownership, Samsung-component replaceability, recovery and legitimate provider-quality integration remain installation gates.
 
+The [off-TV execution plan](deployment/OFF_TV_READINESS.md) orders the remaining work and requires matching-lab rehearsal before a household write proposal. A tested offline packet auditor checks identity/image/evidence consistency and reports current missing proofs; it never certifies hardware safety or grants authorization. The recovery failure matrix, unverified storage/provenance records and hashed media callback analysis are implemented. Exact-board boot/recovery and independent protected-media eligibility remain the critical external dependencies.
+
 | Next package | Deliverable | Acceptance |
 |---|---|---|
 | Native shell qualification | Local APK/JVM/lint and 12 API 36 TV runtime tests pass; Linux x86_64 TV CI passed; PR #3 merged. | D-pad/focus, import callback, persisted read-back, invalid files and reset/recovery covered. Actual system picker, physical remote and provider launch remain separate qualification work. |
