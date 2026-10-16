@@ -73,12 +73,19 @@ def handler(store, token):
             if self.path == '/api/capabilities':
                 return self.send(200, {'api_version': 1, 'mode': 'loopback-development',
                     'operations': ['state', 'preview', 'apply', 'undo', 'receipt', 'asset-put', 'asset-get', 'export'],
-                    'hardware_control': False, 'agentos_qualified': False})
+                    'experience_schema_versions': [1, 2, 3], 'manual_movie_curation': True, 'home_autoplay': False, 'movie_playback_qualified': False, 'hardware_control': False, 'agentos_qualified': False})
             if self.path.startswith('/api/receipts/'):
                 result = store.receipt(self.path[len('/api/receipts/'):])
                 return self.send(200 if result else 404, result or {'error': 'unknown request'})
             static = {'/': ('index.html', 'text/html; charset=utf-8'),
                       '/app.js': ('app.js', 'application/javascript'), '/style.css': ('style.css', 'text/css')}
+            static['/storybook.js'] = ('storybook.js', 'application/javascript')
+            static.update({'/preview': ('preview.html','text/html; charset=utf-8'), '/preview.js':('preview.js','application/javascript'), '/preview.css':('preview.css','text/css')})
+            if self.path == '/storybook-default.json':
+                return self.send(200, json.loads((ROOT / 'examples/storybook.json').read_text()))
+            if self.path in ('/storybook/background.png', '/storybook/posters.png'):
+                name = self.path.rsplit('/', 1)[1]
+                return self.send(200, (ROOT / 'android/app/src/main/assets/storybook' / name).read_bytes(), 'image/png')
             if self.path in static:
                 name, mime = static[self.path]
                 return self.send(200, (ROOT / 'web' / name).read_bytes(), mime)
@@ -141,7 +148,7 @@ def main():
         with os.fdopen(fd, 'w') as stream:
             stream.write(secrets.token_urlsafe(32))
     os.chmod(token_path, 0o600)
-    store = Store(args.data / 'experience.sqlite3', json.loads((ROOT / 'examples/experience.json').read_text()), ArtworkStore(args.data / 'artwork'))
+    store = Store(args.data / 'experience.sqlite3', json.loads((ROOT / 'examples/storybook.json').read_text()), ArtworkStore(args.data / 'artwork'))
     server = ThreadingHTTPServer(('127.0.0.1', args.port), handler(store, token_path.read_text().strip()))
     print(f'Preview: http://127.0.0.1:{server.server_port}\nLocal development token file: {token_path} (paste into preview; never publish it)', flush=True)
     try:

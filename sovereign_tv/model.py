@@ -24,11 +24,11 @@ def identifier(value):
 
 def validate(doc):
     version = doc.get('schema_version') if isinstance(doc, dict) else None
-    if type(version) is not int or version not in (1, 2):
+    if type(version) is not int or version not in (1, 2, 3):
         raise Invalid('unsupported schema version')
-    fields(doc, ('schema_version', 'title', 'theme', 'sections', 'settings') + (('collections',) if version == 2 else ()))
+    fields(doc, ('schema_version', 'title', 'theme', 'sections', 'settings') + (('collections',) if version >= 2 else ()))
     label(doc['title'])
-    if doc['theme'] not in ('night', 'warm', 'light'):
+    if doc['theme'] not in ('night', 'warm', 'light', 'storybook'):
         raise Invalid('unsupported theme')
     sections = doc['sections']
     if not isinstance(sections, list) or not 1 <= len(sections) <= 12:
@@ -44,22 +44,24 @@ def validate(doc):
         ids.add(section['id'])
         if section['layout'] not in ('row', 'grid'):
             raise Invalid('unsupported layout')
-        if not isinstance(section['items'], list) or not 1 <= len(section['items']) <= 24:
+        if not isinstance(section['items'], list) or not (0 if version == 3 else 1) <= len(section['items']) <= 24:
             raise Invalid('1–24 items per section required')
         for item in section['items']:
-            fields(item, ('id', 'title', 'kind', 'target', 'visible'))
+            fields(item, ('id', 'title', 'kind', 'target', 'visible') + (('poster', 'playback') if isinstance(item, dict) and item.get('kind') == 'movie' and version == 3 else ()))
+            if item.get('kind') == 'movie':
+                movie(item)
             identifier(item['id'])
             identifier(item['target'])
             label(item['title'])
             if item['id'] in ids:
                 raise Invalid('duplicate identifier')
             ids.add(item['id'])
-            if item['kind'] not in ('app', 'collection') or type(item['visible']) is not bool:
+            if item['kind'] not in (('app', 'collection', 'movie') if version == 3 else ('app', 'collection')) or type(item['visible']) is not bool:
                 raise Invalid('unsupported item')
             count += int(item['visible'])
     if not count:
         raise Invalid('at least one visible item required')
-    if version == 2:
+    if version >= 2:
         collections = doc['collections']
         if not isinstance(collections, list) or len(collections) > 12:
             raise Invalid('at most 12 collections allowed')
@@ -112,4 +114,21 @@ def canonical(value):
 
 def artwork_refs(doc):
     return {item['target'] for collection in doc.get('collections', [])
-            for item in collection['items'] if item['kind'] == 'artwork'}
+            for item in collection['items'] if item['kind'] == 'artwork'} | {item['poster'] for section in doc['sections']
+            for item in section['items'] if item['kind'] == 'movie' and re.fullmatch(r'[a-f0-9]{64}', item['poster'])}
+
+
+BUILTIN_POSTERS = {'blank', 'princess_frog', 'kung_fu_panda', 'balto', 'little_mermaid', 'hunchback', 'land_before_time'}
+PLAYBACK_IDS = {'netflix': r'[0-9]{6,12}', 'youtube': r'[A-Za-z0-9_-]{11}',
+                'prime_video': r'[A-Z0-9]{10}', 'disney_plus': r'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}'}
+
+def movie(item):
+    poster = item['poster']
+    if not isinstance(poster, str) or not (poster in BUILTIN_POSTERS or re.fullmatch(r'[a-f0-9]{64}', poster)):
+        raise Invalid('movie poster must be bundled artwork or a local SHA-256 asset')
+    link = item['playback']
+    if link is not None:
+        fields(link, ('provider', 'content_id'))
+        provider, content = link['provider'], link['content_id']
+        if not isinstance(provider, str) or not isinstance(content, str) or provider not in PLAYBACK_IDS or not re.fullmatch(PLAYBACK_IDS[provider], content):
+            raise Invalid('unsupported explicit movie route')

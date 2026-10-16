@@ -4,12 +4,12 @@ import org.json.JSONObject
 import org.json.JSONArray
 import java.util.UUID
 
-data class Tile(val id: String, val title: String, val kind: String, val target: String, val visible: Boolean)
+data class Tile(val id: String, val title: String, val kind: String, val target: String, val visible: Boolean, val poster: String? = null, val playback: MovieLink? = null)
 data class Section(val id: String, val title: String, val layout: String, val items: List<Tile>)
 data class Collection(val id: String, val title: String, val items: List<Tile>)
 data class Experience(val title: String, val theme: String, val textScale: Float, val sections: List<Section>,
     val collections: List<Collection> = emptyList(), val artworkIntervalSeconds: Int = 300) {
-    val artworkRefs get() = collections.flatMap { it.items }.filter { it.kind == "artwork" }.map { it.target }.toSet()
+    val artworkRefs get() = (collections.flatMap { it.items }.filter { it.kind == "artwork" }.map { it.target } + sections.flatMap { it.items }.filter { it.kind == "movie" }.mapNotNull { it.poster?.takeIf { poster -> Regex("[a-f0-9]{64}").matches(poster) } }).toSet()
     companion object {
         private fun exact(o: JSONObject, keys: Set<String>) { require(o.keys().asSequence().toSet() == keys) }
         private fun label(value: Any): String { require(value is String && value.codePointCount(0, value.length) in 1..120 && value.none { it.code < 32 } && Charsets.UTF_8.newEncoder().canEncode(value)); return value }
@@ -18,11 +18,11 @@ data class Experience(val title: String, val theme: String, val textScale: Float
             require(Charsets.UTF_8.newEncoder().canEncode(text)) { "Well-formed Unicode required" }
             require(text.toByteArray(Charsets.UTF_8).size <= 65536)
             val root = JSONObject(text)
-            require(root.get("schema_version") is Int && root.getInt("schema_version") in 1..2)
+            require(root.get("schema_version") is Int && root.getInt("schema_version") in 1..3)
             val version = root.getInt("schema_version")
-            exact(root, setOf("schema_version", "title", "theme", "sections", "settings") + if (version == 2) setOf("collections") else emptySet())
+            exact(root, setOf("schema_version", "title", "theme", "sections", "settings") + if (version >= 2) setOf("collections") else emptySet())
             val title = label(root.get("title"))
-            val theme = root.getString("theme"); require(theme in setOf("night", "warm", "light"))
+            val theme = root.getString("theme"); require(theme in setOf("night", "warm", "light", "storybook"))
             val settings = root.getJSONObject("settings")
             exact(settings, setOf("text_scale", "artwork_interval_seconds"))
             require(settings.get("text_scale") is Number)
@@ -35,14 +35,16 @@ data class Experience(val title: String, val theme: String, val textScale: Float
                 exact(section, setOf("id", "title", "layout", "items"))
                 require(ids.add(id(section.get("id"))))
                 val layout = section.getString("layout"); require(layout in setOf("row", "grid"))
-                val items = section.getJSONArray("items"); require(items.length() in 1..24)
+                val items = section.getJSONArray("items"); require(items.length() in (if (version == 3) 0..24 else 1..24))
                 Section(section.getString("id"), label(section.get("title")), layout, (0 until items.length()).map { j ->
                     val item = items.getJSONObject(j)
-                    exact(item, setOf("id", "title", "kind", "target", "visible"))
+                    exact(item, setOf("id", "title", "kind", "target", "visible") + if (version == 3 && item.optString("kind") == "movie") setOf("poster", "playback") else emptySet())
                     val itemId = id(item.get("id")); require(ids.add(itemId))
-                    val kind = item.getString("kind"); require(kind in setOf("app", "collection"))
+                    val kind = item.getString("kind"); require(kind in (if (version == 3) setOf("app", "collection", "movie") else setOf("app", "collection")))
                     require(item.get("visible") is Boolean)
-                    Tile(itemId, label(item.get("title")), kind, id(item.get("target")), item.getBoolean("visible"))
+                    val poster = if (kind == "movie") item.getString("poster").also { require(item.get("poster") is String) }.also { require(it == "blank" || it in MovieLink.POSTERS || Regex("[a-f0-9]{64}").matches(it)) } else null
+                    val playback = if (kind == "movie" && !item.isNull("playback")) MovieLink.parse(item.getJSONObject("playback")) else null
+                    Tile(itemId, label(item.get("title")), kind, id(item.get("target")), item.getBoolean("visible"), poster, playback)
                 })
             }
             require(sections.any { section -> section.items.any { it.visible } })
@@ -70,7 +72,7 @@ data class Experience(val title: String, val theme: String, val textScale: Float
                 }
             }
             require(total <= 256)
-            if (version == 2) require(sections.flatMap { it.items }.filter { it.kind == "collection" }.all { it.target in collectionIds })
+            if (version >= 2) require(sections.flatMap { it.items }.filter { it.kind == "collection" }.all { it.target in collectionIds })
             return Experience(title, theme, scale.toFloat(), sections, collections, settings.getInt("artwork_interval_seconds"))
         }
 
@@ -79,7 +81,7 @@ data class Experience(val title: String, val theme: String, val textScale: Float
             val parsed = parse(document)
             require(Regex("[a-f0-9]{64}").matches(digest))
             val root = JSONObject(document)
-            val collections = if (root.getInt("schema_version") == 2) root.getJSONArray("collections") else JSONArray().also { array ->
+            val collections = if (root.getInt("schema_version") >= 2) root.getJSONArray("collections") else JSONArray().also { array ->
                 parsed.sections.flatMap { it.items }.filter { it.kind == "collection" }.distinctBy { it.target }.forEach {
                     array.put(JSONObject().put("id", it.target).put("title", it.title).put("items", JSONArray()))
                 }

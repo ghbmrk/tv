@@ -24,6 +24,7 @@ class HouseholdControlEntryTest {
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
     @Test fun settingsOpensTheDiscoveredOwnerSignedController() {
+        useLegacyHome(compose)
         Intents.init()
         try {
             lateinit var model: ExperienceViewModel

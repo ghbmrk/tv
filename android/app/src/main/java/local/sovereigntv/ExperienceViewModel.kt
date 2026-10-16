@@ -231,6 +231,7 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
 
     /** Recheck current installed entry points off the UI thread immediately before an owner launch. */
     fun launch(tile: Tile, start: (Intent) -> Unit) {
+        if (tile.kind == "movie") { launchMovie(tile); return }
         if (tile.kind != "app" || closed.get()) return
         worker.execute {
             val resolution = runCatching { TvApplications(getApplication()).resolve(tile.target) }
@@ -241,6 +242,13 @@ class ExperienceViewModel(application: Application) : AndroidViewModel(applicati
                 }.onFailure { message = "Installed TV applications unavailable; try again" }
             }
         }
+    }
+
+    private fun launchMovie(tile: Tile) {
+        // A title link alone cannot guarantee stop-at-end. No provider route is qualified yet.
+        // Never fall back to its Home/recommendations or transfer playback on an unproven promise.
+        message = if (tile.playback == null) "Choose an explicit playback link for ${tile.title} in the local editor"
+            else "Chosen movie playback unavailable: stop-at-end provider integration is not qualified"
     }
 
     fun openControl(start: (Intent) -> Unit) = launch(Tile("local_control", "Household control", "app", "local_control", true), start)

@@ -76,7 +76,7 @@ class ExperienceRepository(private val context: Context) {
         return load()
     }
 
-    private fun defaultDocument(): String = context.assets.open("experience.json").use(::readBounded)
+    private fun defaultDocument(): String = context.assets.open("storybook.json").use(::readBounded)
 
     companion object {
         fun readBounded(stream: InputStream): String {

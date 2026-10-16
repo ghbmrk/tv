@@ -89,3 +89,7 @@ Keep the TV service and protocol work in this project. The agentOS backend work 
 6. Test offline Home/artwork/settings, agentOS loss, standby/wake, failed update, and recovery with Home unavailable. Record separately what remains controllable in each power/boot state.
 
 Primary implementation references: [agentOS SPEC](https://github.com/ghbmrk/agentOS/blob/c17b5a92b95c97272c3f138f40a39b28608928b3/SPEC.md), [guest MCP implementation](https://github.com/ghbmrk/agentOS/blob/c17b5a92b95c97272c3f138f40a39b28608928b3/broker/guest/mcp.go), [journal executor contract](https://github.com/ghbmrk/agentOS/blob/c17b5a92b95c97272c3f138f40a39b28608928b3/broker/journal/intent.go), [closed verb list](https://github.com/ghbmrk/agentOS/blob/c17b5a92b95c97272c3f138f40a39b28608928b3/broker/verb/verb.go).
+
+## Deliberate movie curation
+
+The [storybook v3 format](STORYBOOK_HOME.md) places the owner-curated movie order, visibility, local poster references and candidate title bindings in the existing preview/apply/undo document. Household edits must be explicitly authorized; providers cannot populate this list. There is no feed, auto-advance or Home autoplay operation. A movie adapter cannot be enabled until exact-title playback and reliable stop-at-end are qualified; selecting a card must never fall back to recommendations. This addition does not lift the production broker lane/policy boundary described above.

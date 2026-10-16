@@ -42,7 +42,7 @@ function populateEditor(doc) {
   };
   field(form, 'Home title', ['title'], doc.title);
   const pair = document.createElement('div'); pair.className = 'field-pair'; form.append(pair);
-  field(pair, 'Appearance', ['theme'], doc.theme, [['night','Forest night'],['warm','Warm earth'],['light','Soft daylight']]);
+  field(pair, 'Appearance', ['theme'], doc.theme, [['storybook','Storybook'],['night','Forest night'],['warm','Warm earth'],['light','Soft daylight']]);
   field(pair, 'Text size', ['settings','text_scale'], doc.settings.text_scale, null, true);
   field(form, 'Artwork interval · seconds', ['settings','artwork_interval_seconds'], doc.settings.artwork_interval_seconds, null, true);
   const list = (parent, items, path) => items.forEach((item, index) => {
@@ -65,13 +65,60 @@ function populateEditor(doc) {
       }; row.append(button);
     }
     parent.append(row);
+    if (item.kind === 'movie') {
+      const detail = document.createElement('div'); detail.className = 'movie-edit';
+      field(detail, 'Poster for '+item.title, [...path,index,'poster'], item.poster);
+      const provider = document.createElement('select'); provider.setAttribute('aria-label','Playback provider for '+item.title);
+      for (const [id,title] of [['','No playback link'],['netflix','Netflix'],['prime_video','Prime Video'],['disney_plus','Disney+'],['youtube','YouTube']]) {
+        const option = document.createElement('option'); option.value=id; option.textContent=title; provider.append(option);
+      }
+      provider.value = item.playback?.provider || '';
+      const content = document.createElement('input'); content.type='text'; content.maxLength=64;
+      content.setAttribute('aria-label','Exact content ID for '+item.title); content.value=item.playback?.content_id || ''; content.disabled=!provider.value;
+      const changeLink = () => { content.disabled=!provider.value; update([...path,index,'playback'],provider.value?{provider:provider.value,content_id:content.value}:null); };
+      provider.onchange=changeLink; content.oninput=changeLink;
+      const remove = document.createElement('button'); remove.type='button'; remove.textContent='Remove movie'; remove.setAttribute('aria-label','Remove '+item.title);
+      remove.onclick=() => {
+        const next=JSON.parse(el('document').value); let entries=next; for(const key of path) entries=entries[key];
+        entries.splice(index,1); el('document').value=JSON.stringify(next,null,2); populateEditor(next); status('Movie removed from the draft. Preview, then save.');
+      };
+      const upload=document.createElement('button'); upload.type='button'; upload.textContent='Choose local poster'; upload.setAttribute('aria-label','Choose local poster for '+item.title);
+      const picker=document.createElement('input'); picker.type='file'; picker.accept='image/png'; picker.hidden=true;
+      upload.onclick=() => picker.click();
+      picker.onchange=async () => {
+        const file=picker.files[0]; picker.value=''; if(!file) return;
+        const actions=[...document.querySelectorAll('nav button, #connect')];
+        try {
+          if(!current || inFlight || file.size>8388608) throw Error('Poster unavailable, too large, or an edit is unconfirmed');
+          form.inert=true; actions.forEach(b=>b.disabled=true);
+          const bytes=await file.arrayBuffer();
+          const digest=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('');
+          const response=await fetch(`/api/assets/${digest}`,{method:'PUT',headers:{Authorization:`Bearer ${el('token').value}`,'Content-Type':'image/png'},body:bytes});
+          if(!response.ok) throw Error('Poster refused: use a plain local RGB/RGBA PNG within the image limits');
+          update([...path,index,'poster'],digest); populateEditor(JSON.parse(el('document').value)); status('Local poster added to the draft only. Preview, then save.');
+        } catch(error) { status(error.message); }
+        finally { form.inert=false; actions.forEach(b=>b.disabled=false); }
+      };
+      detail.append(provider,content,upload,picker,remove); parent.append(detail);
+    }
   });
   for (const [index, section] of doc.sections.entries()) {
     const disclosure = document.createElement('details'); disclosure.className = 'section-editor'; const summary = document.createElement('summary'); summary.textContent = section.title + ' · ' + section.items.length + (section.items.length === 1 ? ' item' : ' items'); disclosure.append(summary); disclosure.dataset.editorKey = 'section:' + section.id; disclosure.open = opened.has(disclosure.dataset.editorKey);
     const group = document.createElement('fieldset'); group.className = 'editor-section'; const legend = document.createElement('legend'); legend.textContent = 'Section settings'; group.append(legend); disclosure.append(group);
     field(group,'Section title '+(index+1),['sections',index,'title'],section.title);
     field(group,'Section layout '+(index+1),['sections',index,'layout'],section.layout,[['row','Horizontal row'],['grid','Grid']]);
-    list(group,section.items,['sections',index,'items']); form.append(disclosure);
+    list(group,section.items,['sections',index,'items']);
+    if (doc.schema_version === 3) {
+      const add=document.createElement('button'); add.type='button'; add.textContent='Add chosen movie'; add.disabled=section.items.length>=24;
+      add.setAttribute('aria-label','Add chosen movie to '+section.title);
+      add.onclick=() => {
+        const next=JSON.parse(el('document').value);
+        next.sections[index].items.push({id:'film_'+crypto.randomUUID().replaceAll('-',''),title:'Chosen movie',kind:'movie',target:'chosen_movie',visible:true,poster:'blank',playback:null});
+        el('document').value=JSON.stringify(next,null,2); populateEditor(next); status('Movie added to the draft only. Set its title, local poster and optional explicit content link.');
+      };
+      group.append(add);
+    }
+    form.append(disclosure);
   }
   for (const [index, collection] of (doc.collections || []).entries()) {
     const disclosure = document.createElement('details'); disclosure.className = 'section-editor'; const summary = document.createElement('summary'); summary.textContent = collection.title + ' · collection'; disclosure.append(summary); disclosure.dataset.editorKey = 'collection:' + collection.id; disclosure.open = opened.has(disclosure.dataset.editorKey);
@@ -91,9 +138,10 @@ function render(doc, collectionId = null, artworkId = null, playing = false) {
   clearTimeout(slideshowTimer); clearTimeout(chromeTimer);
   const generation = ++renderGeneration;
   const screen = el('screen');
-  screen.replaceChildren(); screen.classList.remove('chrome-hidden'); screen.onkeydown = null; screen.onpointermove = null;
+  screen.replaceChildren(); screen.classList.remove('chrome-hidden','storybook'); screen.onkeydown = null; screen.onpointermove = null;
   screen.dataset.theme = doc.theme;
   screen.style.setProperty('--text-scale', doc.settings.text_scale);
+  if (doc.theme === 'storybook' && !collectionId) { renderStorybook(screen,doc,status); return; }
   const heading = document.createElement('h2');
   const collection = (doc.collections || []).find(c => c.id === collectionId);
   const artwork = collection?.items.find(item => item.id === artworkId && item.visible && item.kind === 'artwork');
