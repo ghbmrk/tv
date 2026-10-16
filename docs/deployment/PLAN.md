@@ -1,5 +1,7 @@
 # Deployment on the original TV
 
+The [off-TV execution and readiness plan](OFF_TV_READINESS.md) now specifies ordered deliverables, matching-lab rehearsal, independent review and the household experiment boundary. The [read-only experiment packet](experiment-packet.json) deliberately fails completeness checks; no installer or hardware writer exists. Source-level diagnostic side effects are recorded in [media findings](../../research/MEDIA_SOURCE_FINDINGS.md). Follow that plan before proposing a TV experiment.
+
 Target: Samsung QN50LS03FAFXZA, installed family/build T-PTMFAKUC-0090-1301.0. The selected route is an independently booting AOSP TV system on the original board, with native Netflix, Prime Video, Disney+, and YouTube clients. Preserve stock-capable 4K/HDR, cadence, picture processing, audio, remote, and hardware safety. Reuse the existing physical Samsung remote and qualify stock-parity responsiveness using [the remote and performance plan](../REMOTE_AND_PERFORMANCE.md). No Android image or flashing procedure is qualified for this TV yet.
 
 ## Work sequence and decision gates

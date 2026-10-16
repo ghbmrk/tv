@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "selected_files": [
+    {
+      "path": "tztv-media-sec/tztv-media-sec/sdp_vdsp/pontusm/Makefile",
+      "size_bytes": 322,
+      "sha256": "b8f9863c924cee8242ca0e1597b4d81f90451be3e81a82d090b0bde01ff31337",
+      "lexical_markers": {}
+    },
+    {
+      "path": "tztv-media-sec/tztv-media-sec/sdp_vdsp/pontusm/sdp_vdsp_init.c",
+      "size_bytes": 625,
+      "sha256": "a6b4d20a709c7631bf56c2fcb7d482e90ace53704293cfa7a722a1c539415bdb",
+      "lexical_markers": {
+        "controller_initialization": [
+          {
+            "line": 19,
+            "line_sha256": "a798b0de43ce0a16af537e95ac08067b3cd9715cb4b8cb2e79d5459c5fcd5b1e"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tztv-media-sec/tztv-media-sec/sdp_vdsp/pontusm/sdp_cm7_top.c",
+      "size_bytes": 21596,
+      "sha256": "832a42abe73d5855c9c635c80ca8bf117a72b1f41f7c31a2ad1f9d261a0e1ea7",
+      "lexical_markers": {
+        "microcode_include": [
+          {
+            "line": 27,
+            "line_sha256": "edacc10288798e6917f5c4f6a609d09c137fe5b0093c42ec03e75aa7052879aa"
+          },
+          {
+            "line": 28,
+            "line_sha256": "7634d439deacf1b890a7800c026b57a22584822a6a41be9d44e362c7b6b80b41"
+          }
+        ],
+        "microcode_transfer": [
+          {
+            "line": 102,
+            "line_sha256": "d59ad2002bc4625bedf2e80a5755cf56d4a3237263e354319b33b36621704d4c"
+          },
+          {
+            "line": 103,
+            "line_sha256": "032c7956fd601182c2ac6d9a76565574616f11e8f773c2fd06b5941b1012b1aa"
+          },
+          {
+            "line": 139,
+            "line_sha256": "ba2709b908bd65291c5443804b578c0e602c1e707cb7fece9537d1492879005a"
+          },
+          {
+            "line": 140,
+            "line_sha256": "7e1cc47d846a73b56f34362865113c69522888d683c764c970ac7c1c41a84063"
+          },
+          {
+            "line": 588,
+            "line_sha256": "ba2709b908bd65291c5443804b578c0e602c1e707cb7fece9537d1492879005a"
+          },
+          {
+            "line": 589,
+            "line_sha256": "7e1cc47d846a73b56f34362865113c69522888d683c764c970ac7c1c41a84063"
+          },
+          {
+            "line": 712,
+            "line_sha256": "ba2709b908bd65291c5443804b578c0e602c1e707cb7fece9537d1492879005a"
+          },
+          {
+            "line": 713,
+            "line_sha256": "7e1cc47d846a73b56f34362865113c69522888d683c764c970ac7c1c41a84063"
+          }
+        ],
+        "debug_read_callback": [
+          {
+            "line": 79,
+            "line_sha256": "79054e4c7edcfc5e2f19f43ad64d62424655e53918e4d41062bb6b3ea325c583"
+          }
+        ],
+        "debug_attribute_binding": [
+          {
+            "line": 146,
+            "line_sha256": "b1b95a468c5566ff873c56b1d7876ff0414b4680c0929221146eca2e0c30ccd2"
+          }
+        ],
+        "read_permission_debug_entry": [
+          {
+            "line": 151,
+            "line_sha256": "b63d13c8f619d0aeef87d568b53999cdce9f9a54956fb52393f46bf485c5da25"
+          }
+        ],
+        "controller_initialization": [
+          {
+            "line": 824,
+            "line_sha256": "ad483eea412011de07a4d8d463e9f46db201f0fb58e8b126b9f4f6bcb6a47648"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tztv-media-sec/tztv-media-sec/sdp_vdsp/pontusm/sdp_vdsp_tzdev.c",
+      "size_bytes": 2316,
+      "sha256": "8ade84b8a3ffd5e108eebb42ada987c7bcacb3c8d589598b68854b97ae90e046",
+      "lexical_markers": {
+        "secure_world_call": [
+          {
+            "line": 39,
+            "line_sha256": "f7aff9bb71ef85a8905b7bbf0d484998cbcf0d75a179bf2efcf55c08dd4ccfcc"
+          },
+          {
+            "line": 45,
+            "line_sha256": "83c0adc965ab07dc5e25009ea5241a6598bb32f27400890affb58f61ed889556"
+          },
+          {
+            "line": 66,
+            "line_sha256": "8cbbcf0e3cf960236cb326661493807eed661144595473076c87ea7007363ecd"
+          },
+          {
+            "line": 98,
+            "line_sha256": "3700a4684d51718f868fd3fea3eb7f15381615fb430d10ea1fb6a05d86dbef15"
+          }
+        ]
+      }
+    },
+    {
+      "path": "tztv-media-sec/tztv-media-sec/sdp_vdsp/pontusm/sdp_cm7_ucode_core0.h",
+      "size_bytes": 731535,
+      "sha256": "37f5aa15d446885e7efbf556ddbb1b42c66aea79aac531b22156db479c9b237f",
+      "lexical_markers": {}
+    },
+    {
+      "path": "tztv-media-sec/tztv-media-sec/sdp_vdsp/pontusm/sdp_cm7_ucode_core1.h",
+      "size_bytes": 532546,
+      "sha256": "4c914f1b5bb945639fe377728fc0aa6512f89022650a5bfd55878bba06f68364",
+      "lexical_markers": {}
+    }
+  ],
+  "selected_crc_checked": true,
+  "files_extracted": false,
+  "code_executed": false,
+  "device_accessed": false,
+  "target_applicability": "family source only; exact board and build unverified",
+  "marker_semantics": "Lexical evidence; control flow and applicability require manual review.",
+  "source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e"
+}

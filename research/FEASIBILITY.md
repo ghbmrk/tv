@@ -72,6 +72,8 @@ If documented developer access later exposes board diagnostics, review that exac
 
 ## Minimum architecture justified now
 
+The subsequent [media source review](MEDIA_SOURCE_FINDINGS.md) identifies embedded controller microcode and a nominally read-only debug callback with hardware writes. Do not extend device collection to unreviewed debug/sysfs/proc entries. The [off-TV execution plan](../docs/deployment/OFF_TV_READINESS.md) and packet auditor add evidence organization, not a qualified boot/recovery route. All original-board feasibility gates remain unresolved.
+
 Retain the existing local experience model and emulator shell as product prototypes. Reserve an AOSP host, a narrow privileged hardware bridge and a separately protected provider-media path as conditional interfaces only. Do not choose an Android/kernel ABI, reuse the released Samsung drivers in the final system, allocate a full board port, or write an installer until the decisive evidence supports those choices.
 
 The next concrete dependency is actual-unit identity and access. Independently, the chip-specific provisioning route needs a qualified answer. Neither can be replaced by further UI work. This verdict must change to no-go if a binding incompatibility is demonstrated, or to a qualified bring-up recommendation when exact boot, provenance, recovery and media routes are established.

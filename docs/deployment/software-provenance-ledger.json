@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "target_model": "QN50LS03FAFXZA",
+  "installed_build": "T-PTMFAKUC-0090-1301.0",
+  "inventory_complete": false,
+  "scope": "Candidate domains, not an observed complete target inventory. Family-source leads are not installed components.",
+  "family_source_leads": [
+    "research/platform-dependency-inventory.json",
+    "research/media-source-inventory.json"
+  ],
+  "components": [
+    {
+      "component": "boot_chain",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "secure_world",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "storage_and_recovery",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "graphics_display_composer",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "panel_one_connect_controller",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "video_decoder",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "audio_and_earc",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "drm_protected_path_and_provisioning",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "hdmi_input_cec",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "remote_and_input",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "network",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "power_standby_thermal",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "boot_rom_otp_and_fuses",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "embedded_media_microcode",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "calibration_and_unique_provisioning",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    },
+    {
+      "component": "inactive_and_recovery_copies",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [],
+      "status": "unverified"
+    }
+  ]
+}
