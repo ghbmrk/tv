@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "path": "android/app/src/main/assets/storybook/background.png",
+      "sha256": "de2219c38f7018da2620a32865cc26494a71928f2e082f56aa25b4474ddaefa1",
+      "bytes": 3191293,
+      "origin": "built-in imagegen; original illustration for owner-requested storybook UI; owner reference remains private"
+    },
+    {
+      "path": "android/app/src/main/assets/storybook/posters.png",
+      "sha256": "a1dedaa1e2c6169e4917ad1b69eb7f3066500a2bf79ff259b9e90bd965da3f49",
+      "bytes": 4021255,
+      "origin": "built-in imagegen; original illustration for owner-requested storybook UI; owner reference remains private"
+    }
+  ],
+  "generation_mode": "built-in imagegen",
+  "prompts": {
+    "background": "Use case: illustration-story. Asset type: background illustration for an actual 16:9 television interface, NOT a mockup. Use the attached reference only for mood and illustration medium. Paint a rustic storybook reading nook opening onto a distant medieval castle, hazy mountains and a low warm sun. Fine pen-and-ink etching and watercolor on softly aged parchment, almost e-ink with muted moss, slate and ochre pigments. Quiet and luminous rather than dark or orange. Tree trunk and leafy branches frame the far left/top, old timber and one small lantern at far right; subtle books and tea at bottom left and sleeping cat at bottom right. The middle and lower-middle 80% must be calm pale warm parchment with barely perceptible scenery so separate interactive movie/app cards can be laid on it later. Landscape and castle occupy the upper quarter. Full bleed composition, straight on, no screen/device frame. Absolutely NO UI, cards, rectangles, icons, logos, letters, writing or watermark. High detail without visual noise. Wide 16:9 composition. Reference image is style guidance only; do not reproduce its movie posters or app logos.",
+    "posters": "Create a square illustrated production atlas with exactly six portrait scenes in an exact 3-column by 2-row grid, equal-size cells, no gutters or margins. Each cell is 2:3 portrait. Old storybook ink etching with muted watercolor on ivory paper; rustic, tactile, quiet, near e-ink. In reading order: 1 a fully clothed young woman in a long green storybook dress sitting on a bayou bank looking at a small frog among fireflies; 2 a friendly panda holding a bamboo staff in autumn mountains with a distant pagoda; 3 a gray sled dog standing on a snowy forest ridge below the moon; 4 a mermaid wearing a modest green bodice sitting on a sea rock with a ship on the horizon; 5 a fully clothed solitary bell-ringer sitting on a cathedral gargoyle above old Paris with birds flying; 6 a friendly young long-neck dinosaur overlooking a fern-covered valley. These are six distinct self-contained original paintings, not a UI. No letters, writing, logos, titles, frames, watermark or text. Precise grid boundaries so the atlas can be displayed as six independent images."
+  }
+}

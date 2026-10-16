@@ -57,6 +57,7 @@ class ControlRuntimeTest {
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
     @Before fun bindAndReset() {
+        useLegacyHome(compose)
         Intents.init(); waitFor("Settings")
         bound = context.bindService(Intent(context, ExperienceControlService::class.java), connection, Context.BIND_AUTO_CREATE)
         assertTrue(bound)
@@ -258,7 +259,8 @@ class ControlRuntimeTest {
             assertEquals("not_found", control.receipt(requests[1 - winner], expiry()).getString("status"))
             val reset = id()
             val receipt = json(control.restoreDefault(reset, before + 1, expiry())).getJSONObject("receipt")
-            waitFor("Household TV")
+            compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-home").fetchSemanticsNodes().isNotEmpty() }
+            assertEquals("storybook", JSONObject(state().getString("document")).getString("theme"))
             assertEquals(before + 2, receipt.getLong("revision"))
             assertEquals(receipt.toString(), json(control.restoreDefault(reset, before + 1, expiry())).getJSONObject("receipt").toString())
             assertEquals(before + 2, state().getLong("revision"))

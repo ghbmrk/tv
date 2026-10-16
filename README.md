@@ -4,7 +4,11 @@ An owner-controlled TV experience and an Android-first replacement project for t
 
 **Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell previews and applies the same format with persistent undo; its local build, four JVM unit tests, native Android TV emulator runtime tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
 
-**Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Owner-authorized off-TV implementation continues while device access is unavailable; the board-port gates remain mandatory before installation.
+**Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Owner-authorized off-TV implementation continues; ordinary SDB now connects but does not expose board identity; the board-port gates remain mandatory before installation.
+
+## Initial Home
+
+The [storybook Home](docs/STORYBOOK_HOME.md) renders a manually curated movie carousel and six app marks without visible text. Its local document supports deliberate add/remove/reorder/hide, local posters, preview/apply/undo and accessibility labels. No recommendation feeds or Home autoplay exist. Movie handoff remains disabled until exact-title playback and stop-at-end can be qualified; app launches remain explicit. The read-only design preview is at `/preview` on the local studio server. Existing saved experiences are preserved.
 
 ## Run the first slice
 

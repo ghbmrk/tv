@@ -4,3 +4,18 @@
 .workspace{min-width:0}@media(max-width:760px){#screen{width:100%;min-height:0;aspect-ratio:16/9}}
 
 #screen h2{font-size:calc(clamp(22px,2.6vw,40px)*var(--text-scale,1))}#screen h3{font-size:calc(10px*var(--text-scale,1))}#screen .tile{font-size:calc(clamp(12px,1.2vw,18px)*var(--text-scale,1))}
+
+/* Storybook Home: static local illustration, no visible typography. */
+#screen.storybook{padding:16.1% 5.6% 7%;background:#e7d5b1 url('/storybook/background.png') center/cover;overflow:hidden;container-type:inline-size;box-shadow:0 18px 50px #0003;border:1px solid #534331;border-radius:3px;display:flex;flex-direction:column;justify-content:center;gap:4.3cqw}
+.story-row{display:flex;flex-shrink:0;gap:1.4%;overflow-x:auto;overflow-y:hidden;padding:6px 5px 10px;scrollbar-width:none}
+.story-row::-webkit-scrollbar{display:none}.story-tile{flex:0 0 15.5%;aspect-ratio:1.8;padding:0;min-width:0;position:relative;display:grid;place-items:center;border:1px solid #443d31;border-radius:5px;background:#3b352f;color:#e9d9b6;box-shadow:0 4px 8px #241a1640;outline:none;overflow:hidden;transition:box-shadow .09s,border-color .09s}
+.story-tile svg{width:51%;height:70%;fill:currentColor;overflow:visible}.story-tile[data-target=disney_plus]{background:#28394c}.story-tile[data-target=netflix]{background:#282621}.story-tile[data-target=youtube]{background:#dfcda8}.story-tile[data-target=prime_video]{background:#3e6371}.story-tile[data-target=hulu]{background:#52684e}.story-tile[data-target=apple_tv]{background:#3b352f}
+.story-tile.story-poster{aspect-ratio:2/3;background-size:300% 200%;background-repeat:no-repeat}.story-tile img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover}
+.story-tile:hover{background-color:inherit}.story-tile:focus-visible,.story-tile:focus{border-color:#ffecb1;box-shadow:0 0 0 3px #ffecb1,0 0 10px 4px #e6c37e80,0 5px 12px #291b1b55;transform:none}
+@media(max-width:760px){#screen.storybook{aspect-ratio:16/9;min-height:0;padding-top:16.1%;gap:3cqw}.story-row{padding:4px}.story-tile{border-radius:3px}}
+
+.movie-edit{display:grid;gap:8px;margin:0 0 20px 20px;padding-bottom:12px;border-bottom:1px solid var(--line)}.movie-edit .field{margin-bottom:0}
+
+.story-row[data-layout=grid]{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.story-row[data-layout=grid] .story-tile{width:100%}#screen.storybook{overflow-y:auto;scrollbar-width:none}.story-tile:not(.story-poster){background-image:url('/storybook/background.png');background-size:350%;background-position:50% 50%;background-blend-mode:multiply}
+
+.story-tile:focus-visible,.story-tile:focus{border-color:#fff1c4;box-shadow:0 0 0 4px #fff1c4,0 0 12px 5px #e6c37e80,0 5px 12px #291b1b55}

@@ -35,8 +35,7 @@ class HomeExperienceTest {
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
     @Test fun settingsRoundTripsPreserveSelectionAndRecordFrameDiagnostics() {
-        waitFor("Settings")
-        activate("Settings"); activate("Restore default"); waitFor("Default Home restored"); activate("Back to Home")
+        useLegacyHome(compose)
         compose.onNodeWithText("Import experience").assertDoesNotExist()
         compose.onNodeWithText("Restore default").assertDoesNotExist()
         compose.onNodeWithText("Netflix").performSemanticsAction(SemanticsActions.RequestFocus) { it() }

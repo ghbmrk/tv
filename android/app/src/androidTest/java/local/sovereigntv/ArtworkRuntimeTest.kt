@@ -48,7 +48,7 @@ class ArtworkRuntimeTest {
         compose.onNodeWithText(text).performKeyInput { pressKey(Key.DirectionCenter) }
     }
     @Before fun reset() {
-        Intents.init(); waitFor("Settings"); activate("Restore default"); waitFor("Default Home restored"); activate("Back to Home")
+        Intents.init(); useLegacyHome(compose)
     }
     @After fun finish() { Intents.release() }
 

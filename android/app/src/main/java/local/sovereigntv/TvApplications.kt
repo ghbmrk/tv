@@ -60,6 +60,6 @@ class TvApplications(private val context: Context) {
         const val MAX_APPLICATIONS = 256
         fun target(component: ComponentName) = "app_" + ExperienceJournal.sha256(component.flattenToString()).take(60)
         private val LEGACY = mapOf("netflix" to "com.netflix.ninja", "prime_video" to "com.amazon.amazonvideo.livingroom",
-            "disney_plus" to "com.disney.disneyplus", "youtube" to "com.google.android.youtube.tv", "local_control" to "local.sovereigntv.control")
+            "disney_plus" to "com.disney.disneyplus", "youtube" to "com.google.android.youtube.tv", "hulu" to "com.hulu.livingroomplus", "apple_tv" to "com.apple.atve.androidtv.appletv", "local_control" to "local.sovereigntv.control")
     }
 }

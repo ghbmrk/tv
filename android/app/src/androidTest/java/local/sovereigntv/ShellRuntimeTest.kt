@@ -42,11 +42,7 @@ class ShellRuntimeTest {
 
     @Before fun reset() {
         Intents.init()
-        waitForText("Settings")
-        activate("Restore default")
-        waitForText("Household TV")
-        waitForText("Default Home restored")
-        activate("Back to Home")
+        useLegacyHome(compose)
     }
     @After fun release() { Intents.release() }
 

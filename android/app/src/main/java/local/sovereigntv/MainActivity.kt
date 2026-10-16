@@ -77,6 +77,8 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(settingsOpen) { if (settingsOpen) settingsFocus.requestFocus() }
                 LaunchedEffect(model.preview) { if (model.preview != null) settingsOpen = false }
                 var focusedId by rememberSaveable { mutableStateOf<String?>(null) }
+                // Freeze the owner selection across focus rehoming while Settings mounts/unmounts.
+                var homeRestoreId by rememberSaveable { mutableStateOf<String?>(null) }
                 var collectionId by rememberSaveable { mutableStateOf<String?>(null) }
                 var entryId by rememberSaveable { mutableStateOf<String?>(null) }
                 var artworkId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -102,7 +104,8 @@ class MainActivity : ComponentActivity() {
                     onDispose { lifecycle.removeObserver(observer) }
                 }
                 val visibleIds = (collection?.items ?: doc.sections.flatMap { it.items }).filter { it.visible }.map { it.id }
-                val restoreId = (if (collection != null) entryId else focusedId)?.takeIf { it in visibleIds } ?: visibleIds.firstOrNull()
+                LaunchedEffect(visibleIds) { if (homeRestoreId != null && homeRestoreId !in visibleIds) homeRestoreId = null }
+                val restoreId = (if (collection != null) entryId else homeRestoreId ?: focusedId)?.takeIf { it in visibleIds } ?: (if (doc.theme == "storybook" && collection == null) visibleIds.getOrNull(2) else null) ?: visibleIds.firstOrNull()
                 fun activate(tile: Tile) {
                     when (tile.kind) {
                         "collection" -> { collectionId = tile.target; entryId = null }
@@ -134,11 +137,22 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 var settingsHasFocus by remember { mutableStateOf(false) }
-                Column(Modifier.fillMaxSize().background(background).padding(40.dp)) {
+                val storybook = doc.theme == "storybook" && collectionId == null
+                Box(Modifier.fillMaxSize()) {
+                if (storybook) StorybookHome(doc, restoreId, !settingsOpen, resumeGeneration,
+                    availability = { model.appAvailability(it) },
+                    notice = model.message.takeIf { it != "Local Home • no agentOS connection" && (!transientNotice || noticeVisible) },
+                    activate = { activate(it) }, focused = { id ->
+                        if (!settingsOpen && (homeRestoreId == null || id == homeRestoreId)) { focusedId = id; homeRestoreId = null }
+                    }, settings = { homeRestoreId = focusedId ?: restoreId; settingsOpen = true },
+                    load = { id, width, height -> withContext(model.diskDispatcher) { model.loadArtwork(id, width, height) } })
+                Column(Modifier.fillMaxSize().graphicsLayer { alpha = if (storybook && !settingsOpen) 0f else 1f }
+                    .background(background).padding(40.dp)
+                    .then(if (storybook && !settingsOpen) Modifier.clearAndSetSemantics { } else Modifier)) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Text("sovereign tv", color = foreground.copy(alpha = .65f), fontSize = 16.sp)
                         Button(onClick = { settingsOpen = !settingsOpen },
-                            modifier = Modifier.focusRequester(settingsFocus).focusProperties { if (settingsOpen) down = firstSettingsAction }.onFocusChanged { settingsHasFocus = it.isFocused },
+                            modifier = Modifier.focusRequester(settingsFocus).focusProperties { canFocus = !storybook || settingsOpen; if (settingsOpen) down = firstSettingsAction }.onFocusChanged { settingsHasFocus = it.isFocused },
                             shape = ButtonDefaults.shape(RoundedCornerShape(8.dp)), scale = ButtonDefaults.scale(focusedScale = 1f),
                             colors = ButtonDefaults.colors(containerColor = if (settingsHasFocus) Color(0xffd5e6b4) else Color.Transparent,
                                 contentColor = if (settingsHasFocus) Color(0xff202919) else foreground.copy(alpha = .7f),
@@ -156,7 +170,7 @@ class MainActivity : ComponentActivity() {
                     }
                     Box(Modifier.weight(1f)) {
                         // Retain Home's lazy-list state and composition; the hidden surface cannot receive focus or expose semantics.
-                        LazyColumn(Modifier.fillMaxSize().focusProperties { canFocus = !settingsOpen }.graphicsLayer { alpha = if (settingsOpen) 0f else 1f }
+                        if (!storybook) LazyColumn(Modifier.fillMaxSize().focusProperties { canFocus = !settingsOpen }.graphicsLayer { alpha = if (settingsOpen) 0f else 1f }
                             .then(if (settingsOpen) Modifier.clearAndSetSemantics { } else Modifier),
                             contentPadding = PaddingValues(vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(24.dp)) {
                             if (model.preview != null || model.unconfirmed) item(key = "controls") { EditingControls() }
@@ -175,13 +189,13 @@ class MainActivity : ComponentActivity() {
                                     if (section.layout == "row") {
                                         LazyRow(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp), horizontalArrangement = Arrangement.spacedBy(18.dp)) {
                                             items(section.items.filter { it.visible }, key = { it.id }) { tile ->
-                                                TileButton(tile, doc.textScale, doc.theme == "light", tile.id == restoreId && !settingsOpen, !settingsOpen, resumeGeneration, { activate(tile) }) { if (collection != null) entryId = tile.id else focusedId = tile.id }
+                                                TileButton(tile, doc.textScale, doc.theme == "light", tile.id == restoreId && !settingsOpen, !settingsOpen && !storybook, resumeGeneration, { activate(tile) }) { if (collection != null) entryId = tile.id else focusedId = tile.id }
                                             }
                                         }
                                     } else {
                                         section.items.filter { it.visible }.chunked(3).forEach { row ->
                                             Row(horizontalArrangement = Arrangement.spacedBy(18.dp)) {
-                                                row.forEach { tile -> key(tile.id) { TileButton(tile, doc.textScale, doc.theme == "light", tile.id == restoreId && !settingsOpen, !settingsOpen, resumeGeneration, { activate(tile) }) { if (collection != null) entryId = tile.id else focusedId = tile.id } } }
+                                                row.forEach { tile -> key(tile.id) { TileButton(tile, doc.textScale, doc.theme == "light", tile.id == restoreId && !settingsOpen, !settingsOpen && !storybook, resumeGeneration, { activate(tile) }) { if (collection != null) entryId = tile.id else focusedId = tile.id } } }
                                             }
                                         }
                                     }
@@ -196,6 +210,7 @@ class MainActivity : ComponentActivity() {
                             item { Button(onClick = { model.openControl { runCatching { startActivity(it) }.onFailure { model.launchFailed() } } }) { Text("Household control") } }
                         }
                     }
+                }
                 }
             }
         }
@@ -216,7 +231,7 @@ class MainActivity : ComponentActivity() {
     @Composable private fun TileButton(tile: Tile, textScale: Float, light: Boolean, restore: Boolean, focusEnabled: Boolean, generation: Int, activate: () -> Unit, focused: () -> Unit) {
         val requester = remember(tile.id) { FocusRequester() }
         var hasFocus by remember(tile.id) { mutableStateOf(false) }
-        LaunchedEffect(tile.id, generation, restore) { if (restore) requester.requestFocus() }
+        LaunchedEffect(tile.id, generation, restore, focusEnabled) { if (restore && focusEnabled) requester.requestFocus() }
         val accent = when (tile.target) {
             "netflix" -> Color(0xffff887c)
             "prime_video" -> Color(0xff9ed4ed)
@@ -230,7 +245,7 @@ class MainActivity : ComponentActivity() {
             scale = ButtonDefaults.scale(focusedScale = 1f),
             modifier = Modifier.width(190.dp).height(110.dp).focusProperties { canFocus = focusEnabled }.focusRequester(requester).onFocusChanged { hasFocus = it.isFocused; if (it.isFocused) focused() }) {
             Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
-                Text(if (tile.kind == "collection") "COLLECTION" else if (tile.kind == "artwork") "ARTWORK" else model.appAvailability(tile.target), fontSize = 10.sp, modifier = Modifier.padding(top = 4.dp))
+                Text(if (tile.kind == "collection") "COLLECTION" else if (tile.kind == "artwork") "ARTWORK" else if (tile.kind == "movie") "CHOSEN MOVIE" else model.appAvailability(tile.target), fontSize = 10.sp, modifier = Modifier.padding(top = 4.dp))
                 Text(tile.title, fontSize = (19 * textScale).sp, maxLines = 2)
             }
         }

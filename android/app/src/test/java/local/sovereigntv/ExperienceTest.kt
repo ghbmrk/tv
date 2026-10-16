@@ -41,4 +41,22 @@ class ExperienceTest {
         assertEquals(valid, ExperienceRepository.readBounded(valid.toByteArray(Charsets.UTF_8).inputStream()))
     }
 
+    @Test fun curatedMoviesAreVersionedDataAndNeverImplicitProviderLaunches() {
+        val text = java.io.File("src/main/assets/storybook.json").readText()
+        val experience = Experience.parse(text)
+        assertEquals("storybook", experience.theme)
+        assertEquals(6, experience.sections[0].items.size)
+        assertEquals(6, experience.sections[1].items.size)
+        assertTrue(experience.sections[0].items.all { it.kind == "movie" && it.playback == null })
+        val root = org.json.JSONObject(text)
+        root.getJSONArray("sections").getJSONObject(0).put("items", org.json.JSONArray())
+        assertTrue(Experience.parse(root.toString()).sections[0].items.isEmpty())
+        root.put("autoplay", true)
+        assertThrows(IllegalArgumentException::class.java) { Experience.parse(root.toString()) }
+        for (value in listOf("https://example.com", "1234/../../private")) {
+            assertThrows(IllegalArgumentException::class.java) { MovieLink.parse(org.json.JSONObject().put("provider","netflix").put("content_id",value)) }
+        }
+        assertThrows(IllegalArgumentException::class.java) { MovieLink.parse(org.json.JSONObject().put("provider","netflix").put("content_id",12345678)) }
+    }
+
 }

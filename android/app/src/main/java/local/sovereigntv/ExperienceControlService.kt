@@ -82,6 +82,8 @@ class ExperienceControlService : Service() {
                 .put("network_endpoint", false).put("paired_service", false).put("agentos_qualified", false)
                 .put("hardware_control", false).put("capture", false).put("max_deadline_ms", 30000)
                 .put("max_document_bytes", 65536).put("max_artwork_bytes", ArtworkStore.MAX_BYTES)
+                .put("experience_schema_versions", JSONArray(listOf(1, 2, 3)))
+                .put("manual_movie_curation", true).put("movie_playback_qualified", false).put("home_autoplay", false)
                 .put("receipt_operation_sha256", true))
         }
         override fun applications(expiresAtUtcMillis: Long) = call(expiresAtUtcMillis) { guard ->

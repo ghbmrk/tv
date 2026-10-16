@@ -1,0 +1,122 @@
+{
+  "schema_version": 3,
+  "title": "Household TV",
+  "theme": "storybook",
+  "sections": [
+    {
+      "id": "chosen_movies",
+      "title": "Chosen movies",
+      "layout": "row",
+      "items": [
+        {
+          "id": "film_princess_frog",
+          "title": "The Princess and the Frog",
+          "kind": "movie",
+          "target": "princess_frog",
+          "visible": true,
+          "poster": "princess_frog",
+          "playback": null
+        },
+        {
+          "id": "film_kung_fu_panda",
+          "title": "Kung Fu Panda",
+          "kind": "movie",
+          "target": "kung_fu_panda",
+          "visible": true,
+          "poster": "kung_fu_panda",
+          "playback": null
+        },
+        {
+          "id": "film_balto",
+          "title": "Balto",
+          "kind": "movie",
+          "target": "balto",
+          "visible": true,
+          "poster": "balto",
+          "playback": null
+        },
+        {
+          "id": "film_little_mermaid",
+          "title": "The Little Mermaid",
+          "kind": "movie",
+          "target": "little_mermaid",
+          "visible": true,
+          "poster": "little_mermaid",
+          "playback": null
+        },
+        {
+          "id": "film_hunchback",
+          "title": "The Hunchback of Notre Dame",
+          "kind": "movie",
+          "target": "hunchback",
+          "visible": true,
+          "poster": "hunchback",
+          "playback": null
+        },
+        {
+          "id": "film_land_before_time",
+          "title": "The Land Before Time",
+          "kind": "movie",
+          "target": "land_before_time",
+          "visible": true,
+          "poster": "land_before_time",
+          "playback": null
+        }
+      ]
+    },
+    {
+      "id": "apps",
+      "title": "Apps",
+      "layout": "row",
+      "items": [
+        {
+          "id": "app_netflix",
+          "title": "Netflix",
+          "kind": "app",
+          "target": "netflix",
+          "visible": true
+        },
+        {
+          "id": "app_disney_plus",
+          "title": "Disney+",
+          "kind": "app",
+          "target": "disney_plus",
+          "visible": true
+        },
+        {
+          "id": "app_youtube",
+          "title": "YouTube",
+          "kind": "app",
+          "target": "youtube",
+          "visible": true
+        },
+        {
+          "id": "app_prime_video",
+          "title": "Prime Video",
+          "kind": "app",
+          "target": "prime_video",
+          "visible": true
+        },
+        {
+          "id": "app_hulu",
+          "title": "Hulu",
+          "kind": "app",
+          "target": "hulu",
+          "visible": true
+        },
+        {
+          "id": "app_apple_tv",
+          "title": "Apple TV",
+          "kind": "app",
+          "target": "apple_tv",
+          "visible": true
+        }
+      ]
+    }
+  ],
+  "collections": [],
+  "settings": {
+    "text_scale": 1.0,
+    "artwork_interval_seconds": 300
+  }
+}
