@@ -43,9 +43,12 @@ class StorybookRuntimeTest {
         compose.mainClock.advanceTimeBy(360000)
         node("app_prime_video").assertIsFocused()
         assertEquals(document, ExperienceRepository(context).load().document)
-        repeat(6) {
-            compose.onNodeWithContentDescription("Settings").performSemanticsAction(SemanticsActions.RequestFocus) { it() }
-            compose.onNodeWithContentDescription("Settings").performKeyInput { pressKey(Key.DirectionCenter) }
+        repeat(6) { round ->
+            if (round == 0) compose.onNodeWithTag("storybook-settings").performTouchInput { click(center) }
+            else {
+                compose.onNodeWithContentDescription("Settings").performSemanticsAction(SemanticsActions.RequestFocus) { it() }
+                compose.onNodeWithContentDescription("Settings").performKeyInput { pressKey(Key.DirectionCenter) }
+            }
             compose.waitUntil(10000) { compose.onAllNodesWithText("Your TV, your rules.").fetchSemanticsNodes().isNotEmpty() }
             Espresso.pressBack()
             compose.waitUntil(10000) { compose.onAllNodesWithText("Your TV, your rules.").fetchSemanticsNodes().isEmpty() }

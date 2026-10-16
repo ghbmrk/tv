@@ -146,9 +146,7 @@ class MainActivity : ComponentActivity() {
                         if (!settingsOpen && (homeRestoreId == null || id == homeRestoreId)) { focusedId = id; homeRestoreId = null }
                     }, settings = { homeRestoreId = focusedId ?: restoreId; settingsOpen = true },
                     load = { id, width, height -> withContext(model.diskDispatcher) { model.loadArtwork(id, width, height) } })
-                Column(Modifier.fillMaxSize().graphicsLayer { alpha = if (storybook && !settingsOpen) 0f else 1f }
-                    .background(background).padding(40.dp)
-                    .then(if (storybook && !settingsOpen) Modifier.clearAndSetSemantics { } else Modifier)) {
+                if (!storybook || settingsOpen) Column(Modifier.fillMaxSize().background(background).padding(40.dp)) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Text("sovereign tv", color = foreground.copy(alpha = .65f), fontSize = 16.sp)
                         Button(onClick = { settingsOpen = !settingsOpen },
