@@ -19,6 +19,8 @@ Target: Samsung QN50LS03FAFXZA, installed family/build T-PTMFAKUC-0090-1301.0. T
 
 The host studio and Android APK are product-development artifacts. The APK cannot install Android onto Samsung Tizen. Installing it on a separate Android target helps test the shell but does not replace the original-hardware requirement.
 
+The [board-topology and media-eligibility follow-up](../../research/BOARD_AND_MEDIA_ELIGIBILITY.md) narrows the documentation and integrator requests. Catalog chip names remain candidates; they do not select a BSP or justify buying a lab enclosure.
+
 ## Immediate work
 
 The [feasibility investigation](../../research/FEASIBILITY.md) now governs the immediate sequence. Its falsifiable gates and independent acceptance criteria govern hardware installation. Owner-authorized host/emulator implementation continues; working SDB transport does not satisfy these gates. The [dependency inventory](../../research/platform-dependency-inventory.json) narrows source research to the executing boot, controller and secure-world implementations; the named boot-mode driver is not an unlock mechanism.

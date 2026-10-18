@@ -185,6 +185,15 @@
       "id": "related_ls03f_art_report",
       "observed": "2026-10-15",
       "use": "Family-level Linux/ABI corroboration and stock application dependency research lead."
+    },
+    {
+      "id": "public_board_media_eligibility_20261017",
+      "kind": "primary_manufacturer_family_repair_guide_and_public_parts_catalog_with_primary_integration_rules",
+      "observed": "2026-10-17",
+      "evidence": "research/public-component-evidence.json",
+      "findings": "research/BOARD_AND_MEDIA_ELIGIBILITY.md",
+      "use": "Independent public model catalog query and bounded product metadata; rendered family repair-guide review; Widevine licensing/OEMCrypto, AOSP compatibility and YouTube device-partner access boundaries.",
+      "limit": "Catalog relations do not identify installed chips or board placement. Family diagrams and sample service screenshots do not prove exact revision, independent boot or recovery. No provider approval or integration inquiry sent."
     }
   ]
 }
