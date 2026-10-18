@@ -1,12 +1,12 @@
 component,exact_hardware,independent_implementation,provenance,abi,test_evidence,status
-boot_chain,,,,,,unverified
+boot_chain,unverified; shared update names PontusM,No independent boot implementation qualified,research/DECRYPTED_UPDATE_FINDINGS.md,Update kernel declares ARM; executing ABI unverified,Kernel CRC and source/update version agreement only,boot acceptance and recovery unverified
 secure_world,,,,,,unverified
-storage_and_recovery,,,,,,unverified
+storage_and_recovery,unverified live storage; checked update-image GPT only,No independent restore implementation qualified,research/DECRYPTED_UPDATE_FINDINGS.md,not established,Primary/backup file GPT and VDFS headers checked; not a restore test,live layout and failure recovery unverified
 graphics_display_composer,,,,,,unverified
 panel_one_connect_controller,,,,,,unverified
 video_decoder,,,,,,unverified
 audio_and_earc,,,,,,unverified
-drm_protected_path_and_provisioning,,,,,,unverified
+drm_protected_path_and_provisioning,exact secure-media hardware unverified,No independent MediaDrm/OEMCrypto integration qualified,research/RUNTIME_DEPENDENCY_FINDINGS.md,Two shared-update wrappers are ELF32 little-endian ARM with glibc/Tizen dependencies,Bounded catalog graph and compressed ELF dependency checks; no playback or provisioning test,static dependency evidence only; Android and UHD/HDR unqualified
 hdmi_input_cec,,,,,,unverified
 remote_and_input,,,,,,unverified
 network,,,,,,unverified
