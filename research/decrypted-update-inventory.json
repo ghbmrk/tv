@@ -1,0 +1,583 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-18",
+  "source_kind": "Independent offline inspection of an officially published shared update; no owner photographs or runtime observations.",
+  "source_url": "https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip",
+  "archive_sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+  "upgrade_member_sha256": "cb0b87a332c4d4138af5bc875f535e56b6600738cb0546ba0e269bb677cbfb38",
+  "upgrade_zip_crc_checked": true,
+  "format_reference": {
+    "repository": "https://github.com/theubusu/unixtract",
+    "commit": "144cf51e3e1b6e832119fde60f676a6def8266f7",
+    "profile_name": "PontusM 2025",
+    "source_files": [
+      "src/formats/msd/mod.rs",
+      "src/formats/msd11/mod.rs",
+      "src/formats/msd/msd_ouith_parser_tizen_1_9.rs",
+      "src/keys.ukf"
+    ],
+    "key_values_included": false,
+    "upstream_code_executed": false
+  },
+  "compatibility_check": {
+    "profiles_tested": 17,
+    "accepted_profiles": 1,
+    "key_bytes": 32,
+    "algorithm": "AES-256-CBC; IV first 16 bytes of SHA-256(salt); checked PKCS7",
+    "signature_verified": false
+  },
+  "sections": [
+    {
+      "item_id": 1001,
+      "name": "platform.img",
+      "ciphertext_offset": 4290,
+      "ciphertext_bytes": 1430257680,
+      "plaintext_bytes": 1430257664,
+      "plaintext_sha256": "bc1fd89b70327be4227f1bbe5611075065eaaf48bef899521f96853bc6058faf",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1002,
+      "name": "uImage",
+      "ciphertext_offset": 1430261970,
+      "ciphertext_bytes": 10472720,
+      "plaintext_bytes": 10472704,
+      "plaintext_sha256": "b0b7db74a8f5342fb76cc4d88ac785927e0bff6da44a7f0421033dc685b464fc",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1003,
+      "name": "secos.bin",
+      "ciphertext_offset": 1440734690,
+      "ciphertext_bytes": 8380432,
+      "plaintext_bytes": 8380416,
+      "plaintext_sha256": "9606ed4a9f4114ae808934d2284e0e1192f2f645497187e4afaf52d270635200",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1004,
+      "name": "factory_peq.img",
+      "ciphertext_offset": 1449115122,
+      "ciphertext_bytes": 7667728,
+      "plaintext_bytes": 7667712,
+      "plaintext_sha256": "87f483f8234dff667414b20c14a48e53fe660e474ea069469139b0cb9d92be61",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1005,
+      "name": "seret.bin",
+      "ciphertext_offset": 1456782850,
+      "ciphertext_bytes": 3661840,
+      "plaintext_bytes": 3661824,
+      "plaintext_sha256": "ad53d344b3db12a88dd140bbd5b9fd7898193ee2c083336a99fe978fbd7a985b",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1006,
+      "name": "secos_drv.bin",
+      "ciphertext_offset": 1460444690,
+      "ciphertext_bytes": 3137552,
+      "plaintext_bytes": 3137536,
+      "plaintext_sha256": "d777809ce182a5762d9a23edc5e211fc6a3ba76ab3ea12face74a01dcb606c82",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1007,
+      "name": "dtb.bin",
+      "ciphertext_offset": 1463582242,
+      "ciphertext_bytes": 1564688,
+      "plaintext_bytes": 1564672,
+      "plaintext_sha256": "b7b1f7fce26e036977a453df8ea67f07349f87a916d56ebb56ca8e86d402da77",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1008,
+      "name": "ddr.init",
+      "ciphertext_offset": 1465146930,
+      "ciphertext_bytes": 55824,
+      "plaintext_bytes": 55808,
+      "plaintext_sha256": "03f5a3cf865c366f60ab174368ba3142d04a2164098de39ef838af9072c893c5",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    },
+    {
+      "item_id": 1009,
+      "name": "sign.bin",
+      "ciphertext_offset": 1465202754,
+      "ciphertext_bytes": 1040,
+      "plaintext_bytes": 1024,
+      "plaintext_sha256": "41080f8989b7fbcc1de3656552087d95892ce0034ffa0d326826ca4e48cf1888",
+      "crc32_matches_metadata": true,
+      "pkcs7_valid": true,
+      "signature_verified": false
+    }
+  ],
+  "inspection": {
+    "schema_version": 1,
+    "metadata": {
+      "sha256": "b58d4a12722313e3863f4c9277b2887482bdfb9d3745c1364e047ef88731427f",
+      "bytes": 4027,
+      "format": "Tizen update tree 1.9",
+      "signature_bytes": 256,
+      "signature_verified": false,
+      "items": [
+        {
+          "item_id": 1001,
+          "original_bytes": 1430257664,
+          "processed_bytes": 1430257680,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "platform.img",
+          "crc32": "0581309a",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1002,
+          "original_bytes": 10472704,
+          "processed_bytes": 10472720,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "uImage",
+          "crc32": "14def0c9",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1003,
+          "original_bytes": 8380416,
+          "processed_bytes": 8380432,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "secos.bin",
+          "crc32": "c91c4ade",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1004,
+          "original_bytes": 7667712,
+          "processed_bytes": 7667728,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "factory_peq.img",
+          "crc32": "7b1276fd",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1005,
+          "original_bytes": 3661824,
+          "processed_bytes": 3661840,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "seret.bin",
+          "crc32": "443f561b",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1006,
+          "original_bytes": 3137536,
+          "processed_bytes": 3137552,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "secos_drv.bin",
+          "crc32": "ddf3ebd0",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1007,
+          "original_bytes": 1564672,
+          "processed_bytes": 1564688,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "dtb.bin",
+          "crc32": "d7c183a9",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1008,
+          "original_bytes": 55808,
+          "processed_bytes": 55824,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "ddr.init",
+          "crc32": "7d793301",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        },
+        {
+          "item_id": 1009,
+          "original_bytes": 1024,
+          "processed_bytes": 1040,
+          "encrypted": true,
+          "signature_verified": false,
+          "name": "sign.bin",
+          "crc32": "94348712",
+          "encryption_salt_bytes": 8,
+          "signature_bytes": 256
+        }
+      ],
+      "groups": [
+        {
+          "name": "T-PTMFAKUC-0090",
+          "major": 1301,
+          "minor": 0,
+          "device_type": "Common"
+        }
+      ],
+      "opaque_descriptors": [
+        {
+          "tag": 55,
+          "body_bytes": 13
+        },
+        {
+          "tag": 35,
+          "body_bytes": 25
+        }
+      ],
+      "all_descriptor_bounds_checked": true,
+      "exact_eof": true
+    },
+    "signature_verified": false,
+    "device_identity_verified": false,
+    "boot_or_recovery_qualified": false,
+    "code_executed": false,
+    "scope": "Input-file declarations only; not observed hardware, live partitions or boot policy.",
+    "dtb_bundle": {
+      "bytes": 1564672,
+      "sha256": "b7b1f7fce26e036977a453df8ea67f07349f87a916d56ebb56ca8e86d402da77",
+      "fdts": [
+        {
+          "file_offset": 0,
+          "bytes": 63205,
+          "sha256": "d72f7a3f8ee06ed3093ef382c8b137e861fb8a4cd2cb1e6632e00d0cfe8c1aab",
+          "version": 17,
+          "nodes": 503,
+          "properties": 2177,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 86016,
+          "bytes": 62254,
+          "sha256": "6df9647ddfff1863de962a834b68901d2c93381e43d8d95f623a9416a403777c",
+          "version": 17,
+          "nodes": 502,
+          "properties": 2148,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 172032,
+          "bytes": 61939,
+          "sha256": "a84e6f6c22da7f93211330ce6ac588ec8e7200bbf6c3d8fb8904c62f4dcdb9e9",
+          "version": 17,
+          "nodes": 503,
+          "properties": 2130,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 258048,
+          "bytes": 61641,
+          "sha256": "edde8bbeb0c6930647f6833c16bcd177678ab075cbe96bc10495bdd02c54f628",
+          "version": 17,
+          "nodes": 500,
+          "properties": 2127,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 344064,
+          "bytes": 62151,
+          "sha256": "9f61e3387134ddedbcb48297ab7fd5eb61c7dedb25bafb05fe96993c299fc7bd",
+          "version": 17,
+          "nodes": 499,
+          "properties": 2139,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 430080,
+          "bytes": 62135,
+          "sha256": "9882f2d462910c2a11ad571b492cf081de11e552803eadd2db48e29f6e10928d",
+          "version": 17,
+          "nodes": 501,
+          "properties": 2141,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 516096,
+          "bytes": 60775,
+          "sha256": "87522fcabbf14a7c1db97630ca15dd1391995c9216dff955de98738a36c5a823",
+          "version": 17,
+          "nodes": 498,
+          "properties": 2085,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 602112,
+          "bytes": 62583,
+          "sha256": "86310401121ac050862a8c1a14b8fa4f037352dffd7ac7c1ea93ff2b90f648f8",
+          "version": 17,
+          "nodes": 503,
+          "properties": 2154,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 688128,
+          "bytes": 62442,
+          "sha256": "3c51a2bb03b37d9385a3cdafcd32abbc4fb1b2c0af2296b587902d69175352df",
+          "version": 17,
+          "nodes": 503,
+          "properties": 2153,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 774144,
+          "bytes": 62670,
+          "sha256": "96f59a29f9964945ec922d55795075fdd54ee513cbde141c8336a019149b5b5e",
+          "version": 17,
+          "nodes": 502,
+          "properties": 2155,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 860160,
+          "bytes": 61792,
+          "sha256": "b5d38127583b2e5fa73d69711624a75d9d9de7a3e3fd010c7d43cccf8ffae103",
+          "version": 17,
+          "nodes": 504,
+          "properties": 2122,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        },
+        {
+          "file_offset": 946176,
+          "bytes": 61831,
+          "sha256": "88b9077febaa0158d67a3e52f6402947488b40c1c609f973214a1a8340498e1e",
+          "version": 17,
+          "nodes": 504,
+          "properties": 2123,
+          "root_model": [
+            "Samsung DTV based on PontusM SoC"
+          ],
+          "root_compatible": [
+            "samsung,dtv",
+            "samsung,sdp-pontusm"
+          ],
+          "cpu_compatible_sets": [
+            [
+              "arm,cortex-a57",
+              "arm,armv8"
+            ]
+          ],
+          "cpu_compatible_node_count": 4
+        }
+      ],
+      "trailing_or_inter_tree_bytes_interpreted": false
+    },
+    "kernel_image": {
+      "bytes": 10472704,
+      "sha256": "b0b7db74a8f5342fb76cc4d88ac785927e0bff6da44a7f0421033dc685b464fc",
+      "format": "legacy uImage",
+      "header_crc_matches": true,
+      "data_crc_matches": true,
+      "declared_data_bytes": 10369948,
+      "uninterpreted_trailing_bytes": 102692,
+      "os_id": 5,
+      "architecture_id": 2,
+      "image_type_id": 2,
+      "compression_id": 0,
+      "name": "Linux-5.4.261",
+      "load_entry_values_omitted": true,
+      "signature_verified": false
+    },
+    "platform_image_prefix": {
+      "prefix_bytes": 2097152,
+      "prefix_sha256": "eb879be04a4e1d1c02f8c5372d42aab00228c8c51b5cbde12b1ebdb03f0ea360",
+      "declared_image_bytes": 1430257664,
+      "header_crc_matches": true,
+      "entry_array_crc_matches": true,
+      "partitions": [
+        {
+          "name": "pltf_t.img",
+          "image_file_start_byte": 1048576,
+          "image_bytes": 1369440256,
+          "filesystem_marker_candidate": "VDFS"
+        },
+        {
+          "name": "prd_t.img",
+          "image_file_start_byte": 1370488832,
+          "image_bytes": 58720256
+        }
+      ],
+      "backup_gpt_checked": false,
+      "filesystem_validated": false,
+      "guid_values_omitted": true,
+      "live_device_layout_verified": false,
+      "scope": "GPT ranges inside an update image only; not live-device flash addresses."
+    }
+  },
+  "vendor_code_or_payloads_included": false,
+  "vendor_code_executed": false,
+  "tv_accessed": false,
+  "installed_variant_identified": false,
+  "independent_boot_or_recovery_qualified": false
+}

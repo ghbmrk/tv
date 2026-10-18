@@ -1,5 +1,7 @@
 # Full update integrity and offline analysis
 
+**2026-10-18 follow-up:** the [public 2025-profile investigation](DECRYPTED_UPDATE_FINDINGS.md) successfully decrypted all nine update sections and recovered bounded kernel/DTB declarations without outreach. The older negative compatibility result below remains limited to its ten legacy profiles; its then-current lack of recovered kernel/DTB is superseded. No signature, independent boot or recovery qualification follows.
+
 Observed 2026-10-15. The complete [official T-PTMFAKUC-0090 update](https://downloadcenter.samsung.com/content/FM/202609/20260908143326448/T-PTMFAKUC-0090.zip) is retained privately under `reference/firmware/`. Its 1,465,434,949 bytes match the advertised length. SHA-256: `e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164`. All five ZIP entries passed CRC checks; decompressed members were streamed and hashed without extraction or execution. Publisher signatures are unverified. An update archive is not a complete device backup or recovery procedure.
 
 The [full inventory](full-update-inventory.json) supersedes earlier partial-acquisition limits. The historical range record still describes only its original byte ranges. `info.txt` has the same hash as the earlier CRC-checked copy. The complete `upgrade.msd` is 1,465,203,794 bytes, SHA-256 `cb0b87a332c4d4138af5bc875f535e56b6600738cb0546ba0e269bb677cbfb38`.
