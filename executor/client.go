@@ -177,7 +177,7 @@ func writeFrame(writer io.Writer, data []byte) error {
 	return nil
 }
 func (c *Client) Request(ctx context.Context, operation string, fields map[string]any, expires int64) (result Response, failure error) {
-	required := map[string][]string{"capabilities": {}, "state": {}, "receipt": {"request_id"}, "apply": {"request_id", "base_revision", "document"}, "undo": {"request_id", "base_revision", "restore_revision"}}
+	required := map[string][]string{"capabilities": {}, "state": {}, "apps.list": {}, "preview": {"base_revision", "document"}, "receipt": {"request_id"}, "apply": {"request_id", "base_revision", "document"}, "undo": {"request_id", "base_revision", "restore_revision"}}
 	expected, ok := required[operation]
 	if !ok || len(fields) != len(expected) || ctx.Err() != nil || expires <= time.Now().UnixMilli() || expires > time.Now().Add(30*time.Second).UnixMilli() {
 		return Response{}, ErrUnavailable

@@ -31,16 +31,15 @@ func run() error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
+	inspect, err := tv.NewInspector(client)
+	if err != nil {
+		return err
+	}
+	if _, err = inspect.Applications(ctx); err != nil {
+		return err
+	}
 	state := func() (int64, string, error) {
-		response, err := client.Request(ctx, "state", nil, time.Now().Add(10*time.Second).UnixMilli())
-		if err != nil || response.Status != "ok" {
-			return 0, "", errors.New("state unavailable")
-		}
-		var value struct {
-			Revision int64  `json:"revision"`
-			Document string `json:"document"`
-		}
-		err = json.Unmarshal(response.Result, &value)
+		value, err := inspect.State(ctx)
 		return value.Revision, value.Document, err
 	}
 	base, original, err := state()
@@ -55,6 +54,14 @@ func run() error {
 	encoded, err := json.Marshal(doc)
 	if err != nil {
 		return err
+	}
+	preview, err := inspect.Preview(ctx, base, string(encoded))
+	if err != nil || preview.Revision != base || preview.Document != string(encoded) {
+		return errors.New("preview mismatch")
+	}
+	unchanged, stillOriginal, err := state()
+	if err != nil || unchanged != base || stillOriginal != original {
+		return errors.New("validation preview changed saved state")
 	}
 	x, err := tv.New(ctx, tv.Config{Namespace: "owned-emulator-probe", Account: "tv:emulator", Transport: client})
 	if err != nil {
@@ -83,6 +90,9 @@ func run() error {
 	if err != nil || revision != base+1 || current != string(encoded) {
 		return errors.New("readback mismatch")
 	}
+	if _, err = inspect.Preview(ctx, base, string(encoded)); !errors.Is(err, tv.ErrStaleRevision) {
+		return errors.New("stale preview not refused")
+	}
 	in.ID += "-undo"
 	in.Action = tv.ActionUndo
 	in.Params = map[string]any{"device_id": client.DeviceID(), "base_revision": base + 1, "restore_revision": base}
@@ -93,7 +103,7 @@ func run() error {
 	if err != nil || revision != base+2 || current != original {
 		return errors.New("undo readback mismatch")
 	}
-	fmt.Println(`{"go_executor":true,"operation_receipt_verified":true,"reconcile":true,"exact_retry":true,"undo":true,"agentos_qualified":false}`)
+	fmt.Println(`{"go_executor":true,"state_inspection":true,"validation_preview":true,"application_discovery":true,"stale_preview_refused":true,"operation_receipt_verified":true,"reconcile":true,"exact_retry":true,"undo":true,"agentos_qualified":false}`)
 	return nil
 }
 func main() {
