@@ -4,6 +4,8 @@ The initial Home is a quiet, text-free storybook surface: warm paper, ink and mu
 
 The movie order comes only from the local document. There are no recommendation feeds, automatic additions, hover previews, trailers, carousel timers or automatic advances. An empty movie section stays empty. Manual add, remove, reorder, visibility and poster edits use the existing preview/apply/undo journal. Authorized household edits use that same document, not a separate recommendation service. Existing saved experiences are preserved; the new default applies to a fresh store or explicit Restore default.
 
+Remote selection follows the card's stable ID during live curation. If an edit moves that card beyond a composed viewport, Home brings its section and carousel position into view before restoring focus. Existing visible scroll positions are retained. Hiding or removing the selected card uses the existing visible-card fallback; the next D-pad action works without reopening Home. This is local navigation behavior, not a measurement of the Samsung remote or TV latency.
+
 ## Curating movies
 
 Run the local studio and connect using its private local token. Expand Chosen movies. Add chosen movie creates an unsaved blank card, never an algorithmic selection. Set the title and choose a local PNG poster, or choose a bundled illustration key. Arrange, hide or remove entries, then Preview changes and Save changes. Uploaded posters are immutable content-addressed private PNGs; export includes referenced posters. Nothing fetches movie art or metadata from a third party. The same validated JSON can be edited by an authorized household agent through native preview/apply/undo; production agentOS broker qualification remains pending.

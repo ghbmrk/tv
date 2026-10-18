@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -45,25 +46,43 @@ private val Ink = Color(0xff302c24)
     val posters by produceState<ImageBitmap?>(null) {
         value = withContext(Dispatchers.IO) { context.assets.open("storybook/posters.png").use { BitmapFactory.decodeStream(it).asImageBitmap() } }
     }
+    val sectionsState = rememberLazyListState()
+    // A retained tile ID may move outside a lazy viewport after curation. Compose its
+    // section first, then its row item, before the tile requests focus. Do not animate
+    // this recovery or reset the scroll offset when the selection is already visible.
+    LaunchedEffect(doc.sections, restoreId, enabled, generation) {
+        val index = doc.sections.indexOfFirst { section -> section.items.any { it.visible && it.id == restoreId } }
+        if (enabled && index >= 0 && sectionsState.layoutInfo.visibleItemsInfo.none { it.index == index }) {
+            sectionsState.scrollToItem(index)
+        }
+    }
     BoxWithConstraints(Modifier.fillMaxSize().background(Paper).testTag("storybook-home")
         .then(if (!enabled) Modifier.clearAndSetSemantics { } else Modifier)) {
         val unit = maxWidth / 960f
         background?.let { Image(it, null, Modifier.fillMaxSize(), contentScale = ContentScale.Crop) }
-        LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(start = unit * 60f, end = unit * 60f,
+        LazyColumn(Modifier.fillMaxSize(), state = sectionsState, contentPadding = PaddingValues(start = unit * 60f, end = unit * 60f,
             top = unit * 150f, bottom = unit * 72f), verticalArrangement = Arrangement.spacedBy(unit * 30f)) {
             items(doc.sections, key = { it.id }) { section ->
                 val movies = section.items.any { it.kind == "movie" }
                 val tileWidth = unit * if (movies) 128f else 104f
                 val arrangement = Arrangement.spacedBy(unit * 12f, if (movies) Alignment.Start else Alignment.CenterHorizontally)
-                if (section.layout == "row") LazyRow(Modifier.fillMaxWidth(), horizontalArrangement = arrangement,
+                val visible = section.items.filter { it.visible }
+                val rowState = rememberLazyListState()
+                LaunchedEffect(visible, restoreId, enabled, generation) {
+                    val index = visible.indexOfFirst { it.id == restoreId }
+                    if (enabled && section.layout == "row" && index >= 0 && rowState.layoutInfo.visibleItemsInfo.none { it.index == index }) {
+                        rowState.scrollToItem(index)
+                    }
+                }
+                if (section.layout == "row") LazyRow(Modifier.fillMaxWidth(), state = rowState, horizontalArrangement = arrangement,
                     contentPadding = PaddingValues(horizontal = unit * 5f, vertical = unit * 8f)) {
-                    items(section.items.filter { it.visible }, key = { it.id }) { tile ->
+                    items(visible, key = { it.id }) { tile ->
                         StorybookTile(tile, tileWidth, if (movies) unit * 190f else unit * 72f, posters, background,
                             tile.id == restoreId, enabled, generation, availability(tile.target),
                             { activate(tile) }, { focused(tile.id) }, load)
                     }
                 } else Column(verticalArrangement = Arrangement.spacedBy(unit * 12f)) {
-                    section.items.filter { it.visible }.chunked(6).forEach { row ->
+                    visible.chunked(6).forEach { row ->
                         Row(horizontalArrangement = arrangement, modifier = Modifier.fillMaxWidth().padding(5.dp)) {
                             row.forEach { tile -> key(tile.id) {
                                 StorybookTile(tile, tileWidth, if (movies) unit * 190f else unit * 72f, posters, background,

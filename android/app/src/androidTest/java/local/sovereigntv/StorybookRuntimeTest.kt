@@ -28,9 +28,19 @@ class StorybookRuntimeTest {
         ExperienceRepository(context).import(document)
         compose.activityRule.scenario.recreate()
         compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-home").fetchSemanticsNodes().isNotEmpty() }
+        val expected = Experience.parse(document)
+        compose.waitUntil(10000) { ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].experience == expected }
+        node("film_balto").performSemanticsAction(SemanticsActions.RequestFocus) { it() }
         compose.waitForIdle()
     }
-    @Before fun setup() { seed(context.assets.open("storybook.json").bufferedReader().use { it.readText() }) }
+    @Before fun setup() {
+        Intents.init()
+        // An unexpected launch must be recorded for assertions, never open a real client.
+        Intents.intending(androidx.test.espresso.intent.matcher.IntentMatchers.anyIntent())
+            .respondWith(android.app.Instrumentation.ActivityResult(android.app.Activity.RESULT_CANCELED, null))
+        seed(context.assets.open("storybook.json").bufferedReader().use { it.readText() })
+    }
+    @After fun releaseIntents() { Intents.release() }
 
     @Test fun textFreeHomeHasManualMoviesSixAppsDpadAndRestoredFocus() {
         compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.Text)).assertCountEquals(0)
@@ -74,14 +84,11 @@ class StorybookRuntimeTest {
     }
 
     @Test fun unconfiguredMovieNeverLaunchesProviderOrRecommendations() {
-        Intents.init()
-        try {
-            node("film_balto").performKeyInput { pressKey(Key.DirectionCenter) }
-            compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-notice").fetchSemanticsNodes().isNotEmpty() }
-            assertTrue(Intents.getIntents().isEmpty())
-            node("film_balto").assertIsFocused()
-            compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.Text)).assertCountEquals(0)
-        } finally { Intents.release() }
+        node("film_balto").performKeyInput { pressKey(Key.DirectionCenter) }
+        compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-notice").fetchSemanticsNodes().isNotEmpty() }
+        assertTrue(Intents.getIntents().isEmpty())
+        node("film_balto").assertIsFocused()
+        compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.Text)).assertCountEquals(0)
     }
 
     @Test fun evenAnExplicitMovieBindingCannotBypassStopAtEndQualification() {
@@ -89,13 +96,10 @@ class StorybookRuntimeTest {
         doc.getJSONArray("sections").getJSONObject(0).getJSONArray("items").getJSONObject(2)
             .put("playback", JSONObject().put("provider","youtube").put("content_id","abcdefghijk"))
         seed(doc.toString())
-        Intents.init()
-        try {
-            node("film_balto").performKeyInput { pressKey(Key.DirectionCenter) }
-            compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-notice").fetchSemanticsNodes().isNotEmpty() }
-            assertTrue(Intents.getIntents().isEmpty())
-            compose.runOnIdle { assertTrue(ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].message.contains("stop-at-end")) }
-        } finally { Intents.release() }
+        node("film_balto").performKeyInput { pressKey(Key.DirectionCenter) }
+        compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-notice").fetchSemanticsNodes().isNotEmpty() }
+        assertTrue(Intents.getIntents().isEmpty())
+        compose.runOnIdle { assertTrue(ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].message.contains("stop-at-end")) }
     }
 
     @Test fun householdEditsReorderAndRemoveMoviesWithoutRepopulatingThem() {
@@ -117,5 +121,57 @@ class StorybookRuntimeTest {
         repository.undo(java.util.UUID.randomUUID().toString(), current.revision, initial.revision)
         compose.runOnIdle { ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].refreshSaved() }
         compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-tile:film_balto").fetchSemanticsNodes().isNotEmpty() }
+    }
+
+    @Test fun liveReorderRestoresSelectedMovieBeyondTheComposedViewport() {
+        val doc = JSONObject(context.assets.open("storybook.json").bufferedReader().use { it.readText() })
+        val movies = doc.getJSONArray("sections").getJSONObject(0).getJSONArray("items")
+        repeat(18) { index -> movies.put(JSONObject(movies.getJSONObject(0).toString()).put("id", "extra_$index")) }
+        seed(doc.toString())
+        node("film_balto").assertIsFocused()
+        val selected = movies.remove(2)
+        movies.put(selected)
+        ExperienceRepository(context).import(doc.toString())
+        compose.runOnIdle { ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].refreshSaved() }
+        compose.waitUntil(10000) {
+            compose.onAllNodes(hasTestTag("storybook-tile:film_balto") and isFocused()).fetchSemanticsNodes().isNotEmpty() &&
+                compose.onAllNodesWithTag("storybook-tile:extra_17").fetchSemanticsNodes().isNotEmpty()
+        }
+        node("film_balto").assertIsDisplayed().assertIsFocused()
+        compose.activityRule.scenario.recreate()
+        compose.waitUntil(10000) { compose.onAllNodes(hasTestTag("storybook-tile:film_balto") and isFocused()).fetchSemanticsNodes().isNotEmpty() }
+        node("film_balto").performKeyInput { pressKey(Key.DirectionLeft) }
+        node("extra_17").assertIsFocused()
+        // Removing the selected tail must recover to a visible, navigable card rather
+        // than leave focus parked on the detached item or the Settings button.
+        movies.getJSONObject(movies.length() - 2).put("visible", false)
+        ExperienceRepository(context).import(doc.toString())
+        compose.runOnIdle { ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].refreshSaved() }
+        compose.waitUntil(10000) { compose.onAllNodes(hasTestTag("storybook-tile:film_little_mermaid") and isFocused()).fetchSemanticsNodes().isNotEmpty() }
+        node("film_little_mermaid").assertIsDisplayed().performKeyInput { pressKey(Key.DirectionRight) }
+        node("film_hunchback").assertIsFocused()
+    }
+
+    @Test fun liveSectionMoveRetainsRemoteSelectionAcrossVerticalVirtualization() {
+        val doc = JSONObject(context.assets.open("storybook.json").bufferedReader().use { it.readText() })
+        val sections = doc.getJSONArray("sections")
+        repeat(10) { index ->
+            val section = JSONObject(sections.getJSONObject(0).toString()).put("id", "shelf_$index")
+            val entries = section.getJSONArray("items")
+            repeat(entries.length()) { item -> entries.getJSONObject(item).put("id", "shelf_${index}_$item") }
+            sections.put(section)
+        }
+        seed(doc.toString())
+        node("film_balto").assertIsFocused()
+        sections.put(sections.remove(0))
+        ExperienceRepository(context).import(doc.toString())
+        compose.runOnIdle { ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].refreshSaved() }
+        compose.waitUntil(10000) { ViewModelProvider(compose.activity)[ExperienceViewModel::class.java].experience?.sections?.firstOrNull()?.id == "apps" }
+        compose.waitUntil(10000) { compose.onAllNodes(hasTestTag("storybook-tile:film_balto") and isFocused()).fetchSemanticsNodes().isNotEmpty() }
+        node("film_balto").assertIsDisplayed()
+        compose.activityRule.scenario.recreate()
+        compose.waitUntil(10000) { compose.onAllNodes(hasTestTag("storybook-tile:film_balto") and isFocused()).fetchSemanticsNodes().isNotEmpty() }
+        node("film_balto").assertIsDisplayed().performKeyInput { pressKey(Key.DirectionRight) }
+        node("film_little_mermaid").assertIsFocused()
     }
 }

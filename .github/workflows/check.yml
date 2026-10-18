@@ -48,7 +48,7 @@ jobs:
         with:
           gradle-version: '8.13'
       - run: sdkmanager 'platforms;android-36' 'build-tools;35.0.0'
-      - run: gradle -p android :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug :control-probe:lintDebug :control:assembleDebug :control:assembleDebugAndroidTest :control:lintDebug
+      - run: gradle -p android :app:testDebugUnitTest :app:assembleDebug :app:assembleRelease :app:assembleDebugAndroidTest :app:lintDebug :control-probe:lintDebug :control:assembleDebug :control:assembleDebugAndroidTest :control:lintDebug
       - name: Enable KVM for the test emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
