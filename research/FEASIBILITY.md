@@ -6,6 +6,10 @@ Decision date: 2026-10-15. Target: Samsung QN50LS03FAFXZA, photographed build T-
 
 The requirements remain jointly binding: original hardware, no remaining Samsung software including immutable and peripheral components, stock-supported quality for all four providers, original remote, local household data, responsive operation and agentOS editing. No incompatibility has yet been demonstrated on this exact board. Equally, neither acquired family source nor emulator success demonstrates a compatible replacement.
 
+## Public documentation follow-up
+
+The [October 17 board and media investigation](BOARD_AND_MEDIA_ELIGIBILITY.md) adds a rendered Samsung family repair-guide review and independent exact-model catalog relation. It narrows candidates to two PCB assemblies, two decoder entries and several storage parts without identifying the installed CPU/revision or selecting a BSP. The [bounded public evidence record](public-component-evidence.json) preserves source URLs, queries and digests separately from private owner observations. Widevine and YouTube primary access rules now identify concrete eligibility questions and contact routes. No TV access, independent boot, recovery or provisioning approval resulted.
+
 ## New source evidence
 
 The [dependency inventory](platform-dependency-inventory.json) identifies 12 selected files across four nested packages by archive/member/file SHA-256, and locates ASCII markers by line number and line hash. It contains no vendor source text. The outer source digest agrees with the [previously acquired archive](PONTUS_SOURCE_FINDINGS.md). Manual review of the selected code supports the observations below; marker matching alone does not establish control flow or active build branches.

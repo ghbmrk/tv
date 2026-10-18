@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-17",
+  "model_lookup": "QN50LS03FAFXZA",
+  "provenance": "Independent public catalog retrieval only; no owner-photo observations or identifiers.",
+  "model_page": {
+    "url": "https://samsungparts.com/products/samsung-qn50ls03fafxza-50-inch-class-the-frame-ls03fa-qled-4k-tv",
+    "bytes": 371217,
+    "sha256": "b2b002027ce2dcf36b4d7a6205c38c2cf0388937ef5a6260c5aa2138cf2d669b"
+  },
+  "model_relation": {
+    "url": "https://fridgeparts.us/newsamsungparts/admin_ajax.php",
+    "method": "POST",
+    "operation": "Read-only catalog query used by public model-page JavaScript; no cart, account or message action.",
+    "form": {
+      "action": "fetch_related_products",
+      "shop": "samsungparts.com",
+      "model_number": "QN50LS03FAFXZA",
+      "model_variation": "Default Title",
+      "model_brand": "Samsung"
+    },
+    "response_bytes": 5316,
+    "response_sha256": "093a3904ff92701e273e2ab532d9c899bf34dc7af6f917c9a6a75b408e84edff",
+    "selected_parts": [
+      "1204-003839",
+      "1204-003778",
+      "1107-002758",
+      "1107-002587",
+      "1107-002226",
+      "1103-001694",
+      "BN94-18661C",
+      "BN94-18663B",
+      "BN96-61147A",
+      "1105-003303"
+    ],
+    "limit": "Flat model relation; not a revision-specific BOM, placement map, schematic or observed installed inventory."
+  },
+  "product_records": [
+    {
+      "part": "1204-003839",
+      "title": "Samsung 1204-003839 Ic-Decoder , Quantum Processor",
+      "source_url": "https://samsungparts.com/products/1204-003839.js",
+      "bytes": 1255,
+      "sha256": "47e06d18617472d387166ebe2acd46bac144a89650a7113c226ff58d70995ad7",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "1204-003778",
+      "title": "Samsung 1204-003778 Ic-Decoder Sdp1805S,Fcbga,490P",
+      "source_url": "https://samsungparts.com/products/1204-003778.js",
+      "bytes": 1311,
+      "sha256": "2da0a84604d35f83550921634105bab07cdb93d06eeea449a1b982a1be3a7d33",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "1107-002758",
+      "title": "Samsung 1107-002758 Ic-Emmc",
+      "source_url": "https://samsungparts.com/products/1107-002758.js",
+      "bytes": 1216,
+      "sha256": "d0e4514b125fee5404f1f6d265c6983c562d89f0cca39d4fa6df78e7d14d8d1f",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "1107-002587",
+      "title": "Samsung 1107-002587 Ic-Nor Flash En25Qh16B 16Mbit",
+      "source_url": "https://samsungparts.com/products/1107-002587.js",
+      "bytes": 1305,
+      "sha256": "bd0ff92da3a5bb734b27544817942f58cc2d12ab94ab4ad9629404bed84e059b",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "1107-002226",
+      "title": "Samsung 1107-002226 Ic-Nor Flash",
+      "source_url": "https://samsungparts.com/products/1107-002226.js",
+      "bytes": 1315,
+      "sha256": "1cf7abb0319932cac2e9fed01dfe8d730a48c99cbe7757ae8d14ae45fab22e81",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "1103-001694",
+      "title": "Samsung 1103-001694 SMG PART",
+      "source_url": "https://samsungparts.com/products/1103-001694.js",
+      "bytes": 1173,
+      "sha256": "68de0170ec59f98a6c8c4f81673b666af74f12a0c68b8435dab260e54630384f",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "BN94-18661C",
+      "title": "Samsung BN94-18661C",
+      "source_url": "https://samsungparts.com/products/samsung-bn94-18661c.js",
+      "bytes": 1199,
+      "sha256": "751db46d37b9defd3b6a97dd0bfa884171a305d9385840ca89194971562cfabf",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "BN94-18663B",
+      "title": "Samsung BN94-18663B Assy Pcb",
+      "source_url": "https://samsungparts.com/products/samsung-bn94-18663b-assy-pcb.js",
+      "bytes": 1244,
+      "sha256": "836be4520fb3d193e2f97be0aedfc2950d17fc8fc27e040d91d712f60696d5d5",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "BN96-61147A",
+      "title": "Samsung BN96-61147A Assembly Pcb P;Fr-1,Oc + Cover",
+      "source_url": "https://samsungparts.com/products/samsung-bn96-61147a-assembly-pcb-p-fr-1-oc-cover.js",
+      "bytes": 1349,
+      "sha256": "f68caf293db38b7d8df55f13bc9084f4e023a32727041c1e971a51910a054aac",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    },
+    {
+      "part": "1105-003303",
+      "title": "Samsung 1105-003303",
+      "source_url": "https://samsungparts.com/products/samsung-1105-003303.js",
+      "bytes": 1183,
+      "sha256": "04b6aa37635c7ff94320508524a631ee74119ba7747298065954db0c1932ceae",
+      "evidence_scope": "Public product description; no installed-unit, board-location or compatibility verification."
+    }
+  ],
+  "repair_guide": {
+    "source_url": "https://org.downloadcenter.samsung.com/downloadfile/ContentsFile.aspx?CDSite=UNI_CA&OriginYN=N&ModelType=N&ModelName=QN50LS03FAF&CttFileID=11120328&CDCttType=EU&VPath=EU%2F202511%2F20251119160707499%2F79.Repair_Guide_QFLS03M_QNxxLS03FAFXxx_Ver1.0.pdf",
+    "listing_url": "https://www.samsung.com/ca/support/model/QN50LS03FAFXZC/",
+    "bytes": 2277287,
+    "sha256": "55d94a4b8db1665316ff9b7453018398472b1e0acb9baea5091353751720d49f"
+  },
+  "target_identity_changed": false,
+  "boot_or_recovery_qualified": false,
+  "hardware_accessed": false,
+  "vendor_files_redistributed": false
+}
