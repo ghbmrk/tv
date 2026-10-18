@@ -42,7 +42,9 @@ The exact variant-selection mechanism, executing board/revision, ROM trust polic
 
 A retained 2 MiB prefix contains a GPT with valid primary-header and partition-entry-array CRCs. It declares two image partitions: `pltf_t.img` starts at byte 1,048,576 and spans 1,369,440,256 bytes; `prd_t.img` starts at byte 1,370,488,832 and spans 58,720,256 bytes. These are ranges **inside the update image**, not the live TV partition map. GUIDs are omitted and the backup GPT has not been checked.
 
-The first partition starts with `VDFS`. This is a filesystem-marker candidate, not a validated filesystem or a writable restore target. A bounded filesystem-format inspection can now proceed without mounting the image or executing vendor code.
+The first partition starts with `VDFS`. Static comparison with `vdfs-tools.opensource.tgz` from the retained official `25_DTV_PontusM.zip` identifies layout `2007`. The published layout, flush and CRC sources define six 512-byte headers plus primary/copy extended superblocks. Every header CRC and both extended-header CRCs match, the extended-checksum references match, and primary/copy superblocks are equal. The source uses the reflected CRC32 polynomial with initial zero and no final complement, distinct from the usual ZIP CRC convention.
+
+The superblock declares a read-only image, 4,096-byte blocks, 16,384-byte metadata nodes, 334,114 volume blocks and signature-type ID 1 (the source enum names RSA1024). This verifies fixed-header consistency only: no signature authentication, catalog traversal, complete filesystem validation or mount occurred. Builder command/identity, UUID and signature bytes are excluded. The source-reference hashes are recorded in the inventory; no reference implementation was executed or copied into the product.
 
 ## Reproduce bounded plaintext inspection
 
@@ -57,7 +59,7 @@ python3 tools/inspect_update_metadata.py \
   --output .local/update-metadata-review.json
 ```
 
-The tool bounds input sizes, descriptor counts/ranges, node depth, properties, strings, reservation blocks and image CRCs. It refuses nonregular/link inputs and output aliases of inputs. It reports selected model/compatible strings and counts only; it excludes raw salts, keys, signatures, address values and unrelated device-tree properties. Synthetic tests cover truncation, overflow, unsafe names, duplicate IDs/properties, overlapping blocks, excessive nesting, CRC damage, GPT range/overlap constraints and preservation of input files. This tool does not reproduce decryption or all-section CRC checking; those separate results are recorded with their input/reference provenance.
+The tool bounds input sizes, descriptor counts/ranges, node depth, properties, strings, reservation blocks and image CRCs. It refuses nonregular/link inputs and output aliases of inputs. It reports selected model/compatible strings and counts only; it excludes raw salts, keys, signatures, address values and unrelated device-tree properties. Synthetic tests cover truncation, overflow, unsafe names, duplicate IDs/properties, overlapping blocks, excessive nesting, CRC damage, GPT range/overlap constraints, VDFS fixed-header corruption and preservation of input files. This tool does not reproduce decryption or all-section CRC checking; those separate results are recorded with their input/reference provenance.
 
 ## Consequence for the implementation plan
 

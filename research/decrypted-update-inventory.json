@@ -560,7 +560,22 @@
           "name": "pltf_t.img",
           "image_file_start_byte": 1048576,
           "image_bytes": 1369440256,
-          "filesystem_marker_candidate": "VDFS"
+          "filesystem_marker_candidate": "VDFS",
+          "vdfs_headers": {
+            "layout_version": "2007",
+            "header_crcs_match": true,
+            "extended_header_crcs_match": true,
+            "primary_and_copy_superblocks_equal": true,
+            "block_bytes": 4096,
+            "metadata_node_bytes": 16384,
+            "read_only_declaration": true,
+            "signature_type_id": 1,
+            "declared_volume_blocks": 334114,
+            "builder_identity_command_uuid_and_signature_omitted": true,
+            "signature_verified": false,
+            "filesystem_contents_validated": false,
+            "scope": "Fixed headers only; no catalog traversal, mount, execution or boot qualification."
+          }
         },
         {
           "name": "prd_t.img",
@@ -579,5 +594,27 @@
   "vendor_code_executed": false,
   "tv_accessed": false,
   "installed_variant_identified": false,
-  "independent_boot_or_recovery_qualified": false
+  "independent_boot_or_recovery_qualified": false,
+  "vdfs_format_reference": {
+    "official_source_archive": "25_DTV_PontusM.zip",
+    "source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+    "member": "vdfs-tools.opensource.tgz",
+    "member_sha256": "30816d6f2e955695f0083fe8af154cfb944b108d6eb85f93f65f332bb282e002",
+    "files": [
+      {
+        "path": "vdfs-tools/include/vdfs4_layout.h",
+        "sha256": "b35cccf69184b3b8dd6ba2f86fc3922e23b06d3fc3f478bc510b3bb6ddac3b8e"
+      },
+      {
+        "path": "vdfs-tools/lib/crc32.c",
+        "sha256": "dede583f4e30358121cc5ae206b2a24bf2772a0fa86fd1a8392ce5d51d8e68b0"
+      },
+      {
+        "path": "vdfs-tools/lib/flush_metadata.c",
+        "sha256": "df805b46d3bf2d7beb65cf7b5055171499bcbe3c25b14ad9977468feccbe3f83"
+      }
+    ],
+    "reference_code_executed": false,
+    "reference_implementation_copied": false
+  }
 }

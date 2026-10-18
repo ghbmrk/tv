@@ -232,6 +232,33 @@ def kernel_header(data):
             'load_entry_values_omitted': True, 'signature_verified': False}
 
 
+def vdfs_headers(data, partition_bytes):
+    """Inspect fixed headers only; omit builder identity, command, UUID and signatures."""
+    require(8192 <= len(data) <= 4*1024**2 and len(data) <= partition_bytes <= 2**31)
+    raw_crc = lambda value: zlib.crc32(value, 0xffffffff) ^ 0xffffffff
+    for base in (0, 4096):
+        for offset in (0, 512, 1024):
+            header = data[base+offset:base+offset+512]
+            require(header[:8] == b'VDFS2007' and raw_crc(header[:508]) == unpack(header, 508, '<I')[0])
+        extended = data[base+1536:base+4096]
+        checksum = unpack(extended, 2556, '<I')[0]
+        require(raw_crc(extended[:2556]) == checksum
+                and unpack(data, base+1024+228, '<I')[0] == checksum)
+    require(data[1024:4096] == data[5120:8192])
+    sb, ex = data[1024:1536], data[1536:4096]
+    log_block, log_node = sb[164], sb[165]
+    require(9 <= log_block <= 20 and log_block <= log_node <= 24 and sb[168] in (0, 1) and sb[173] in (0, 1, 2))
+    blocks = unpack(ex, 1640, '<Q')[0]
+    require(0 < blocks <= partition_bytes // (1 << log_block))
+    return {'layout_version': '2007', 'header_crcs_match': True, 'extended_header_crcs_match': True,
+            'primary_and_copy_superblocks_equal': True, 'block_bytes': 1 << log_block,
+            'metadata_node_bytes': 1 << log_node, 'read_only_declaration': bool(sb[168]),
+            'signature_type_id': sb[173], 'declared_volume_blocks': blocks,
+            'builder_identity_command_uuid_and_signature_omitted': True,
+            'signature_verified': False, 'filesystem_contents_validated': False,
+            'scope': 'Fixed headers only; no catalog traversal, mount, execution or boot qualification.'}
+
+
 def platform_header(data, image_bytes):
     require(1024 <= len(data) <= 4*1024**2 and len(data) <= image_bytes <= 2**31 and image_bytes % 512 == 0)
     require(data[510:512] == b'\x55\xaa' and data[512:520] == b'EFI PART')
@@ -260,6 +287,8 @@ def platform_header(data, image_bytes):
         record = {'name': name, 'image_file_start_byte': start*512, 'image_bytes': (end-start+1)*512}
         if data[start*512:start*512+4] == b'VDFS':
             record['filesystem_marker_candidate'] = 'VDFS'
+            if len(data) >= start*512+8192:
+                record['vdfs_headers'] = vdfs_headers(data[start*512:], record['image_bytes'])
         records.append(record)
     require(records and all(a[1] < b[0] for a, b in zip(sorted(ranges), sorted(ranges)[1:])))
     return {'prefix_bytes': len(data), 'prefix_sha256': hashlib.sha256(data).hexdigest(),

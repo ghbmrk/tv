@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 import unittest
 import zlib
-from tools.inspect_update_metadata import metadata, dtb_bundle, kernel_header, read_bounded, platform_header, main, MAGIC
+from tools.inspect_update_metadata import metadata, dtb_bundle, kernel_header, read_bounded, platform_header, vdfs_headers, main, MAGIC
 
 
 def desc(tag, body):
@@ -62,7 +62,7 @@ def kernel_bytes():
 
 
 def gpt_bytes(ranges=((8, 10), (11, 13)), names=('pltf_t.img', 'prd_t.img')):
-    data = bytearray(8192)
+    data = bytearray(4608)
     data[510:512] = b'\x55\xaa'
     for i, ((start, end), name) in enumerate(zip(ranges, names)):
         at = 1024 + i*128
@@ -74,6 +74,23 @@ def gpt_bytes(ranges=((8, 10), (11, 13)), names=('pltf_t.img', 'prd_t.img')):
     struct.pack_into('<8s4I4Q16sQIII', data, 512, b'EFI PART', 0x10000, 92, 0, 0,
                      1, 19, 4, 17, b'g'*16, 2, 2, 128, zlib.crc32(data[1024:1280]))
     struct.pack_into('<I', data, 528, zlib.crc32(data[512:604]))
+    return data
+
+
+def vdfs_bytes():
+    data = bytearray(8192)
+    crc = lambda value: zlib.crc32(value, 0xffffffff) ^ 0xffffffff
+    for base in (0, 4096):
+        ex = bytearray(2560); struct.pack_into('<Q', ex, 1640, 10)
+        struct.pack_into('<I', ex, 2556, crc(ex[:2556]))
+        data[base+1536:base+4096] = ex
+        for offset in (0, 512, 1024):
+            header = bytearray(512); header[:8] = b'VDFS2007'
+            if offset == 1024:
+                header[164:166] = bytes([12, 14]); header[168] = 1; header[173] = 1
+                struct.pack_into('<I', header, 228, crc(ex[:2556]))
+            struct.pack_into('<I', header, 508, crc(header[:508]))
+            data[base+offset:base+offset+512] = header
     return data
 
 
@@ -163,6 +180,23 @@ class UpdateMetadataTests(unittest.TestCase):
         for size in (10239, 1024, 2**31+512):
             with self.assertRaises(ValueError):
                 platform_header(gpt_bytes(), size)
+
+    def test_vdfs_fixed_header_crcs_are_not_signature_or_content_validation(self):
+        result = vdfs_headers(vdfs_bytes(), 40960)
+        self.assertEqual(result['block_bytes'], 4096)
+        self.assertTrue(result['read_only_declaration'])
+        self.assertTrue(result['primary_and_copy_superblocks_equal'])
+        self.assertFalse(result['signature_verified'])
+        self.assertFalse(result['filesystem_contents_validated'])
+        for at in (0, 508, 512, 1024, 1536, 4095, 4096, 8191):
+            data = vdfs_bytes(); data[at] ^= 1
+            with self.subTest(offset=at), self.assertRaises(ValueError):
+                vdfs_headers(data, 40960)
+        for size in (8192, 40959):
+            with self.assertRaises(ValueError):
+                vdfs_headers(vdfs_bytes(), size)
+        with self.assertRaises(ValueError):
+            vdfs_headers(vdfs_bytes()[:-1], 40960)
 
     def test_cli_preserves_inputs_and_refuses_links_and_oversized_files(self):
         with tempfile.TemporaryDirectory() as directory:
