@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-18",
+  "source_kind": "Static offline inspection of an official shared update and published source; no owner-unit dump or observations.",
+  "archive_sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+  "upgrade_member_sha256": "cb0b87a332c4d4138af5bc875f535e56b6600738cb0546ba0e269bb677cbfb38",
+  "source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+  "source_member_sha256": "30816d6f2e955695f0083fe8af154cfb944b108d6eb85f93f65f332bb282e002",
+  "format_sources": [
+    {
+      "path": "vdfs-tools/include/vdfs4_layout.h",
+      "sha256": "b35cccf69184b3b8dd6ba2f86fc3922e23b06d3fc3f478bc510b3bb6ddac3b8e"
+    },
+    {
+      "path": "vdfs-tools/include/vdfs4.h",
+      "sha256": "5fa43cc85cbfedf01feab86da0972e36af9719828c8aff918cdba4b6ab991fc9"
+    },
+    {
+      "path": "vdfs-tools/include/btree.h",
+      "sha256": "647ece57a5f8bc9e862819fb90243ad6e359b7f41fec29dc41b1848aab21e0d1"
+    },
+    {
+      "path": "vdfs-tools/lib/space_manager.c",
+      "sha256": "1aabf755faf18faab26a979d943f8662e877877dce77985818ebb7566fd0b6e5"
+    },
+    {
+      "path": "vdfs-tools/lib/btree.c",
+      "sha256": "41c8c60398f63d2845609f9b59b7f4a40e48e5b6fb9f7ab48b66707dcfe293fc"
+    },
+    {
+      "path": "vdfs-tools/lib/compress.c",
+      "sha256": "5cfe5e7569b61a74a1e30dd70600cb25f2d64733befe9972ec356299d9b2a39e"
+    },
+    {
+      "path": "vdfs-tools/lib/decompress.c",
+      "sha256": "8db41a4e99ee851795577ac55611ef37b5f8ad4cb68311c35343feacf550ad09"
+    }
+  ],
+  "catalog": {
+    "schema_version": 1,
+    "scope": "Shared update catalog structure and selected file declarations only.",
+    "platform_prefix_sha256": "eb879be04a4e1d1c02f8c5372d42aab00228c8c51b5cbde12b1ebdb03f0ea360",
+    "metadata_sha256": "6e1b2e66d717266876a7ffe6d8f5fb33b797427904ea6488a5745d123e4318f0",
+    "metadata_bytes": 61587456,
+    "snapshot_crc_and_reference_match": true,
+    "catalog_nodes": 3083,
+    "node_crcs_checked": 3083,
+    "node_type_counts": {
+      "1": 22,
+      "2": 3060
+    },
+    "leaf_records": 166831,
+    "record_type_counts": {
+      "1": 24073,
+      "2": 58657,
+      "3": 1950,
+      "5": 82151
+    },
+    "rooted_graph_reaches_every_node_once": true,
+    "graph_height_matches": true,
+    "sibling_links_reciprocal": true,
+    "selected_files": [
+      {
+        "name": "libcapi-drm-widevinecdm.so.0.1.1",
+        "record_type": 2,
+        "file_mode": 33261,
+        "declared_file_bytes": 8888,
+        "catalog_record_sha256": "9c56fbcbbd4a9a4a3be195aa6aa97025f6b920ef5f29d229a50ff7847d82c3ed"
+      },
+      {
+        "name": "libdrm-service.so.0.1.0",
+        "record_type": 2,
+        "file_mode": 33261,
+        "declared_file_bytes": 23736,
+        "catalog_record_sha256": "e60d761ee8ac5de693993f8276a3a7890794c2ebaacd903491f72b82799a1ce1"
+      },
+      {
+        "name": "org.tizen.netflix-app.sh",
+        "record_type": 2,
+        "file_mode": 33088,
+        "declared_file_bytes": 529,
+        "catalog_record_sha256": "ab31db190da9e13e164148cd3400563bfb52d8f2a8b1ea46f6bd1afb1708029e"
+      }
+    ],
+    "arbitrary_names_values_and_file_extents_exported": false,
+    "file_contents_validated": false,
+    "signature_verified": false,
+    "installed_variant_verified": false,
+    "boot_or_recovery_qualified": false,
+    "code_executed": false,
+    "device_accessed": false
+  },
+  "libraries": {
+    "libcapi-drm-widevinecdm.so.0.1.1": {
+      "schema_version": 1,
+      "stored_bytes": 8888,
+      "stored_sha256": "a57ca0f8093446d35537608d0d2a41f42e26115ab2d77c170fd827a032a06771",
+      "decoded_bytes": 17708,
+      "decoded_sha256": "1347d2f68518a10a5ffd019f2c7b4f75c210d73b8b93954575ee85d0f81e6fb4",
+      "compression": {
+        "layout": 6,
+        "chunks": 1,
+        "descriptor_crc_matches": true,
+        "chunk_and_descriptor_hashes_match": true,
+        "zero_alignment_padding_bytes": 21,
+        "signature_type_id": 1,
+        "signature_verified": false,
+        "encrypted_chunks_accepted": false
+      },
+      "elf": {
+        "class_bits": 32,
+        "endianness": "little",
+        "machine_id": 40,
+        "type_id": 3,
+        "needed_libraries": [
+          "ld-linux.so.3",
+          "libc.so.6",
+          "libdlog.so.0",
+          "libdrm-muse-proxy.so.0",
+          "libgcc_s.so.1",
+          "libmuse-core.so.0"
+        ],
+        "soname": "libcapi-drm-widevinecdm.so.0"
+      },
+      "decoded_bytes_exported": false,
+      "executed": false,
+      "device_accessed": false,
+      "signature_verified": false,
+      "android_compatibility_verified": false,
+      "provider_or_quality_eligibility_verified": false,
+      "scope": "Static declarations in supplied file only; no runtime or secure-media qualification."
+    },
+    "libdrm-service.so.0.1.0": {
+      "schema_version": 1,
+      "stored_bytes": 23736,
+      "stored_sha256": "13367ca1b347c492f0d85c7fa88e8f68188604838dc088ec96e5ef76c071b947",
+      "decoded_bytes": 46856,
+      "decoded_sha256": "31ab5976788161508313933001c7879d9349aded65128e68f915905715415768",
+      "compression": {
+        "layout": 6,
+        "chunks": 1,
+        "descriptor_crc_matches": true,
+        "chunk_and_descriptor_hashes_match": true,
+        "zero_alignment_padding_bytes": 55,
+        "signature_type_id": 1,
+        "signature_verified": false,
+        "encrypted_chunks_accepted": false
+      },
+      "elf": {
+        "class_bits": 32,
+        "endianness": "little",
+        "machine_id": 40,
+        "type_id": 3,
+        "needed_libraries": [
+          "ld-linux.so.3",
+          "libc.so.6",
+          "libcapi-base-common.so.0",
+          "libcdmbase.so.0",
+          "libdlog.so.0",
+          "libdrmdecrypt.so.0",
+          "libgcc_s.so.1",
+          "libgio-2.0.so.0",
+          "libglib-2.0.so.0",
+          "libgobject-2.0.so.0",
+          "liblegacy-drm.so.0",
+          "libmmfcommon.so.0",
+          "libmuse-server.so.0",
+          "libplayready.so.0",
+          "libpthread.so.0",
+          "libtbm.so.1",
+          "libwvcdm.so.0"
+        ],
+        "soname": "libdrm-service.so.0"
+      },
+      "decoded_bytes_exported": false,
+      "executed": false,
+      "device_accessed": false,
+      "signature_verified": false,
+      "android_compatibility_verified": false,
+      "provider_or_quality_eligibility_verified": false,
+      "scope": "Static declarations in supplied file only; no runtime or secure-media qualification."
+    }
+  },
+  "netflix_named_script": {
+    "name": "org.tizen.netflix-app.sh",
+    "stored_bytes": 529,
+    "sha256": "07117946698710ea824e59b0dec4422b3e1a0f2926164ad80ed894ae55092da2",
+    "static_role": "Update-migration hook using the update execution environment and a vconf reset key; not an app-launch integration.",
+    "executed": false,
+    "source_text_exported": false
+  },
+  "raw_vendor_bytes_keys_signatures_extents_and_arbitrary_catalog_names_included": false,
+  "tv_accessed": false,
+  "vendor_code_executed": false,
+  "mounted": false,
+  "messages_sent": false,
+  "boot_recovery_android_and_provider_qualification": false
+}
