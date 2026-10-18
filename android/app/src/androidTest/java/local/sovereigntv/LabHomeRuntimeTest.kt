@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import androidx.test.runner.lifecycle.Stage
@@ -18,7 +18,7 @@ import org.junit.Test
 /** Changes the Home role only on the dedicated emulator, restoring it in finally. */
 @OptIn(ExperimentalTestApi::class)
 class LabHomeRuntimeTest {
-    @get:Rule val compose = createAndroidComposeRule<MainActivity>()
+    @get:Rule val compose = createEmptyComposeRule()
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
     private fun shell(command: String): String = android.os.ParcelFileDescriptor.AutoCloseInputStream(
         instrumentation.uiAutomation.executeShellCommand(command)).bufferedReader().use { it.readText() }
@@ -32,40 +32,62 @@ class LabHomeRuntimeTest {
         val previousHome = ComponentName(previous.packageName, previous.name).flattenToString()
         require(Regex("[A-Za-z0-9_.$]+/[A-Za-z0-9_.$]+").matches(previousHome))
         require(previous.packageName != "android" && previous.packageName != context.packageName)
+        require(previous.packageName in setOf("com.google.android.tvlauncher", "com.google.android.apps.tv.launcherx"))
+        val previousEnabled = pm.getApplicationEnabledSetting(previous.packageName)
+        require(previousEnabled in setOf(PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.COMPONENT_ENABLED_STATE_ENABLED))
         val alias = ComponentName(context, "local.sovereigntv.LabHome")
         val priorEnabled = pm.getComponentEnabledSetting(alias)
-        val originalActivity = compose.activity
-        fun originalResumed(): Boolean {
-            var resumed = false
+        var originalActivity: MainActivity? = null
+        fun resumedHome(): MainActivity? {
+            var resumed: MainActivity? = null
             instrumentation.runOnMainSync {
-                resumed = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED).contains(originalActivity)
+                resumed = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED).filterIsInstance<MainActivity>().singleOrNull()
             }
             return resumed
         }
         val document = context.assets.open("storybook.json").bufferedReader().use { it.readText() }
         ExperienceRepository(context).import(document)
-        compose.runOnIdle { androidx.lifecycle.ViewModelProvider(originalActivity)[ExperienceViewModel::class.java].refreshSaved() }
-        val expected = Experience.parse(document)
-        compose.waitUntil(10000) { androidx.lifecycle.ViewModelProvider(originalActivity)[ExperienceViewModel::class.java].experience == expected }
-        compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-tile:film_balto").fetchSemanticsNodes().isNotEmpty() }
-        compose.onNodeWithTag("storybook-tile:film_balto").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.RequestFocus) { it() }
-        compose.onNodeWithTag("storybook-tile:film_balto").performKeyInput { pressKey(Key.DirectionRight) }
-        compose.onNodeWithTag("storybook-tile:film_little_mermaid").assertIsFocused()
         try {
             pm.setComponentEnabledSetting(alias, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
-            shell("cmd package set-home-activity --user 0 ${alias.flattenToString()}")
-            assertEquals(context.packageName, pm.resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName)
+            // The TV image's privileged Home outranks third-party candidates even
+            // after a successful role command. Model an owned platform by removing
+            // that launcher from this emulator's candidate set, then restore its
+            // exact prior enabled state. Component-only changes to another app are
+            // rejected by this image's shell; this fixture is never a TV installer.
+            val disabled = shell("pm disable-user --user 0 ${previous.packageName}")
+            assertTrue("Emulator fixture setup failed: $disabled", disabled.contains("disabled-user"))
+            assertEquals(PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, pm.getApplicationEnabledSetting(previous.packageName))
+            val result = shell("cmd package set-home-activity --user 0 ${alias.flattenToString()}")
+            assertTrue("Home-role selection failed: $result", result.contains("Success"))
+            compose.waitUntil(10000) { pm.resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName == context.packageName }
+            // A system Home task is distinct from a standard preview task. Start
+            // through the actual Home key before measuring warm task continuity.
+            shell("input keyevent KEYCODE_HOME")
+            compose.waitUntil(10000) { resumedHome() != null }
+            originalActivity = requireNotNull(resumedHome())
+            compose.waitUntil(10000) { compose.onAllNodesWithTag("storybook-tile:film_balto").fetchSemanticsNodes().isNotEmpty() }
+            compose.onNodeWithTag("storybook-tile:film_balto").performSemanticsAction(androidx.compose.ui.semantics.SemanticsActions.RequestFocus) { it() }
+            compose.onNodeWithTag("storybook-tile:film_balto").performKeyInput { pressKey(Key.DirectionRight) }
+            compose.onNodeWithTag("storybook-tile:film_little_mermaid").assertIsFocused()
             repeat(3) {
                 // The separate-UID synthetic app has no provider account or media session.
                 assertTrue(shell("am start -W -n local.sovereigntv.controlprobe/.TvFixtureActivity").contains("Status: ok"))
-                assertFalse("Synthetic app must actually leave Home", originalResumed())
+                assertNull("Synthetic app must actually leave Home", resumedHome())
                 shell("input keyevent KEYCODE_HOME")
-                compose.waitUntil(10000) { originalResumed() }
+                compose.waitUntil(10000) { resumedHome() === originalActivity }
                 compose.onNodeWithTag("storybook-tile:film_little_mermaid").assertIsFocused().assertIsDisplayed()
             }
         } finally {
-            shell("cmd package set-home-activity --user 0 $previousHome")
-            pm.setComponentEnabledSetting(alias, priorEnabled, PackageManager.DONT_KILL_APP)
+            try {
+                shell("pm ${if (previousEnabled == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) "default-state" else "enable"} --user 0 ${previous.packageName}")
+            } finally {
+                try { shell("cmd package set-home-activity --user 0 $previousHome") }
+                finally {
+                    pm.setComponentEnabledSetting(alias, priorEnabled, PackageManager.DONT_KILL_APP)
+                    instrumentation.runOnMainSync { originalActivity?.finish() }
+                }
+            }
+            assertEquals(previousEnabled, pm.getApplicationEnabledSetting(previous.packageName))
             assertEquals(previousHome, pm.resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.let {
                 ComponentName(it.packageName, it.name).flattenToString()
             })
