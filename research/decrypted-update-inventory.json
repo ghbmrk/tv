@@ -616,5 +616,27 @@
     ],
     "reference_code_executed": false,
     "reference_implementation_copied": false
+  },
+  "source_kernel_correspondence": {
+    "source_files": {
+      "linux-5.4/Makefile": {
+        "sha256": "353a81281cb6ea9c7ab42042452195daa879d86f19695143418c6981cefb1d25",
+        "bytes": 63324,
+        "version_fields": {
+          "VERSION": "5",
+          "PATCHLEVEL": "4",
+          "SUBLEVEL": "261",
+          "EXTRAVERSION": ""
+        }
+      },
+      "linux-5.4/arch/arm/mach-sdp/board-pontus-dt.c": {
+        "sha256": "cf83256d707d45d0bfe2b3e383394a00ada79c8a29796bfba16cd99dc86462dd",
+        "bytes": 4910
+      }
+    },
+    "kernel_version_string": "5.4.261",
+    "kernel_config_marker_found": false,
+    "build_host_user_compiler_string_exported": false,
+    "exact_build_correspondence_verified": false
   }
 }

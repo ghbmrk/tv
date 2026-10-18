@@ -36,6 +36,8 @@ The recovered kernel has a valid legacy uImage header, matching header/data CRCs
 
 The DTB bundle contains twelve nonoverlapping, structurally parsed FDTs. Each declares `samsung,dtv` and `samsung,sdp-pontusm`, and four CPU-compatible nodes containing `arm,cortex-a57` and `arm,armv8`. These are device-tree declarations; do not promote them to a measured Cortex-A57 silicon identity, assume AArch64 boot support, or infer the installed variant. They do strengthen the correspondence between this update and the family source's PontusM machine support. An ARMv7 kernel/interface report is not inconsistent with ARMv8-capable hardware running a 32-bit software stack.
 
+The official source archive’s kernel Makefile also declares version 5.4.261, matching both the update’s uImage name and its embedded Linux-version string. The inventory binds that Makefile and PontusM board source by hashes. This establishes a matching version declaration, not an exact build: the executing configuration, toolchain, patch equivalence and selected DTB are not yet established. A bounded scan of the recovered kernel found no `IKCFG_ST` marker; this does not prove that no configuration can be recovered by another method. Build-host/user/compiler strings are not exported.
+
 The exact variant-selection mechanism, executing board/revision, ROM trust policy, earlier boot stages and independent restore route remain unresolved. Neither the catalog's chip names, the source's Cortex-A15 configuration symbol nor another device's benchmark can replace those observations.
 
 ## Platform-image wrapper
