@@ -121,3 +121,60 @@ func TestActualBrokerDispatchRechecksPolicyBeforeTVTransport(t *testing.T) {
 		t.Fatal("revoked dispatch reached TV transport", err)
 	}
 }
+
+// The current upstream engine may retry key-honouring executors and park
+// unresolved effects. A missing TV receipt must never authorize another edit.
+func TestCurrentBrokerParksMissingReceiptWithoutResendingTVEffect(t *testing.T) {
+	x, f, in := fixture(t)
+	in.Origin = "owner:fixture"
+	f.lost = true
+	store, err := journal.OpenFile(filepath.Join(t.TempDir(), "journal"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer store.Close()
+	engine, err := journal.Open(store, &fixturePolicy{}, map[string]journal.Executor{Name: x}, func(s string) string { return s })
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = engine.Submit(in); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = engine.Authorize(context.Background(), in.ID); err != nil {
+		t.Fatal(err)
+	}
+	status, err := engine.Dispatch(context.Background(), in.ID)
+	if err != nil || status.State != journal.OutcomeUnknown {
+		t.Fatal(status.State, err)
+	}
+	saved := f.receipts
+	f.receipts = map[string]Receipt{}
+	for round := 0; round < 32 && len(engine.Parked()) == 0; round++ {
+		engine.Reconcile(context.Background())
+	}
+	status, err = engine.Get(in.ID)
+	if err != nil || status.State != journal.OutcomeUnknown || len(status.Attempts) != 1 || !status.Attempts[0].Parked || len(engine.Parked()) != 1 {
+		t.Fatal("missing receipt did not remain a single parked unknown attempt", status, err)
+	}
+	for round := 0; round < 8; round++ {
+		engine.Reconcile(context.Background())
+	}
+	countEffects := func() int {
+		n := 0
+		for _, op := range f.calls {
+			if op == "apply" {
+				n++
+			}
+		}
+		return n
+	}
+	if countEffects() != 1 {
+		t.Fatal("unknown/parked effect was sent again", countEffects())
+	}
+	f.receipts = saved
+	engine.Reconcile(context.Background())
+	status, err = engine.Get(in.ID)
+	if err != nil || status.State != journal.Succeeded || len(status.Attempts) != 1 || len(engine.Parked()) != 0 || countEffects() != 1 {
+		t.Fatal("original receipt did not settle the parked attempt without an edit", status, err)
+	}
+}
