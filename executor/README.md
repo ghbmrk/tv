@@ -2,7 +2,7 @@
 
 This development Go module implements the actual `journal.Executor` interface for native experience apply and undo. It is an isolated broker component, with no guest endpoint. Production broker registration, operation classification, grants, audience/private-data routing and capture enforcement remain unimplemented and unqualified. The adapter does not grant authority or make the TV agentOS-compatible by itself.
 
-The dependency pins public agentOS commit [`c17b5a92b95c97272c3f138f40a39b28608928b3`](https://github.com/ghbmrk/agentOS/tree/c17b5a92b95c97272c3f138f40a39b28608928b3/broker), with its module and source checksums in `go.sum`. Its `journal/intent.go` and `go.mod` are byte-identical to the previously inspected local merge `76ec0022012664e734aba22f281b88d9c0aa23f1`; the latter is not publicly fetchable. No local replacement or copied interface is used. Go 1.26.8 matches the upstream toolchain; official [release checksums](https://go.dev/dl/) identify the project-local SDK.
+The dependency pins public agentOS commit [`603cad7ce180c7f4f45447b64e652fa4a15d5563`](https://github.com/ghbmrk/agentOS/tree/603cad7ce180c7f4f45447b64e652fa4a15d5563/broker), with module/source checksums in `go.sum`. No local replacement or copied interface is used. Go 1.26.8 matches that upstream module's toolchain; official [release checksums](https://go.dev/dl/) identify the project-local SDK. This replaces the earlier October 13 module pin; it is not a production broker installation.
 
 ## Owner embedding boundary
 
@@ -50,3 +50,10 @@ python3 tools/qualify_control_interop.py --serial EMULATOR_SERIAL --go-executor 
 The driver checks the owned emulator, transfers only a temporary public client certificate and creates a localhost forward. Its Go probe verifies native editing, exact retries, reconciliation after adapter recreation and undo. The Android test independently verifies four resulting revisions: two from Python and two from Go, with the exact original document restored. This is transport/domain interoperability, not production agentOS or actual-TV qualification.
 
 The unit suite also uses agentOS's actual file-backed journal engine to verify policy recheck before dispatch, lost-reply fencing across restart, no effect replay while a receipt is missing, and resolution from the original receipt. Its synthetic policy and redactor are fixtures, never production authorization.
+
+
+## Current journal compatibility
+
+Pinned upstream: `603cad7ce180c7f4f45447b64e652fa4a15d5563`, module `v0.0.0-20261017235249-603cad7ce180` (checked 2026-10-17). Upstream may resend an unknown attempt only for executors that opt into its key-honouring contract. This adapter deliberately does not advertise that capability: stable native request IDs alone are not permission for automatic effect replay.
+
+`TestCurrentBrokerParksMissingReceiptWithoutResendingTVEffect` exercises the actual current engine through repeated missing-receipt checks and parking, verifies exactly one edit/attempt, and restores the original receipt to prove settlement without another edit. The race-enabled suite and existing restart/policy tests qualify these fixture paths only. Production registration, grants, routing and household end-to-end operation remain unqualified. The upstream Codex lane is retired; this dependency update changes only TV-owned code and does not authorize broker edits.
