@@ -1,3 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <queries><provider android:authorities="local.sovereigntv.controlprobe" /></queries>
+    <queries>
+        <provider android:authorities="local.sovereigntv.controlprobe" />
+        <intent><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.HOME" /></intent>
+    </queries>
+    <application>
+        <activity android:name=".MainActivity" android:launchMode="singleTask" />
+        <!-- Opt-in lab role only. Installing the APK never changes the current Home. -->
+        <activity-alias android:name=".LabHome" android:targetActivity=".MainActivity"
+            android:enabled="false" android:exported="true" android:label="Sovereign TV Lab Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
+    </application>
 </manifest>
