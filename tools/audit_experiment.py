@@ -13,7 +13,8 @@ import stat
 
 GATES = ('identity', 'boot_trust', 'software_provenance', 'build_reproduction',
          'bench_rehearsal', 'recovery', 'stock_baseline', 'provider_route')
-TARGET_FIELDS = {'model', 'installed_build', 'board_id', 'board_revision'}
+TARGET_FIELDS = {'model', 'installed_build', 'board_id', 'board_revision',
+                 'one_connect_model', 'one_connect_assembly', 'power_label_code', 'panel_id'}
 
 
 def fields(value, expected):
@@ -53,7 +54,7 @@ def digest_file(root, record, limit):
 
 def audit(packet, root):
     fields(packet, {'schema_version', 'target', 'artifact', 'gates'})
-    if type(packet['schema_version']) is not int or packet['schema_version'] != 1:
+    if type(packet['schema_version']) is not int or packet['schema_version'] != 2:
         raise ValueError('unsupported schema version')
     target = packet['target']
     fields(target, TARGET_FIELDS)
@@ -90,7 +91,7 @@ def audit(packet, root):
             raise ValueError('documented gate requires bounded evidence')
         for record in evidence:
             digest_file(root, record, 16 * 1024**2)
-    return {'schema_version': 1, 'review_packet_complete': not blockers,
+    return {'schema_version': 2, 'review_packet_complete': not blockers,
             'blockers': blockers, 'hardware_safety_verified': False,
             'authorization_granted': False, 'device_accessed': False,
             'limit': 'Hashes and schema only. Independent technical review and separate owner authorization are required; this tool never authorizes a hardware experiment.'}

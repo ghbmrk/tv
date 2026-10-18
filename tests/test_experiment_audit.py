@@ -18,9 +18,11 @@ class ExperimentAuditTests(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
-        self.target = dict(model='fixture-model', installed_build='fixture-build', board_id='fixture-board', board_revision='fixture-revision')
+        self.target = dict(model='fixture-model', installed_build='fixture-build', board_id='fixture-board', board_revision='fixture-revision',
+                           one_connect_model='fixture-box', one_connect_assembly='fixture-assembly',
+                           power_label_code='fixture-power', panel_id='fixture-panel')
         self.artifact = self.file('image', b'synthetic image, never a hardware image')
-        self.packet = dict(schema_version=1, target=self.target, artifact=self.artifact, gates=[
+        self.packet = dict(schema_version=2, target=self.target, artifact=self.artifact, gates=[
             dict(id=g, status='documented', scope=dict(target=self.target.copy(), artifact_sha256=self.artifact['sha256']),
                  evidence=[self.file(g, ('synthetic evidence for ' + g).encode())]) for g in GATES])
 
@@ -46,8 +48,18 @@ class ExperimentAuditTests(unittest.TestCase):
         self.assertEqual(command.returncode, 2)
         self.assertFalse(json.loads(command.stdout)['authorization_granted'])
 
+    def test_external_labels_do_not_replace_compute_board_or_panel_identity(self):
+        packet = copy.deepcopy(self.packet)
+        for field in ('board_id', 'board_revision', 'panel_id'):
+            packet['target'][field] = None
+        packet['gates'] = [dict(id=g, status='unverified', scope=None, evidence=[]) for g in GATES]
+        result = audit(packet, self.root)
+        self.assertFalse(result['review_packet_complete'])
+        for field in ('board_id', 'board_revision', 'panel_id'):
+            self.assertIn('target:' + field, result['blockers'])
+
     def test_stale_target_image_or_changed_proof_is_rejected(self):
-        for field in ('model', 'installed_build', 'board_id', 'board_revision'):
+        for field in self.target:
             packet = copy.deepcopy(self.packet)
             packet['gates'][0]['scope']['target'][field] = 'different'
             with self.subTest(field=field), self.assertRaises(ValueError):
@@ -69,6 +81,7 @@ class ExperimentAuditTests(unittest.TestCase):
         p = copy.deepcopy(self.packet); p['gates'][0]['status'] = 'verified'; variants.append(p)
         p = copy.deepcopy(self.packet); p['target']['board_id'] = None; variants.append(p)
         p = copy.deepcopy(self.packet); p['authorize_write'] = True; variants.append(p)
+        p = copy.deepcopy(self.packet); p['schema_version'] = 1; variants.append(p)
         for p in variants:
             with self.assertRaises(ValueError):
                 audit(p, self.root)
