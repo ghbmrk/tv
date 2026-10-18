@@ -236,7 +236,7 @@
       {
         "classification": "decompiler-inference",
         "function": "0x444262cc",
-        "claim": "Inferred dlopen of /prd/usr/lib/libpower-control-impl.so, followed by backend registration/version checks. Board implementation and constructor/registration behavior remain untraced.",
+        "claim": "Inferred dlopen of /prd/usr/lib/libpower-control-impl.so, followed by backend registration/version checks. See the separately recovered backend; this wrapper alone does not establish board effects.",
         "evidence_id": "ev_494b0489354844a0b6e639e1b413d3a5d87a02b63b8cd99eb85f4c7aaafc2d00",
         "private_report_sha256": "3cde3af55705f8c5cf4e9f638aec87561c5aae73d140e10fd99e5e69f7886f07"
       }
@@ -246,5 +246,137 @@
       "Unversioned backend-name request was ambiguous; defined dynamic symbol 0x444262cd selects Thumb entry 0x444262cc.",
       "Backend path is an artifact string in this shared update; installed-device correspondence remains unverified."
     ]
+  },
+  "power_control_backend": {
+    "symlink_chain": [
+      {
+        "name": "libpower-control-impl-sec.so",
+        "target": "libpower-control-impl-sec.so.0"
+      },
+      {
+        "name": "libpower-control-impl-sec.so.0",
+        "target": "libpower-control-impl-sec.so.0.1"
+      },
+      {
+        "name": "libpower-control-impl.so",
+        "target": "/prd/usr/lib/libpower-control-impl-sec.so"
+      }
+    ],
+    "stored_bytes": 21240,
+    "stored_sha256": "340d3f8ce53670a107a858e0635d9a1d9bb566f4185cd65b17d3507ba6b91251",
+    "decoded_bytes": 50638,
+    "decoded_sha256": "d1c4e12f3b768c4b8c29dfa94547d32c1ad1312d32dca83934de28cc73d2ebe2",
+    "compression": {
+      "layout": 6,
+      "chunks": 1,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 20,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "elf": {
+      "class_bits": 32,
+      "endianness": "little",
+      "machine_id": 40,
+      "type_id": 3,
+      "needed_libraries": [
+        "ld-linux.so.3",
+        "libc.so.6",
+        "libdlog.so.0",
+        "libgcc_s.so.1",
+        "libmicom.so.0",
+        "libpower-control.so.0",
+        "libsec-audio.so.0",
+        "libstdc++.so.6"
+      ],
+      "soname": "libpower-control-impl-sec.so.0"
+    },
+    "vendor_code_executed": false,
+    "tv_accessed": false,
+    "analysis_image_base": 65536,
+    "analysis_coordinates_are_not_device_addresses": true,
+    "call_sites": [
+      {
+        "operation": "get",
+        "address": "0x155ca",
+        "file_offset": "0x55ca",
+        "target": "0x11b40",
+        "import_name": "micom_get_boot_partition",
+        "instruction_sha256": "160c726a1b8e7f559f0947a3770d95087a2fa4334d30b3799c25c8f4138db490",
+        "evidence_id": "ev_087be4c7f3ad7c4f55f93c3ba7885fb0e6ebf36dadf7206f4fcc5b8237a97ef4",
+        "private_report_sha256": "14ee80ee09edeacfbb29ace5186a5af7642d671dbb9ab2fe025ffc4de29f8d48"
+      },
+      {
+        "operation": "restore",
+        "address": "0x1555e",
+        "file_offset": "0x555e",
+        "target": "0x11744",
+        "import_name": "restore_fake_magic",
+        "instruction_sha256": "531786ad9a750e12a6a567552823c92b1615dc25454f3dcbf81f11efbd4d23d0",
+        "evidence_id": "ev_7f91c3aecce73fee0a18f8ea3d9dcdda3a719dc9fcc9dff0a0ebe8ccc3a9e47c",
+        "private_report_sha256": "2b7eef3b82a1a6b8979f3747c5ab915bb15a27935005134fe4262a45c1d369a9"
+      }
+    ],
+    "cross_checks": {
+      "input_and_mappings_and_direct_calls_match": true,
+      "analysis_rebase_bytes": 65536
+    },
+    "observations": [
+      {
+        "classification": "decompiler-inference",
+        "function": "0x155ac",
+        "claim": "Inferred getter calls MICOM and accepts only returned partition values zero or one.",
+        "evidence_id": "ev_402b3b1e7ffe11404d7e6eaf0f6dac9b8a3ceff1e95d8a21fb98a803438c1317",
+        "private_report_sha256": "6bf9278ebe94ba4608909e4d453f955199250b2abdf6c0f02b2068dd6f80394d"
+      },
+      {
+        "classification": "decompiler-inference",
+        "function": "0x15524",
+        "claim": "Inferred setter rejects values outside zero/one, calls restore_fake_magic and only on nonnegative result continues to MICOM slot setter. Helper effects and storage safety are unresolved.",
+        "evidence_id": "ev_92f90cc14ae80aacd7a5cf28d84a8f0039dd743b1aec1726f890211b1641ab27",
+        "private_report_sha256": "d71ffe6298c00e6c44a8454e764fefe9daf95ed6ea738e225a18ce82e20495aa"
+      },
+      {
+        "classification": "decompiler-inference",
+        "function": "0x11b4c",
+        "claim": "Inferred backend table registers Thumb-tagged getter and setter at table words seven and eight, matching wrapper byte offsets 0x1c and 0x20.",
+        "evidence_id": "ev_fb0a26bcf35f968c4c972d47f2b49749bc62c53016c26920aa7b500ceaf4291b",
+        "private_report_sha256": "00ce9cfd5a20a87c74127d5aca78df3676571ec85bd27b808c43d56dd7eaf803"
+      }
+    ],
+    "provider_closed": true,
+    "cleanup_pending": false,
+    "limitations": [
+      "Shared-update candidate path only; installed runtime selection is unverified.",
+      "Setter tail transfer and imported MICOM thunk have incomplete function-body/call coverage; pseudocode semantics remain inference.",
+      "MICOM protocol, controller firmware and restore_fake_magic implementation effects are unqualified.",
+      "No early-stage signature policy, independent-image acceptance or recovery is established."
+    ]
+  },
+  "prd_inspection": {
+    "image_range": {
+      "start_in_platform_image": 1370488832,
+      "bytes": 58720256,
+      "sha256": "8623cc1ab62a5030f6ce72a59be9ce5a9fd4c65c42f1866875e8216abaae4c16"
+    },
+    "snapshot_crc_and_header_reference_match": true,
+    "snapshot_node_versions_match": true,
+    "scope": "CRC-checked catalog key inventory only; no file extraction, signature validation, mount or execution",
+    "catalog_nodes": 58,
+    "node_crcs_checked": 58,
+    "index_graph_reaches_every_catalog_node_once": true,
+    "index_graph_height_matches": true,
+    "sibling_links_reciprocal": true,
+    "node_type_counts": {
+      "2": 56,
+      "1": 1
+    },
+    "leaf_records": 2865,
+    "names_retained_privately": true,
+    "private_reader_sha256": "9636f0994b43e456e84b72bbdc580df606057f185584a2196d6dbf157eabf037",
+    "filesystem_signature_authenticated": false,
+    "selected_paths_unique_and_rooted_at_usr_lib": true
   }
 }
