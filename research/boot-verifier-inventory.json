@@ -185,5 +185,66 @@
     "recovery_qualified": false,
     "provider_quality_qualified": false,
     "clean_room_claimed": false
+  },
+  "power_control_wrapper": {
+    "name": "libpower-control.so.0.1",
+    "stored_bytes": 20984,
+    "stored_sha256": "d5ad225e9f80fe7938a5e71a3493bba5efcefe4a8e6e2dabf6aa67ab8511d979",
+    "decoded_bytes": 64288,
+    "decoded_sha256": "11bee8dec64f00f5ef35f61910404511ffb7b1f386742ec86108de1c5cd650bb",
+    "compression": {
+      "layout": 6,
+      "chunks": 1,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 26,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "elf": {
+      "class_bits": 32,
+      "endianness": "little",
+      "machine_id": 40,
+      "type_id": 3,
+      "needed_libraries": [
+        "libc.so.6",
+        "libdl.so.2",
+        "libdlog.so.0",
+        "libgcc_s.so.1"
+      ],
+      "soname": "libpower-control.so.0"
+    },
+    "executed": false,
+    "vendor_code_executed": false,
+    "analysis_image_base": 1145176064,
+    "observations": [
+      {
+        "classification": "decompiler-inference",
+        "function": "ppi_powercontrol_set_boot_partition",
+        "claim": "Inferred dispatch via backend table +0x20 after lazy initialization; missing backend/callback returns an error.",
+        "evidence_id": "ev_ce20148b40c6ba0ce512bc79cc7e896fd3aa9d1013adfc3f6c483521dc6ec53d",
+        "private_report_sha256": "6fa957d0c45c608f21267b55188ac321d710da34a0a51063ab925fa856934900"
+      },
+      {
+        "classification": "decompiler-inference",
+        "function": "ppi_powercontrol_get_boot_partition",
+        "claim": "Inferred dispatch via backend table +0x1c after lazy initialization; missing backend/callback returns an error.",
+        "evidence_id": "ev_c06730851b4b204a2bc6d0189636b1de9df03ee6a4286abd3ce6e15753033786",
+        "private_report_sha256": "60295f89f3c6250761e88c2ff7c287ca99c44f1bc6fee85aeac3185207b272a0"
+      },
+      {
+        "classification": "decompiler-inference",
+        "function": "0x444262cc",
+        "claim": "Inferred dlopen of /prd/usr/lib/libpower-control-impl.so, followed by backend registration/version checks. Board implementation and constructor/registration behavior remain untraced.",
+        "evidence_id": "ev_494b0489354844a0b6e639e1b413d3a5d87a02b63b8cd99eb85f4c7aaafc2d00",
+        "private_report_sha256": "3cde3af55705f8c5cf4e9f638aec87561c5aae73d140e10fd99e5e69f7886f07"
+      }
+    ],
+    "limitations": [
+      "Indirect jump/jumptable recovery warnings occur in both wrapper reports; no concrete target or physical effect is established.",
+      "Unversioned backend-name request was ambiguous; defined dynamic symbol 0x444262cd selects Thumb entry 0x444262cc.",
+      "Backend path is an artifact string in this shared update; installed-device correspondence remains unverified."
+    ]
   }
 }

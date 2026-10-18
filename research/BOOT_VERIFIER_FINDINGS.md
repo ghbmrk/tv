@@ -6,7 +6,7 @@ Observed 2026-10-18 from the official shared update, offline. No household-TV co
 
 `SWUVerifierTV` is not qualified as a read-only diagnostic. Static analysis identifies actual call instructions to boot-partition getter/setter and reboot imports. Decompiler output associates the setter with update finalization and a configuration guard. Runtime reachability and the external implementation's exact effects remain unknown; the binary must not be run on the household TV to find out.
 
-The userspace installation verifier delegates checks to finalizers. Its completion message does **not** establish the ROM's image-signature policy, independent-image acceptance or recovery. The next causal boundary is the finalizer implementations and the PPI power-control implementation beneath the imports, followed by early-stage boot evidence. An update application's name or success string cannot substitute for that evidence.
+The userspace installation verifier delegates checks to finalizers. Its completion message does **not** establish the ROM's image-signature policy, independent-image acceptance or recovery. The power-control wrapper trace now identifies a dynamically loaded `/prd` backend; that backend and the finalizer implementations are the next causal boundary, followed by early-stage boot evidence. An update application's name or success string cannot substitute for that evidence.
 
 ## Evidence
 
@@ -29,6 +29,14 @@ The getter belongs to `0xba16c`; inferred output is normalized to two states aft
 At `0x5cacc`, pseudocode shows an installation-finalization loop with an indirect verification call and early failure. The loop's concrete runtime objects remain unresolved. Function `0x407fc` orchestrates userspace verification and completion; `main` calls it. Neither trace establishes pre-userspace trust enforcement. A keyword search not finding secure-boot strings would not establish their absence.
 
 The small `libSWUProductionConfig.so` was also decoded and imported separately; that alone does not identify active flag values. It is recorded as an additional input, not evidence that partition switching is disabled.
+
+## Power-control dispatch boundary
+
+The verifier declares `libpower-control.so.0` as a link dependency. Its catalog identifies `libpower-control.so.0.1`, whose ELF SONAME matches that dependency. The checked 20,984-byte compressed file decodes to 64,288 bytes, SHA-256 `11bee8dec64f00f5ef35f61910404511ffb7b1f386742ec86108de1c5cd650bb`. This is a candidate resolution from shared-update metadata, not a runtime loader observation. Its compression CRC/hashes match; its signature remains unauthenticated.
+
+Decompiler inference: both exported boot-slot operations initialize a backend lazily, check its callback table and delegate via indirect calls (getter table offset `0x1c`, setter `0x20`). These are **structure offsets in the analyzed wrapper**, not device addresses. Ghidra emits indirect jump/jumptable-recovery warnings, so the concrete callees remain unverified. The wrapper has only libc, libdl, dlog and GCC support as declared dependencies; it is not the board implementation.
+
+The defined backend-loader symbol has Thumb-tagged ELF value `0x444262cd`; exact entry `0x444262cc` disambiguates it from the PLT thunk. Its pseudocode identifies `dlopen` of `/prd/usr/lib/libpower-control-impl.so`, then registration/version checks. That file name is absent from the checked **platform catalog**, not proved absent from the full update or installed TV. The next search must cover the `/prd` image/mount provenance instead of guessing a platform offset or invoking the loader. No backend path was executed and no global library search path was changed.
 
 ## Reproduce and challenge
 
