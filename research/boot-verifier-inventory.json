@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-18",
+  "source_kind": "Static offline inspection of the official shared update; not a household-unit dump.",
+  "archive_sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+  "upgrade_member_sha256": "cb0b87a332c4d4138af5bc875f535e56b6600738cb0546ba0e269bb677cbfb38",
+  "derivation": "Checked VDFS catalog file extents followed by layout-6 zlib decoding; see runtime-dependency-inventory.json.",
+  "toolchain": {
+    "rea": {
+      "version": "6.7.0",
+      "registry_integrity": "sha512-yhIx2ioJYYT1C/tONfYeitC6LhnKmCh+ZwRUOgYuhSc733lGhkkt73zhug9WmLgxoMdKuqIYGCoBfD4fXkOhFw==",
+      "lock_sha256": "279015ac40f34d235ac79b8c2ca1fec3df0b169d45604c5bc0885cb97cdc5785",
+      "documentation_revision": "23f984b1a884baefc3c44e4ab697f6eff61dffb6",
+      "global_registration_performed": false
+    },
+    "downloads": [
+      {
+        "name": "ghidra.zip",
+        "url": "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.4_build/ghidra_12.1.4_PUBLIC_20260921.zip",
+        "bytes": 569649598,
+        "sha256": "ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db",
+        "digest_source": "Official GitHub release asset metadata"
+      },
+      {
+        "name": "jdk21.tar.gz",
+        "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jdk_aarch64_mac_hotspot_21.0.12.1_1.tar.gz",
+        "bytes": 200073404,
+        "sha256": "3623232f33a9c3baadf304480b2535f9a3cba8a58d42ecbb438ba267315d9998",
+        "digest_source": "Official GitHub release asset metadata"
+      }
+    ],
+    "native_decompiler": {
+      "host": "darwin/arm64",
+      "sha256": "1c2c8c592dfa0cfbee008ed417692e0ca83f9b0cd1016a67a9f8f58f5679605b",
+      "build_args": [
+        "make",
+        "-j2",
+        "ghidra_opt",
+        "ARCH_TYPE=-arch arm64",
+        "OSDIR=mac_arm_64",
+        "ADDITIONAL_FLAGS=-w"
+      ]
+    },
+    "node": {
+      "version": "24.19.0"
+    },
+    "ghidra_scoped_doctor_healthy": true,
+    "control": {
+      "source_sha256": "2c6b5e001c99158289abadc30f3fef3588233ac6e2f6d60395f8aef466a9251a",
+      "object_sha256": "dc6f815b6311a1e50e334e78cb939ed533983770d75ea2ecc482fae5a891453f",
+      "decompile_sha256": "e22d0373b6c9f0af3d9bce86de5d434705039f45879775aafbdc49e639a83a7b",
+      "known_predicate_recovered": true
+    }
+  },
+  "verifier": {
+    "name": "SWUVerifierTV",
+    "stored_sha256": "2d354131851b88384f88ddddfca9b33920cae04828669c63c2306001375937be",
+    "decoded_sha256": "a91946004bdc886eef1ca541b2ca86c9df320ee6002c16c0ff8408782708694e",
+    "decoded_bytes": 1495976,
+    "elf_class": 1,
+    "elf_data": 1,
+    "type_id": 3,
+    "machine_id": 40,
+    "compression": {
+      "layout": 6,
+      "chunks": 12,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 293,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "vendor_code_executed": false,
+    "analysis_image_base": 65536,
+    "original_elf_lowest_load_address": 0,
+    "analysis_rebase_bytes": 65536,
+    "analysis_profile_digest": "c58cfeefcb4fd0d3bab90a77ff35ba87158ea8077af41055a6c9161a4f4a61f4",
+    "procedures": 2859,
+    "strings": 3378,
+    "segments": 30,
+    "overview_evidence_id": "ev_8443a6154dd01e60ed82e111ffd4dbd67a220a06889dc6b89a9f2994625b4087",
+    "call_sites": [
+      {
+        "operation": "set-slot",
+        "address": "0xba378",
+        "file_offset": "0xaa378",
+        "target": "0x2d058",
+        "import_name": "ppi_powercontrol_set_boot_partition",
+        "source_procedure": "0x604c4",
+        "instruction_sha256": "df0ee6ca95469f8b3a48f7d4ce1010d0628bbe4d4c122754e1a87fa128a834c0",
+        "evidence_id": "ev_169be9d8b45d0f5346b3f5108f8d2a34f4bf50cdefc1816d2d9f3bed5a2a4402",
+        "private_instruction_report_sha256": "9ad9106b2ab7dabf59115bc896f264fc9f80cccc750996088e24f84fd0236610",
+        "xref_evidence_id": "ev_73ddbc661f6de7d4b2aa7b1e206a3b36f67ad1eb32f7cc598e1ed8bb0e0d3814",
+        "mapping_evidence_id": "ev_f5040a96f93f6860d088d0b06d32cc728ea352de7b36864b9fb82302027833cf"
+      },
+      {
+        "operation": "get-slot",
+        "address": "0xba18c",
+        "file_offset": "0xaa18c",
+        "target": "0x2d590",
+        "import_name": "ppi_powercontrol_get_boot_partition",
+        "source_procedure": "0xba16c",
+        "instruction_sha256": "ef62fd79c163ac4396802ae51317c319aff90fd08f63fdfca6a39f295ae9bf56",
+        "evidence_id": "ev_794b7075d11cdf84d114500f2ff7b6549268a7eb450590c5faa7c7d684d0903e",
+        "private_instruction_report_sha256": "69dfb680a196214fa76e25f17ef4a035eb7a16d22be93680b7b4b9e500a68d18",
+        "xref_evidence_id": "ev_86c134d09a12f1486c2fa3a780b3f9896a2230deaed046945c2428eb2159254a",
+        "mapping_evidence_id": "ev_ef4ab34a298a8b1ed0e499cbc7155c632d40c446fd9b6ba53bc2e9888c31400c"
+      },
+      {
+        "operation": "reboot",
+        "address": "0x8909e",
+        "file_offset": "0x7909e",
+        "target": "0x2c7cc",
+        "import_name": "device_power_request_reboot",
+        "source_procedure": null,
+        "instruction_sha256": "edde6f329946759d9e4e83f237ccca5022b7e1a3bb8fb7fd8948904b35c297cb",
+        "evidence_id": "ev_d95dbc94a0c0a4b1ab10205d80283062b0aa9856e317b8754b08f37387569261",
+        "private_instruction_report_sha256": "e9296f6a972ac7a7511fab6d48f96026b85c9674dc60c5098015a615c4eeb035",
+        "xref_evidence_id": "ev_2dd82374ff62ceb85660bf10d186092500b15908063c0392d12144cf99288fd7",
+        "mapping_evidence_id": "ev_2b485613a1e34d15fe0d69122bed51264ee9d09580f48f7244c7f514b85b5a9a"
+      }
+    ],
+    "stored_bytes": 708488
+  },
+  "additional_input": {
+    "name": "libSWUProductionConfig.so",
+    "stored_sha256": "09d99342037da665dd7a292e0c5b21eb4eecf67ac57c95125ce3f72ae332e405",
+    "decoded_sha256": "a40cf1dc0deeb26e6e86cf56a82b42b87818d573266c324c836336cf0e544a4e",
+    "decoded_bytes": 6440,
+    "elf_class": 1,
+    "elf_data": 1,
+    "type_id": 3,
+    "machine_id": 40,
+    "compression": {
+      "layout": 6,
+      "chunks": 1,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 49,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "vendor_code_executed": false,
+    "stored_bytes": 1720
+  },
+  "semantic_observations": [
+    {
+      "classification": "decompiler-inference",
+      "function": "0x604c4",
+      "claim": "Slot-switch finalization path includes a configuration guard, Boolean-normalized slot argument, external setter call and nonzero-error handling. Actual target reachability and persistence are unverified.",
+      "evidence_id": "ev_fa89f773936024b9ef97073a498032e0e49177469987d7e5a86c9cb65d48503e",
+      "private_report_sha256": "451512f6732c974dbacb9a18b039b1b6d6bf00a4bfc0085488a57859e88d4249"
+    },
+    {
+      "classification": "decompiler-inference",
+      "function": "0x5cacc",
+      "claim": "Installation verification iterates finalizers and delegates via an indirect call; a failed result stops the loop. Indirect callee identities are unresolved.",
+      "evidence_id": "ev_d65d80d19109015836e379a2a1e37bdffd8b99dd748167f39e181d16a80836ba",
+      "private_report_sha256": "b142d9af72a6294bb5cf0cfbeb3c70d5d3d43236810425b75f4b878d979866e4"
+    },
+    {
+      "classification": "decompiler-inference",
+      "function": "0x407fc",
+      "claim": "Userspace verifier reports completion after update-state and finalization-related work. This does not establish ROM image authentication.",
+      "evidence_id": "ev_48ef746ecd07a11d509a7c4faad69e8b767286345010a04154116eb36daa8a63",
+      "private_report_sha256": "3204178c6923c2d1195edfc7a54f245807a598e98d100d2c1b1d69b8d12cd8c2"
+    }
+  ],
+  "cross_checks": {
+    "original_elf_mapping_and_instruction_hashes": true,
+    "independent_thumb_blx_destinations": true,
+    "input_sha256_unchanged": true,
+    "provider_closed": true,
+    "cleanup_pending": false
+  },
+  "qualification": {
+    "tv_accessed": false,
+    "vendor_code_executed": false,
+    "vendor_bytes_published": false,
+    "signature_authenticated": false,
+    "rom_policy_established": false,
+    "owner_image_boot_proven": false,
+    "recovery_qualified": false,
+    "provider_quality_qualified": false,
+    "clean_room_claimed": false
+  }
+}

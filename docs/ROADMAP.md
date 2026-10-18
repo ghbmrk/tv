@@ -20,4 +20,6 @@ The [off-TV execution plan](deployment/OFF_TV_READINESS.md) orders the remaining
 | Provider qualification | Independently provisioned protected path and all four official TV clients. | Stock-supported resolution/HDR/cadence/audio under comparable conditions, with agent controls active. |
 | Owner installation | Signed reproducible build inputs, exact-board manifest, qualified installer/restore procedure. | Interrupted-update recovery, offline operation, final provenance/removal and media/agentOS acceptance. |
 
+[Native update-verifier tracing](../research/BOOT_VERIFIER_FINDINGS.md) now establishes direct boot-slot/reboot calls and userspace finalizer delegation with corroborated file offsets. It does not establish ROM policy, owner-image acceptance or recovery. Continue at the finalizer and PPI implementations and earliest-stage boot evidence; no matching spare is available for recovery rehearsal.
+
 Current limits and the full target sequence are in [deployment/PLAN.md](deployment/PLAN.md); implemented API coverage is in [API.md](API.md). No real-device milestone is marked complete without target evidence.

@@ -1,5 +1,7 @@
 # Bounded offline firmware inspection
 
+Native ELF research now has a separate pinned [REA/Ghidra workflow](NATIVE_ANALYSIS.md), an original ARM control and an independent call-destination checker. The container below remains tied to the earlier firmware-region evidence; it has not been silently upgraded.
+
 This is a tool-only container recipe, not a TV image. It installs REA 6.5.0 without package lifecycle scripts or optional native agents and compiles Binwalk 3.1.0 with its published Cargo lock. Base image digests are pinned. Apt resolution and npm transitive dependencies are not completely frozen; record the resulting executable/package/image hashes for each run.
 
 The recorded local run used Linux ARM64 on Docker Desktop. Upstream documents its firmware milestone on Linux x64; ARM64 validation here consists of a known synthetic control and the observed static scans. No global REA/MCP setup is needed.
