@@ -638,5 +638,30 @@
     "kernel_config_marker_found": false,
     "build_host_user_compiler_string_exported": false,
     "exact_build_correspondence_verified": false
+  },
+  "additional_platform_ranges": {
+    "scope": "Additional fixed ranges inside the already checked public update; not a live-device map or restore procedure",
+    "backup_gpt_header_crc_matches": true,
+    "backup_gpt_entry_array_crc_matches": true,
+    "primary_and_backup_entry_arrays_equal": true,
+    "prd_header_bytes": 8192,
+    "prd_header_sha256": "0ffaa19ef455bdb7b9c76b42fa30420e823cc3bfb7110dc82115cf5273689224",
+    "prd_filesystem_headers": {
+      "layout_version": "2007",
+      "header_crcs_match": true,
+      "extended_header_crcs_match": true,
+      "primary_and_copy_superblocks_equal": true,
+      "block_bytes": 4096,
+      "metadata_node_bytes": 16384,
+      "read_only_declaration": true,
+      "signature_type_id": 1,
+      "declared_volume_blocks": 14137,
+      "builder_identity_command_uuid_and_signature_omitted": true,
+      "signature_verified": false,
+      "filesystem_contents_validated": false,
+      "scope": "Fixed headers only; no catalog traversal, mount, execution or boot qualification."
+    },
+    "vendor_code_executed": false,
+    "tv_accessed": false
   }
 }
