@@ -14,6 +14,7 @@ import (
 	"math"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 	"unicode/utf8"
 
@@ -56,11 +57,15 @@ func New(ctx context.Context, cfg Config) (*Executor, error) {
 		return nil, errors.New("invalid owner executor configuration")
 	}
 	response, err := cfg.Transport.Request(ctx, "capabilities", nil, expiry(ctx))
-	var caps struct {
-		OperationDigest bool `json:"receipt_operation_sha256"`
-	}
-	if err != nil || response.Status != "ok" || !uniqueJSON(response.Result) || json.Unmarshal(response.Result, &caps) != nil || !caps.OperationDigest {
+	var caps map[string]json.RawMessage
+	var operationDigest bool
+	if err != nil || response.Status != "ok" || !uniqueJSON(response.Result) || json.Unmarshal(response.Result, &caps) != nil || json.Unmarshal(caps["receipt_operation_sha256"], &operationDigest) != nil || !operationDigest {
 		return nil, errors.New("TV receipt verification capability unavailable")
+	}
+	for key := range caps {
+		if key != "receipt_operation_sha256" && strings.EqualFold(key, "receipt_operation_sha256") {
+			return nil, errors.New("TV receipt verification capability unavailable")
+		}
 	}
 	return &Executor{cfg.Namespace, cfg.Account, cfg.Transport.DeviceID(), cfg.Transport}, nil
 }
@@ -161,7 +166,60 @@ func decodeExact(data []byte, value any) bool {
 	if decoder.Decode(value) != nil {
 		return false
 	}
-	return decoder.Decode(new(any)) == io.EOF
+	if decoder.Decode(new(any)) != io.EOF {
+		return false
+	}
+	// DisallowUnknownFields still accepts case-insensitive struct-field aliases.
+	// Compare object keys against the typed encoding, recursively through arrays
+	// and embedded structs. RawMessage boundaries remain opaque until their own
+	// typed decode; missing fields are checked by each operation's contract.
+	canonical, err := json.Marshal(value)
+	if err != nil {
+		return false
+	}
+	parse := func(data []byte) (any, error) {
+		decoder := json.NewDecoder(bytes.NewReader(data))
+		decoder.UseNumber()
+		var value any
+		err := decoder.Decode(&value)
+		return value, err
+	}
+	input, err := parse(data)
+	if err != nil {
+		return false
+	}
+	output, err := parse(canonical)
+	if err != nil {
+		return false
+	}
+	var exactKeys func(any, any) bool
+	exactKeys = func(input, output any) bool {
+		switch source := input.(type) {
+		case map[string]any:
+			target, ok := output.(map[string]any)
+			if !ok {
+				return false
+			}
+			for key, value := range source {
+				other, ok := target[key]
+				if !ok || !exactKeys(value, other) {
+					return false
+				}
+			}
+		case []any:
+			target, ok := output.([]any)
+			if !ok || len(source) != len(target) {
+				return false
+			}
+			for i, value := range source {
+				if !exactKeys(value, target[i]) {
+					return false
+				}
+			}
+		}
+		return true
+	}
+	return exactKeys(input, output)
 }
 
 // Go's ordinary decoder permits duplicate object fields. A bounded token pass

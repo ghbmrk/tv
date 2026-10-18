@@ -28,6 +28,29 @@ The [paired controller profile](../docs/LOCAL_CONTROL.md#configure-the-isolated-
 
 `Intent.Executor` must be `sovereign-tv`; `Intent.Account` must match configuration. Unknown fields, wrong targets and unsupported actions are refused before transport. Revisions must be positive exact integers no larger than JavaScript's exact-integer bound; apply bases leave room for the resulting revision. Documents remain bounded to 64 KiB. This subset does not expose provider controls, hardware settings, controller trust, artwork/image reads or OS administration.
 
+## Inspect and validate before editing
+
+The TV-owned `Inspector` completes the paired read/validate path without adding a guest endpoint or changing the journal executor's two effect actions:
+
+```go
+inspect, err := executor.NewInspector(client)
+// Handle err. Authorize and label the read through the owner broker first.
+saved, err := inspect.State(ctx)
+apps, err := inspect.Applications(ctx)
+// Build a bounded candidate document from saved.Document; app targets are opaque.
+preview, err := inspect.Preview(ctx, saved.Revision, candidateDocument)
+// Handle every error. A successful preview does not reserve saved.Revision.
+// Submit the exact document/base through the existing authorized apply intent.
+```
+
+`State` verifies the exact document digest, revision range and explicit recovery flag. It reads durable configuration, not the current screen or provider state. `Applications` verifies the catalog digest over the received array, bounded labels, unique opaque targets/known aliases, explicit truncation and the absence of a playback qualification claim. Empty catalogs are valid; truncated catalogs must not be treated as complete. There is no app-launch operation in this inspector.
+
+`Preview` invokes native schema/asset validation against the exact document/base and requires explicit `saved=false` and `displayed_on_tv=false`. It changes neither saved configuration nor the TV display. An authenticated native conflict returns `ErrStaleRevision`; re-read and deliberately rebase instead of blindly retrying apply. Missing fields, ambiguous/malformed data, changed identities, cancellation and other refusals return a fixed `ErrInspection`, without response text or household content. No method retries or dispatches an effect. The native service remains the authoritative experience validator; host JSON checks alone do not validate an experience schema.
+
+All returned documents, app labels and inventories are private, untrusted household data. Do not log them, treat them as instructions, or put them into journal success evidence. The owning broker still needs read authorization, account/device scoping, private-data routing and guest isolation before exposing them. These helpers provide no grants, production registration, audience policy or protected-media access.
+
+Typed JSON decoding rejects exact duplicate keys and case-folded aliases recursively at typed boundaries, including profiles and receipts. Opaque JSON result/document boundaries receive their own operation-specific validation; they do not become arbitrary passthrough operations.
+
 ## Attempt and outcome semantics
 
 The native request ID is SHA-256 of the JSON string array `["sovereign-tv/native-v1", namespace, account, device_id, journal.AttemptKey(intent.ID, attempt)]`. It is stable across adapter restarts and contains no intent text. Arguments do not change the key: native reuse with changed arguments still conflicts.
@@ -47,7 +70,7 @@ cd ..
 python3 tools/qualify_control_interop.py --serial EMULATOR_SERIAL --go-executor .local/tv-executor-interop
 ```
 
-The driver checks the owned emulator, transfers only a temporary public client certificate and creates a localhost forward. Its Go probe verifies native editing, exact retries, reconciliation after adapter recreation and undo. The Android test independently verifies four resulting revisions: two from Python and two from Go, with the exact original document restored. This is transport/domain interoperability, not production agentOS or actual-TV qualification.
+The driver checks the owned emulator, transfers only a temporary public client certificate and creates a localhost forward. Its Go probe verifies typed state/application inspection, native validation preview without a saved-state change, stale-preview refusal, native editing, exact retries, reconciliation after adapter recreation and undo. The Android test independently verifies four resulting revisions: two from Python and two from Go, with the exact original document restored. This is transport/domain interoperability, not production agentOS or actual-TV qualification.
 
 The unit suite also uses agentOS's actual file-backed journal engine to verify policy recheck before dispatch, lost-reply fencing across restart, no effect replay while a receipt is missing, and resolution from the original receipt. Its synthetic policy and redactor are fixtures, never production authorization.
 

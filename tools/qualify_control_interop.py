@@ -115,7 +115,8 @@ def main():
                         env=dict(os.environ, SOVEREIGN_OWNED_EMULATOR='1'), capture_output=True, timeout=20)
                 except subprocess.TimeoutExpired:
                     raise RuntimeError('Owned-emulator Go executor deadline exceeded; reconcile from native evidence') from None
-                if probe.returncode or json.loads(probe.stdout) != {'go_executor': True, 'operation_receipt_verified': True,
+                if probe.returncode or json.loads(probe.stdout) != {'go_executor': True, 'state_inspection': True, 'validation_preview': True,
+                        'application_discovery': True, 'stale_preview_refused': True, 'operation_receipt_verified': True,
                         'reconcile': True, 'exact_retry': True, 'undo': True, 'agentos_qualified': False}:
                     raise RuntimeError('Owned-emulator Go executor assertions failed; no raw output printed')
                 after = call('state')
