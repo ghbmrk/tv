@@ -33,7 +33,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/controller-recovery-inventory.json"
+      ],
       "status": "unverified"
     },
     {
@@ -51,7 +53,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/controller-recovery-inventory.json"
+      ],
       "status": "unverified"
     },
     {
@@ -96,7 +100,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/board-radio-evidence.json"
+      ],
       "status": "unverified"
     },
     {
@@ -105,7 +111,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/board-radio-evidence.json"
+      ],
       "status": "unverified"
     },
     {
@@ -114,7 +122,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/controller-recovery-inventory.json"
+      ],
       "status": "unverified"
     },
     {
@@ -150,7 +160,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/controller-recovery-inventory.json"
+      ],
       "status": "unverified"
     }
   ]
