@@ -46,9 +46,7 @@ Backend decompiler inference: initialization function `0x11b4c` registers the ge
 
 The getter call and pre-switch-helper call have independently checked original-file mappings, instruction hashes and direct BLX destinations in the inventory. The setter tail transfer goes through a Thumb/ARM thunk with incomplete function-body/call coverage; its MICOM semantics remain decompiler inference. No claim of dynamic execution, complete call recovery or physical storage effects follows. The controller protocol/firmware, helper implementation, mount selection and installed-unit correspondence remain unresolved. This is a concrete peripheral dependency for the Samsung-free requirement, not a proposal to retain the vendor backend.
 
-## Reproduce and challenge
-
-### October 23: MICOM and storage-write boundary
+## MICOM and storage-write boundary, October 23
 
 The same CRC-checked `/prd` catalog contains a two-link library chain ending at `libmicom.so.0.1`. Its single bounded extent yields a 64,296-byte compressed file and a 142,302-byte ELF32 ARM library, SHA-256 `040372dfd200205f18c56067c2d57af7d0af64bd51a995ded0ac5c39b6c51763`. Both chunk hashes, the descriptor hash and descriptor CRC pass; signature authenticity remains unverified. Its SONAME matches the backend's declared MICOM dependency. This is candidate resolution inside the shared update, not observed binding on the household TV.
 
@@ -57,6 +55,20 @@ Static call evidence: `restore_fake_magic` contains calls to the `pwrite64` and 
 Decompiler inference: the exported boot-partition getter and setter delegate to `micom_send_msg`; that transport contains an `ioctl` dependency and device initialization. Diagnostic strings refer to uImage-header restoration and CRC checks. These clues do not establish the live storage map, controller protocol semantics or ROM authentication policy. CRC checks are not signature authentication. The original controller firmware remains a replacement dependency, rather than a component qualified for reuse.
 
 The `micom_library` inventory record binds the checked file and two calls; raw vendor code and analysis reports remain private. No vendor code, controller operation, mount or household-TV connection was executed. The native-analysis provider closed with no pending cleanup.
+
+## Update-core trust boundary, October 23
+
+The same catalog yields a unique rooted `/usr/bin/SWUCoreTV` regular file with one checked extent inside the declared VDFS volume. Its 2,293,240-byte compressed file decodes to a 4,737,944-byte ELF32 little-endian ARM executable, SHA-256 `c538eb0d686dd1d4b336e11262b81ecab2af3b34d1dc3f6ae0ef827eb3d4e731`. All 37 chunk hashes, descriptor hash and CRC match; signature authenticity remains unverified. This is a shared-update artifact, not an observed running implementation on the TV.
+
+Static call evidence: analysis coordinate `0x308b8e`, original ELF offset `0x2f8b8e`, calls the `EVP_PKEY_verify` import thunk at `0x5f0b8`. Independent mapping, instruction hashing and Thumb BLX decoding reproduce the destination. Function `0x308b54` has an inferred comparison of that result against one. [OpenSSL's API documentation](https://docs.openssl.org/3.0/man3/EVP_PKEY_verify/) defines one as verification success, zero as a failed signature and negative values as other errors. The call check does not independently prove the comparison, error propagation or dynamic reachability.
+
+Nearby context setup imports verification/signing initialization, RSA-padding and signature-digest configuration. These are code dependencies, not proof of active parameters, key origin, available signing authority or a trusted owner-build path. No key material was inspected or exported. No update-section signature was authenticated by this investigation.
+
+The literal `RSASignatureSink` is present, but a bounded RTTI-layout attempt did not establish a complete class/vtable binding. No image-specific role is assigned from that name. Incoming procedure references also contain internal jumps and data pointers; treating every entry as a dynamic caller would be wrong. The exact update-item binding and the earliest-stage verifier remain unresolved.
+
+**Consequence:** a userspace signature-check call is now independently located. It does not establish ROM policy, acceptance of an independently signed kernel/secure OS, or recovery. An updater cannot qualify its own replacement boot chain merely by containing cryptographic code. The `update_core` inventory record preserves the narrower claim, the evidence and the unknowns. Native analysis closed without pending cleanup and the input hash is unchanged.
+
+## Reproduce and challenge
 
 Follow the pinned [native analysis workflow](../tools/rea/NATIVE_ANALYSIS.md). An original ARM fixture checks that the native decompiler recovers a known range/arithmetic predicate. This is a tool control, **not** vendor behavioral parity.
 
@@ -67,7 +79,7 @@ python3 tools/check_native_calls.py --file PRIVATE_SWUVERIFIER_ELF
 python3 -m unittest tests.test_native_calls -v
 ```
 
-The checker independently validates the ELF mappings, four-byte hashes and direct branch targets without Ghidra or executing the input. It refuses mismatched digests, ambiguous/non-executable mappings, unsupported encodings and destination changes. Synthetic tests cover forward/backward branches, PC alignment, rebase mistakes and corrupted metadata. Its `inspect(data, record)` entry point also checks the inventory's `power_control_backend` and `micom_library` records against their respective private ELFs (two direct calls each). It does not validate decompiler semantics, indirect targets, external implementations, signatures or hardware safety.
+The checker independently validates the ELF mappings, four-byte hashes and direct branch targets without Ghidra or executing the input. It refuses mismatched digests, ambiguous/non-executable mappings, unsupported encodings and destination changes. Synthetic tests cover forward/backward branches, PC alignment, rebase mistakes and corrupted metadata. Its `inspect(data, record)` entry point also checks the inventory's `power_control_backend`, `micom_library` and `update_core` records against their respective private ELFs. It does not validate decompiler semantics, indirect targets, external implementations, signatures or hardware safety.
 
 REA and Ghidra analysis used an ephemeral project; the provider reports the target closed with no pending cleanup. The input hash is unchanged. Raw vendor code, pseudocode, assembly, catalog records, tool-session output and owner information remain private.
 
