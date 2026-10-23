@@ -19,7 +19,7 @@ SELECTED = {
     'tztv-bootmode.zip': ('tztv-bootmode.c',),
     'tztv-micom.zip': tuple('tztv-micom/tztv-micom/' + name for name in (
         'Makefile', 'sdp_micom_messagebox.c', 'sdp_micom.h',
-        'tztv-micom-upgrade.c', 'rc-wt61p807.c')),
+        'tztv-micom-upgrade.c', 'rc-wt61p807.c', 'msg-wt61p807.c')),
     'tztv-hdmi-sw.zip': ('include/vd_kernel-interfaces/video/frc_tcon_tztv.h',
                          'include/tztv_hdmi_switch_init.h'),
     'trustzone-drivers.tar.gz': tuple('trustzone-drivers/source/tzdev/' + name for name in (
@@ -32,6 +32,10 @@ MARKERS = {
     'controller_upgrade_build': r'\bCONFIG_UPGRADE_SUBMICOM_FIRMWARE\b',
     'controller_upgrade_reference': r'\bmicom_upgrade_(?:check_firmware|get_running_firmware_version)\b',
     'controller_transport': r'\bsdp_messagebox_write(?:_direct)?\b',
+    'controller_message_ioctl': r'\b(?:micom_msg_ioctl|MICOM_MSG_IOCTL_SEND_MSG)\b',
+    'controller_watchdog_start': r'\b(?:kthread_micom_watchdog|kthread_run)\b',
+    'controller_rollback_message': r'\bCTM_SET_ROLLBACK_FLAG\b',
+    'controller_liveness_message': r'\b(?:SDP_MICOM_CMD_ALIVE_MSG|SDP_MICOM_CMD_I_AM_OK)\b',
     'restart_hook': r'\barm_pm_restart(?:_standby)?\b',
     'remote_input': r'\b(?:rc_register_device|rc_allocate_device|rc_keydown|input_report_key)\b',
     'controller_power_commands': r'\b(?:SDP_MICOM_CMD_POWEROFF|SDP_MICOM_CMD_RESTART|CTM_STANDBY_REBOOT)\b',

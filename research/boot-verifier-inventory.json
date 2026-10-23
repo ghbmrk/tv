@@ -378,5 +378,86 @@
     "private_reader_sha256": "9636f0994b43e456e84b72bbdc580df606057f185584a2196d6dbf157eabf037",
     "filesystem_signature_authenticated": false,
     "selected_paths_unique_and_rooted_at_usr_lib": true
+  },
+  "micom_library": {
+    "stored_bytes": 64296,
+    "stored_sha256": "33862690018a9d16727da57f258e7e68c0430c8b475d1cd57f9c2ca41d831817",
+    "decoded_bytes": 142302,
+    "decoded_sha256": "040372dfd200205f18c56067c2d57af7d0af64bd51a995ded0ac5c39b6c51763",
+    "compression": {
+      "layout": 6,
+      "chunks": 2,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 24,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "elf": {
+      "class_bits": 32,
+      "endianness": "little",
+      "machine_id": 40,
+      "type_id": 3,
+      "needed_libraries": [
+        "ld-linux.so.3",
+        "libc.so.6",
+        "libcapi-system-info.so.0",
+        "libdlog.so.0",
+        "libfconfig.so",
+        "libgcc_s.so.1",
+        "libprd-factory-interface.so",
+        "libpthread.so.0",
+        "libtzplatform-config-2.0.so.2"
+      ],
+      "soname": "libmicom.so.0"
+    },
+    "executed": false,
+    "device_accessed": false,
+    "signature_verified": false,
+    "analysis_image_base": 65536,
+    "call_sites": [
+      {
+        "operation": "write",
+        "address": "0x16b46",
+        "file_offset": "0x6b46",
+        "target": "0x157c4",
+        "import_name": "pwrite64",
+        "instruction_sha256": "4d9a7fbd6cfaa37d16aaa3580c7870e5f12c74c0d028edf2d9f8b0971528a815",
+        "evidence_id": "ev_e5d9f8250deab3d88dd17f7fe32f9f98b8323272c68e97c25ec1b9ee3353ba3a",
+        "private_report_sha256": "7851a1f03c0a33b1d42b670a77af3e40b21797f6a4a3fa3ff98e460d18dedf91"
+      },
+      {
+        "operation": "sync",
+        "address": "0x16b54",
+        "file_offset": "0x6b54",
+        "target": "0x15520",
+        "import_name": "fsync",
+        "instruction_sha256": "54ec2757f0a03bcf59da92bbac739cc45819101335da94e62572851fd7307051",
+        "evidence_id": "ev_4a57b88da2e3e53399af9332a92ffdb820bd59413b3cb7d75253104055bcfbf9",
+        "private_report_sha256": "04f31522d0c470df77dc4d0dc1a66e604717f1fd6d495ce7d2a74dee74601952"
+      }
+    ],
+    "provider_closed": true,
+    "cleanup_pending": false,
+    "observations": [
+      {
+        "classification": "static-call-evidence",
+        "claim": "The restore helper contains calls to pwrite64 and fsync; direct BLX targets and original-file mapping checked independently. Physical effect and dynamic reachability remain unverified."
+      },
+      {
+        "classification": "decompiler-inference",
+        "claim": "Getter and setter delegate to micom_send_msg; the transport contains an ioctl dependency. Actual controller implementation and installed-unit binding are unverified."
+      }
+    ],
+    "raw_vendor_code_published": false,
+    "observed": "2026-10-23",
+    "analysis_coordinates_are_not_device_addresses": true,
+    "catalog_reader_sha256": "0b78c1687ca38271324a7a02470f0fc3513e545e1bf908bb423d5ba21b2d3c56",
+    "limitations": [
+      "Shared-update candidate library only; installed-unit correspondence and runtime binding are unverified.",
+      "Direct-call checks do not prove symbol semantics, dynamic reachability, successful writes or recovery.",
+      "No controller firmware replacement, ROM trust policy or independent-image acceptance is established."
+    ]
   }
 }

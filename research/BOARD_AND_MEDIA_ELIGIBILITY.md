@@ -33,6 +33,16 @@ These entries do not prove both decoders or all flash devices are fitted simulta
 
 **Decision:** do not choose an SoC BSP or buy a spare One Connect box from this relation. The cheapest decisive next evidence is a revision-specific exploded BOM/placement map, with non-unique chip-marking images, identifying which PCB runs the application OS and which required panel/controller boards execute separate firmware. A spare enclosure alone cannot yet be claimed to reproduce the relevant hardware boundary. Keep the household unit closed.
 
+## October 23: public board and radio evidence
+
+The [bounded public evidence follow-up](board-radio-evidence.json) adds a seller's first-hand [BN94-18661C board photograph](https://tvpartstoday.com/products/bn94-18661c-samsung-main-board-bn62-01037a-qn50ls03fafxza). The label is visible, but a heat spreader covers the main chips. It does not establish the installed revision, application processor or boot policy. No owner hardware was opened and no photo or unique label data is redistributed.
+
+Samsung's filed [WCF734M internal photos](https://fccid.io/A3LWCF734M/Internal-Photos/Internal-Photos-7805708.pdf), visually reviewed on both pages, show a MediaTek MT7668AUN chip. The mirrored PDF matches the published exhibit digest; the FCC primary download did not succeed. The module is a model-catalog candidate, not an observed installed part. Do not confuse this radio processor with the application CPU.
+
+An independent implementation candidate now has explicit provenance: [Google Coral's MT7668 Wi-Fi source](https://coral.googlesource.com/mt7668-wifi-mod/+/50e077977859e95b8f8250d1b59b17ebd7ec08a3/) carries MediaTek's GPLv2 notice. Its inspected build metadata has USB, SDIO and PCIe branches, plus a USB MT7668 configuration. This has not been compiled or qualified for this TV. Upstream [Linux v6.18 Bluetooth source](https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux/+/7d0a66e4bb9081d75c82ec4957c50034cb0ea449/drivers/bluetooth/btmtk.c) includes MT7668 firmware selection. The separately pinned [linux-firmware provenance](https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/8a46c32a26b3f22835543b158877aa0b0e01e8d6/WHENCE) lists a MediaTek Bluetooth image under its own redistribution terms. These historical pins are research inputs, not selected current release artifacts or an audit of every file's authorship.
+
+The remaining binding facts are installed module identity, actual host bus/device IDs, power/reset/coexistence wiring, applicable firmware and working pairing/wake behavior with the original remote. Generic chip-family support proves none of those. No driver or firmware was loaded, and no firmware binary was downloaded in this follow-up. The component ledger retains `unverified` status and now links these candidate facts rather than leaving the evidence fields empty.
+
 ## Four distinct playback decisions
 
 1. **Android compatibility:** [AOSP's compatibility FAQ](https://source.android.com/docs/compatibility/compatibility-faq) distinguishes CDD/CTS compatibility from separately licensed Google Play access. It permits a customized interface within compatibility constraints. This supports keeping the owner Home separate from provider integrations; it does not grant Play or TV-client distribution.

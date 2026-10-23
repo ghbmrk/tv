@@ -2,6 +2,8 @@
 
 An owner-controlled TV experience and an Android-first replacement project for the original Samsung The Frame LS03F hardware, fully editable through the household's agentOS agent.
 
+**Required destination: no Samsung software.** This includes boot, kernel, secure-world, controllers and recovery, not only the visible interface. A Tizen launcher or stock-app Home remap is excluded as an interim installation. Existing host and Android application code is a development asset, not the replacement operating system. No independently bootable image or safe installation procedure is ready for this TV.
+
 **Status: early implementation.** The local experience store/API and browser studio run on a development host. A native Kotlin/Compose TV shell previews and applies the same format with persistent undo; its local build, four JVM unit tests, native Android TV emulator runtime tests and lint pass. Independent Android boot on the Samsung board, production agentOS connectivity, and qualifying provider playback are not demonstrated.
 
 **Current priority: decisive feasibility investigation.** The [exact-board feasibility verdict and experiments](research/FEASIBILITY.md) make boot ownership, complete Samsung-component replacement, recovery and legitimate provider-quality playback prerequisites to the board port. New source analysis traces controller and secure-world dependencies; it does not establish their replaceability. Owner-authorized off-TV implementation continues; ordinary SDB now connects but does not expose board identity; the board-port gates remain mandatory before installation.

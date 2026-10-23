@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-23",
+  "scope": "Public candidate-board photographs and independently published radio implementations; not observations of the household unit.",
+  "household_device_accessed": false,
+  "vendor_code_executed": false,
+  "installed_unit_correspondence_verified": false,
+  "sources": [
+    {
+      "url": "https://tvpartstoday.com/products/bn94-18661c-samsung-main-board-bn62-01037a-qn50ls03fafxza",
+      "bytes": 276382,
+      "sha256": "127f2145ff284610d950fcb80913bfaf12be1685863a84d9755e6b298b5f9bb9",
+      "claim": "Seller supplies a first-hand board photograph alongside the exact-model listing; compatibility remains seller-reported."
+    },
+    {
+      "url": "https://tvpartstoday.com/cdn/shop/files/20251017_081435_clipped_rev_1.png?v=1760707862&width=1500",
+      "bytes": 2419206,
+      "sha256": "e8ad0ae691a1000b49af2aa05a77e31397911b7ce1cb9dd249b3e52c5b42874c",
+      "claim": "Visual observation: the board label reads BN94-18661C; a heat spreader covers the main chips. Unique label data is omitted."
+    },
+    {
+      "url": "https://fccid.io/A3LWCF734M/Internal-Photos/Internal-Photos-7805708.pdf",
+      "bytes": 782006,
+      "sha256": "e65eff93041164d0437893b93fe2ee016857b1cdc9c1b70c4459fb78d55d348d",
+      "claim": "Samsung/CTK filed internal photographs: page two visibly marks the radio chip MediaTek MT7668AUN; no actual-unit correspondence follows.",
+      "primary_exhibit_url": "https://apps.fcc.gov/eas/GetApplicationAttachment.html?id=7805708",
+      "primary_fetch_succeeded": false,
+      "mirror_digest_matches_published_exhibit_digest": true,
+      "pages_visually_reviewed": [
+        1,
+        2
+      ]
+    }
+  ],
+  "independent_source_candidates": [
+    {
+      "repo": "https://coral.googlesource.com/mt7668-wifi-mod",
+      "commit": "50e077977859e95b8f8250d1b59b17ebd7ec08a3",
+      "files": [
+        {
+          "path": "LICENSE",
+          "sha256": "79a3389fa819daa0f622dd25ba1e8b81281d6d351d73d169806100cdc65c4c87",
+          "bytes": 460
+        },
+        {
+          "path": "COPYING",
+          "sha256": "8177f97513213526df2cf6184d8ff986c675afb514d4e68a404010521b880643",
+          "bytes": 18092
+        },
+        {
+          "path": "Makefile",
+          "sha256": "a34b74f9d41036443796818a866b432914a55c3c62b91b80dad94bc439db2ac2",
+          "bytes": 8036
+        },
+        {
+          "path": "Makefile.ce",
+          "sha256": "bce8399a57822a03f829c4e2ffa815fce80cf19731bf7dab35c0bb833787d26e",
+          "bytes": 11340
+        }
+      ],
+      "claim": "MediaTek-attributed GPLv2 Wi-Fi source; its build metadata supports USB, SDIO and PCIe branches and a USB MT7668 configuration. Not built or qualified for this TV."
+    },
+    {
+      "repo": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux",
+      "tag": "v6.18",
+      "commit": "7d0a66e4bb9081d75c82ec4957c50034cb0ea449",
+      "files": [
+        {
+          "path": "drivers/bluetooth/btusb.c",
+          "bytes": 131283,
+          "sha256": "0bcaf0add027d49958e949cc0ef521dbc95b4803faa46a45cee199709a3d31ab",
+          "mt7668_line_numbers": [
+            617
+          ]
+        },
+        {
+          "path": "drivers/bluetooth/btmtk.c",
+          "bytes": 37124,
+          "sha256": "a5873fd41be801dcda6306da6dc6fe8156d70b280be83d93542c852908de85d8",
+          "mt7668_line_numbers": [
+            1323,
+            1324,
+            1496
+          ]
+        }
+      ],
+      "claim": "Upstream Linux v6.18 btusb has an additional MT7668 device entry; btmtk selects MT7668 firmware by device ID. The TV bus and IDs are unverified."
+    },
+    {
+      "repo": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware",
+      "commit": "8a46c32a26b3f22835543b158877aa0b0e01e8d6",
+      "files": [
+        {
+          "path": "WHENCE",
+          "sha256": "18313654864adbb76514e21566528ce57eff42a2a7a66d5823f1f91e895816ea",
+          "bytes": 162603
+        },
+        {
+          "path": "LICENCE.mediatek",
+          "sha256": "a90d3f66704d85889945fec5525ea77622549da83aced1aac99828383f8f1805",
+          "bytes": 561
+        }
+      ],
+      "claim": "WHENCE lists a MediaTek MT7668 Bluetooth firmware image and version with separate redistribution terms. No firmware binary was downloaded or qualified by this follow-up."
+    }
+  ],
+  "limitations": [
+    "The main chips in the photographed BN94-18661C board are covered by a heat spreader; exact application processor and boot policy remain unestablished.",
+    "WCF734M is a model-catalog candidate, not an identified installed radio.",
+    "Chip-family support does not establish host bus, device IDs, board power/reset/coexistence wiring, firmware variant, original remote pairing or standby wake.",
+    "Historical source and firmware pins are research inputs, not selected current release artifacts or a completed security review.",
+    "No driver, firmware image or radio command was loaded or run."
+  ],
+  "source_photos_committed": false
+}

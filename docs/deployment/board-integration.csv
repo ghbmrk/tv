@@ -3,11 +3,11 @@ boot_chain,unverified; shared update names PontusM,No independent boot implement
 secure_world,,,,,,unverified
 storage_and_recovery,unverified live storage; checked update-image GPT only,No independent restore implementation qualified,research/DECRYPTED_UPDATE_FINDINGS.md,not established,Primary/backup file GPT and VDFS headers checked; not a restore test,live layout and failure recovery unverified
 graphics_display_composer,,,,,,unverified
-panel_one_connect_controller,,,,,,unverified
+panel_one_connect_controller,Unverified installed controller; shared update and family-source candidates only,No independent controller implementation qualified,research/controller-recovery-inventory.json,Source message-device handler and ELF32 ARM wrapper; request ABI unverified,Independent direct-call check and source startup trace; no controller operation,implicit rollback/liveness startup effects and recovery unresolved
 video_decoder,,,,,,unverified
 audio_and_earc,,,,,,unverified
 drm_protected_path_and_provisioning,exact secure-media hardware unverified,No independent MediaDrm/OEMCrypto integration qualified,research/RUNTIME_DEPENDENCY_FINDINGS.md,Two shared-update wrappers are ELF32 little-endian ARM with glibc/Tizen dependencies,Bounded catalog graph and compressed ELF dependency checks; no playback or provisioning test,static dependency evidence only; Android and UHD/HDR unqualified
 hdmi_input_cec,,,,,,unverified
 remote_and_input,,,,,,unverified
-network,,,,,,unverified
+network,Unverified installed radio; public WCF734M exhibit shows MT7668AUN,Google Coral MediaTek GPLv2 Wi-Fi source and upstream Linux Bluetooth/MediaTek firmware are candidates only,research/board-radio-evidence.json,Candidate host bus and target kernel ABI unverified,Filed photos visually reviewed; immutable license/build/source metadata inspected; no compile or device test,candidate implementation provenance only; hardware and firmware compatibility unverified
 power_standby_thermal,,,,,,unverified
