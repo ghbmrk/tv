@@ -2,6 +2,8 @@
 
 Observed 2026-10-18 from the official shared update, offline. No household-TV connection, vendor-code execution, mount, flash or third-party message occurred. This is a deeper extension of the [filesystem investigation](RUNTIME_DEPENDENCY_FINDINGS.md), not an independent-boot milestone.
 
+October 23 continuation: the [controller initialization and embedded recovery findings](CONTROLLER_AND_RECOVERY_FINDINGS.md) trace the message ioctl, identify implicit watchdog/rollback behavior in family source and validate a Linux-bearing XZ payload inside `seret.bin`. They do not qualify a RAM boot or independent recovery.
+
 ## Result and consequence
 
 `SWUVerifierTV` is not qualified as a read-only diagnostic. Static analysis identifies actual call instructions to boot-partition getter/setter and reboot imports. Decompiler output associates the setter with update finalization and a configuration guard. Runtime reachability and the external implementation's exact effects remain unknown; the binary must not be run on the household TV to find out.

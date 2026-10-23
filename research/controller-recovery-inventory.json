@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-23",
+  "update_archive_sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+  "update_section": "seret.bin",
+  "section_derivation": "Bounded AES-CBC section read reproduces the size, CRC and plaintext SHA in decrypted-update-inventory.json; signatures unverified.",
+  "embedded_stream_inspection": {
+    "schema_version": 1,
+    "input_bytes": 3661824,
+    "input_sha256": "ad53d344b3db12a88dd140bbd5b9fd7898193ee2c083336a99fe978fbd7a985b",
+    "candidates": [
+      {
+        "offset": 47160,
+        "validated": false,
+        "rejection": "header_crc_or_length"
+      },
+      {
+        "offset": 47381,
+        "validated": true,
+        "stored_stream_bytes": 2002476,
+        "decoded_bytes": 4952320,
+        "decoded_sha256": "a60e1b13bd45c952647427d15799d01d72bde6fdc531a9205a574f1d3ad76e51",
+        "integrity_check_id": 1,
+        "linux_version_tokens": [
+          "5.4.261"
+        ]
+      }
+    ],
+    "payload_exported": false,
+    "executed": false,
+    "device_accessed": false,
+    "signature_authenticated": false,
+    "boot_or_recovery_qualified": false,
+    "scope": "XZ stream integrity and bounded version tokens only; no executable identity, boot-stage role, installed-unit correspondence or trust-policy proof."
+  },
+  "micom_transport": {
+    "stored_bytes": 64296,
+    "stored_sha256": "33862690018a9d16727da57f258e7e68c0430c8b475d1cd57f9c2ca41d831817",
+    "decoded_bytes": 142302,
+    "decoded_sha256": "040372dfd200205f18c56067c2d57af7d0af64bd51a995ded0ac5c39b6c51763",
+    "compression": {
+      "layout": 6,
+      "chunks": 2,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 24,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "elf": {
+      "class_bits": 32,
+      "endianness": "little",
+      "machine_id": 40,
+      "type_id": 3,
+      "needed_libraries": [
+        "ld-linux.so.3",
+        "libc.so.6",
+        "libcapi-system-info.so.0",
+        "libdlog.so.0",
+        "libfconfig.so",
+        "libgcc_s.so.1",
+        "libprd-factory-interface.so",
+        "libpthread.so.0",
+        "libtzplatform-config-2.0.so.2"
+      ],
+      "soname": "libmicom.so.0"
+    },
+    "executed": false,
+    "device_accessed": false,
+    "signature_verified": false,
+    "analysis_image_base": 65536,
+    "call_sites": [
+      {
+        "operation": "controller-message-ioctl",
+        "address": "0x18238",
+        "file_offset": "0x8238",
+        "target": "0x1567c",
+        "import_name": "ioctl",
+        "instruction_sha256": "cfac624ac2f153ad0dfb953c0e0534c66dc1a617a54f66bf4951468e8bd2a64b",
+        "evidence_id": "ev_055962ac5d09a3100cff25642ca8a43c6f0218ab72ac7cdd4269534e860ac08a",
+        "private_report_sha256": "57207cbf45470ed18de5fc0fb77fe56f514f7387a2f5d3a4ab8e645ab33708cc"
+      }
+    ],
+    "provider_closed": true,
+    "cleanup_pending": false
+  },
+  "source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+  "controller_firmware_candidates": [
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMCMICOM_INTV.bin",
+      "bytes": 74140,
+      "sha256": "1aba5029e68b4e6f35bf177635e2f6a003048df821a9bafd63baec289c6e18c2",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMCMICOM_QBTV.bin",
+      "bytes": 74660,
+      "sha256": "3246f3f159dbe707123ae2007600c2f1c0d3e50e0b5de0b4fb80cba814b649eb",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMCMICOM_QOTV.bin",
+      "bytes": 64224,
+      "sha256": "ffbe0e35b7b8d9e4efc65a3687a9854810a27ae30725f8b12152e2d4eea7a511",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMDMICOM_FRTV.bin",
+      "bytes": 69392,
+      "sha256": "ee7b8083ac041b35001d709175b473785a2d2e002907471aae90235bfa55f591",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMDMICOM_INTV.bin",
+      "bytes": 78052,
+      "sha256": "4bdd0b45ed407bc010ae45ecde6f43453b9a2e067cf7c9126a9f47fdb76d4a7d",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMDMICOM_QBTV.bin",
+      "bytes": 78624,
+      "sha256": "1b5da787db09239b46b69889f403321137e13d602da5ad2263aab0384a8b260f",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PMDMICOM_QOTV.bin",
+      "bytes": 69296,
+      "sha256": "4c2a4020085e724099b29f7dc7f667ea6315a04c7749d69742b7a8bb11626a08",
+      "installed_unit_correspondence": false
+    },
+    {
+      "member": "tztv-micom/micom-binary/PontusM/release/PTMMICOM_INSS.bin",
+      "bytes": 83664,
+      "sha256": "b9511d1bc33df920e4d3e4db6d2046640ac0a1917c9ed5e568a540b6b5b3b653",
+      "installed_unit_correspondence": false
+    }
+  ],
+  "source_observations": [
+    {
+      "classification": "manual-source-observation",
+      "file": "msg-wt61p807.c",
+      "file_sha256": "5626a938690262891f8faf6a334a36ca8fe1f837dc54167c2579c78cccd0081e",
+      "first_line": 113,
+      "last_line": 119,
+      "lines_sha256": "e40fb8b573ac7ec351cbf39df35c4c6fae853cfc09f52cebe6d0daf0eda1f9fe",
+      "claim": "The file-operations table registers the message ioctl handler.",
+      "active_installed_branch_verified": false
+    },
+    {
+      "classification": "manual-source-observation",
+      "file": "msg-wt61p807.c",
+      "file_sha256": "5626a938690262891f8faf6a334a36ca8fe1f837dc54167c2579c78cccd0081e",
+      "first_line": 389,
+      "last_line": 465,
+      "lines_sha256": "fa5b4f800e4f7bf62a4b9ab273434df2ac03a06a53225584d87742e6cb7a2025",
+      "claim": "The acknowledged-message branch transmits controller messages, waits for acknowledgements, may retry and copies returned data to userspace.",
+      "active_installed_branch_verified": false
+    },
+    {
+      "classification": "manual-source-observation",
+      "file": "msg-wt61p807.c",
+      "file_sha256": "5626a938690262891f8faf6a334a36ca8fe1f837dc54167c2579c78cccd0081e",
+      "first_line": 666,
+      "last_line": 758,
+      "lines_sha256": "9322b0ec17be9ac5d0a0ff778430809a0f41afc104ac1f782fa4a9e1db63e24b",
+      "claim": "The watchdog ordinary branch attempts a rollback-control message and periodic liveness messages; the EPAPER branch differs.",
+      "active_installed_branch_verified": false
+    },
+    {
+      "classification": "manual-source-observation",
+      "file": "msg-wt61p807.c",
+      "file_sha256": "5626a938690262891f8faf6a334a36ca8fe1f837dc54167c2579c78cccd0081e",
+      "first_line": 1105,
+      "last_line": 1113,
+      "lines_sha256": "4e83ae05cc118381a74f3f7d3062eb78d61dd962144b3dbabe8771892097b668",
+      "claim": "Message-device probing starts the watchdog thread before marking the device ready.",
+      "active_installed_branch_verified": false
+    }
+  ],
+  "executed": false,
+  "device_accessed": false,
+  "independent_boot_or_recovery_qualified": false,
+  "limitations": [
+    "The Linux version token is a declaration inside decoded bytes, not a complete executable or boot-chain identification.",
+    "ELF and FDT magic candidates in the decoded payload failed format validation; no executable or DTB was recovered from them.",
+    "Shared-family controller binaries do not identify the installed controller, instruction set, active firmware or replaceability.",
+    "Matching device path and source ioctl handler are candidate correspondence; ioctl request ABI and actual kernel binding remain unverified.",
+    "No RAM-boot safety, controller recovery, ROM signature policy or independent image acceptance is established."
+  ]
+}

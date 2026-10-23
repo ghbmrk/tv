@@ -89,6 +89,87 @@
           }
         },
         {
+          "path": "tztv-micom/tztv-micom/msg-wt61p807.c",
+          "size_bytes": 35989,
+          "sha256": "5626a938690262891f8faf6a334a36ca8fe1f837dc54167c2579c78cccd0081e",
+          "lexical_markers": {
+            "boot_mode_observation": [
+              {
+                "line": 776,
+                "line_sha256": "c58f49ae061fd9d18324bc03814fc15c61b88fa5347208c1f6abd1b577792d67"
+              }
+            ],
+            "controller_message_ioctl": [
+              {
+                "line": 96,
+                "line_sha256": "656471f04945b86d7eb75f093b5638dcc440bfd57306041c6971ab5e1c857bae"
+              },
+              {
+                "line": 116,
+                "line_sha256": "940e74cb2694fc800b3bf57646747c133dd28001866b3bddb37d734b1a53a96b"
+              },
+              {
+                "line": 118,
+                "line_sha256": "797455b02823d3ea5fe93ce8ee265492c542b49cb1cc511cfa2feadd226e12d2"
+              },
+              {
+                "line": 215,
+                "line_sha256": "e495f67db2bf4958687ed070af6d9902052035770ae63b0515daf6497a25cff5"
+              },
+              {
+                "line": 219,
+                "line_sha256": "bc83edd3b5fda71df2eaf50581a994ec2029432e7623b71cfbddc80f14b84011"
+              },
+              {
+                "line": 237,
+                "line_sha256": "7e9d42bd16afee0c404c77f489ab198fbf2b96d55647be660b2aaa388579b009"
+              },
+              {
+                "line": 389,
+                "line_sha256": "b0c1870705ade95fbf2e36cced9fca2aa6644c1be96399381b5d55a81af84193"
+              },
+              {
+                "line": 813,
+                "line_sha256": "26ee059fcaea16c0c786642920a897846c68d218564a25dcb44b263a12ccb72a"
+              }
+            ],
+            "controller_watchdog_start": [
+              {
+                "line": 666,
+                "line_sha256": "9154636d8b4a5676db95a823b53ec2e904b820bbf69c438fdb1464fe8fcf1334"
+              },
+              {
+                "line": 797,
+                "line_sha256": "4d7e85b625e9d2abd13605547aacedd84d1f163e62d07a8f674452a91b20271b"
+              },
+              {
+                "line": 1107,
+                "line_sha256": "fe3e2b37bc3cd654ac32febf7c7daed286e42e8a0910fd30e24429838a2de49b"
+              }
+            ],
+            "controller_rollback_message": [
+              {
+                "line": 718,
+                "line_sha256": "fd24bb3216ba616eac03a3c7fe57f69a49d044c982d66aa35a09cefe71931419"
+              }
+            ],
+            "controller_liveness_message": [
+              {
+                "line": 155,
+                "line_sha256": "124848dc27c3b9b0094007529f83a57ce491f2b53c45561a5e894e518f8aacb4"
+              },
+              {
+                "line": 743,
+                "line_sha256": "24879b44faa9826429c1e7d9c2fb4517823202991f9960f3971ac898d540285c"
+              },
+              {
+                "line": 747,
+                "line_sha256": "fb985b301c187d6d8b03a2ea9e2be1352dc3e1df05735697da33ffd3a9aa4937"
+              }
+            ]
+          }
+        },
+        {
           "path": "tztv-micom/tztv-micom/rc-wt61p807.c",
           "size_bytes": 10937,
           "sha256": "06d13028885e12fbbf54fdaa938c405f036e37322146f0fe171ccd732549dd12",
@@ -178,6 +259,22 @@
               {
                 "line": 42,
                 "line_sha256": "e81a2c77d02d367b43261b1f0740ab3dead3dfe723fc1d11440f869af6408290"
+              }
+            ],
+            "controller_rollback_message": [
+              {
+                "line": 51,
+                "line_sha256": "8cf0dee45b3358adfef71999ea5dca83fad04da492827a92e3e42019d8b4a64d"
+              }
+            ],
+            "controller_liveness_message": [
+              {
+                "line": 96,
+                "line_sha256": "16a00a3ea3cb0d88d7ef285bb33bf8cdfd07b85ae8be4198fc326dd77de7097a"
+              },
+              {
+                "line": 98,
+                "line_sha256": "537d36beb137ef7d67ecc8c3d0c3f5dfc99b733e5623410a0a8c0c38277577ed"
               }
             ],
             "controller_power_commands": [
