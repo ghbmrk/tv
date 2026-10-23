@@ -6,7 +6,7 @@ Observed 2026-10-18 from the official shared update, offline. No household-TV co
 
 `SWUVerifierTV` is not qualified as a read-only diagnostic. Static analysis identifies actual call instructions to boot-partition getter/setter and reboot imports. Decompiler output associates the setter with update finalization and a configuration guard. Runtime reachability and the external implementation's exact effects remain unknown; the binary must not be run on the household TV to find out.
 
-The userspace installation verifier delegates checks to finalizers. Its completion message does **not** establish the ROM's image-signature policy, independent-image acceptance or recovery. The power-control trace now reaches a `/prd` backend, a pre-switch helper and MICOM interfaces. The helper/controller implementations and the finalizers are the next causal boundary, followed by early-stage boot evidence. An update application's name or success string cannot substitute for that evidence.
+The userspace installation verifier delegates checks to finalizers. Its completion message does **not** establish the ROM's image-signature policy, independent-image acceptance or recovery. The power-control trace now reaches a `/prd` backend and MICOM library. The October 23 follow-up finds storage-write calls inside the pre-switch helper and an ioctl dependency in the controller-message transport. Actual controller firmware, early-stage trust and installed-unit correspondence remain unresolved. An update application's name or success string cannot substitute for that evidence.
 
 ## Evidence
 
@@ -46,6 +46,16 @@ The getter call and pre-switch-helper call have independently checked original-f
 
 ## Reproduce and challenge
 
+### October 23: MICOM and storage-write boundary
+
+The same CRC-checked `/prd` catalog contains a two-link library chain ending at `libmicom.so.0.1`. Its single bounded extent yields a 64,296-byte compressed file and a 142,302-byte ELF32 ARM library, SHA-256 `040372dfd200205f18c56067c2d57af7d0af64bd51a995ded0ac5c39b6c51763`. Both chunk hashes, the descriptor hash and descriptor CRC pass; signature authenticity remains unverified. Its SONAME matches the backend's declared MICOM dependency. This is candidate resolution inside the shared update, not observed binding on the household TV.
+
+Static call evidence: `restore_fake_magic` contains calls to the `pwrite64` and `fsync` import thunks. A separate decoder reproduces both direct BLX destinations from the original ELF and independently checks file mapping and instruction hashes. This closes the previous uncertainty about whether the helper contains storage-write operations. It does **not** prove when they execute, their actual target on the installed unit, a successful write or recoverability. Do not run this helper as a diagnostic or infer a safe slot-switch procedure from it.
+
+Decompiler inference: the exported boot-partition getter and setter delegate to `micom_send_msg`; that transport contains an `ioctl` dependency and device initialization. Diagnostic strings refer to uImage-header restoration and CRC checks. These clues do not establish the live storage map, controller protocol semantics or ROM authentication policy. CRC checks are not signature authentication. The original controller firmware remains a replacement dependency, rather than a component qualified for reuse.
+
+The `micom_library` inventory record binds the checked file and two calls; raw vendor code and analysis reports remain private. No vendor code, controller operation, mount or household-TV connection was executed. The native-analysis provider closed with no pending cleanup.
+
 Follow the pinned [native analysis workflow](../tools/rea/NATIVE_ANALYSIS.md). An original ARM fixture checks that the native decompiler recovers a known range/arithmetic predicate. This is a tool control, **not** vendor behavioral parity.
 
 For a privately supplied verifier with the exact inventory digest:
@@ -55,7 +65,7 @@ python3 tools/check_native_calls.py --file PRIVATE_SWUVERIFIER_ELF
 python3 -m unittest tests.test_native_calls -v
 ```
 
-The checker independently validates the ELF mappings, four-byte hashes and direct branch targets without Ghidra or executing the input. It refuses mismatched digests, ambiguous/non-executable mappings, unsupported encodings and destination changes. Synthetic tests cover forward/backward branches, PC alignment, rebase mistakes and corrupted metadata. Its `inspect(data, record)` entry point also checks the inventory's `power_control_backend` record against the private backend ELF (two direct calls). It does not validate decompiler semantics, indirect targets, external implementations, signatures or hardware safety.
+The checker independently validates the ELF mappings, four-byte hashes and direct branch targets without Ghidra or executing the input. It refuses mismatched digests, ambiguous/non-executable mappings, unsupported encodings and destination changes. Synthetic tests cover forward/backward branches, PC alignment, rebase mistakes and corrupted metadata. Its `inspect(data, record)` entry point also checks the inventory's `power_control_backend` and `micom_library` records against their respective private ELFs (two direct calls each). It does not validate decompiler semantics, indirect targets, external implementations, signatures or hardware safety.
 
 REA and Ghidra analysis used an ephemeral project; the provider reports the target closed with no pending cleanup. The input hash is unchanged. Raw vendor code, pseudocode, assembly, catalog records, tool-session output and owner information remain private.
 

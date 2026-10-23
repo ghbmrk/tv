@@ -6,6 +6,8 @@ Target: Samsung QN50LS03FAFXZA, installed family/build T-PTMFAKUC-0090-1301.0. T
 
 ## Work sequence and decision gates
 
+Owner reaffirmation, October 23: build the replacement system on the original hardware with all Samsung software removed. Do not insert a Tizen launcher or Home-remapping installation into this sequence. Open-source reuse is allowed; retaining Samsung code in any required stage does not meet acceptance. Existing emulator/application work does not relax the independent-boot and recovery gates.
+
 | Stage | Work and concrete deliverable | Exit evidence |
 |---|---|---|
 | 0 — Product slice | Run the local experience studio; build the native shell and exercise it on an Android TV emulator or an existing development target. | API tests; Android build; D-pad/import/persistence tests. This does not qualify the Samsung hardware. |
