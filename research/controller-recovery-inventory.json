@@ -26,12 +26,24 @@
         ]
       }
     ],
+    "arm_zimage_candidates": [
+      {
+        "offset": 32768,
+        "validated": true,
+        "image_bytes": 2017152,
+        "image_sha256": "2872e7b0731f33bded6ed9acf443837689084e6eef9b5f563f006d2231c58bdc",
+        "header_form": "Linux ARM A32 little-endian zero-linked candidate",
+        "contained_xz_candidate_indices": [
+          1
+        ]
+      }
+    ],
     "payload_exported": false,
     "executed": false,
     "device_accessed": false,
     "signature_authenticated": false,
     "boot_or_recovery_qualified": false,
-    "scope": "XZ stream integrity and bounded version tokens only; no executable identity, boot-stage role, installed-unit correspondence or trust-policy proof."
+    "scope": "XZ integrity/version tokens and conservative ARM zImage header/range checks only; no executable identity, boot-stage role, installed-unit correspondence or trust-policy proof."
   },
   "micom_transport": {
     "stored_bytes": 64296,
@@ -182,10 +194,26 @@
   "device_accessed": false,
   "independent_boot_or_recovery_qualified": false,
   "limitations": [
-    "The Linux version token is a declaration inside decoded bytes, not a complete executable or boot-chain identification.",
+    "The validated conservative ARM A32 zImage header and contained XZ stream identify a nested file format, not executing target architecture, early boot trust or an independent recovery path.",
     "ELF and FDT magic candidates in the decoded payload failed format validation; no executable or DTB was recovered from them.",
     "Shared-family controller binaries do not identify the installed controller, instruction set, active firmware or replaceability.",
     "Matching device path and source ioctl handler are candidate correspondence; ioctl request ABI and actual kernel binding remain unverified.",
     "No RAM-boot safety, controller recovery, ROM signature policy or independent image acceptance is established."
-  ]
+  ],
+  "arm_zimage_format_source": {
+    "url": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux/+/refs/tags/v5.4/arch/arm/boot/compressed/head.S?format=TEXT",
+    "source_bytes": 38370,
+    "source_sha256": "f327910546ddc0931cb45f303f9148ced353216f6bf05f655e06c373d1194da1",
+    "reviewed_lines": [
+      155,
+      185
+    ],
+    "scope": "Upstream header format only; not installed kernel correspondence",
+    "linker_definitions": {
+      "url": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux/+/refs/tags/v5.4/arch/arm/boot/compressed/vmlinux.lds.S?format=TEXT",
+      "source_bytes": 3353,
+      "source_sha256": "248452b9cafccc54aed70075260215c3ed128fe19b152caa319032e23f9a60ed"
+    }
+  },
+  "embedded_image_followup_observed": "2026-10-24"
 }

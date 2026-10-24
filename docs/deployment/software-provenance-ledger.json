@@ -24,7 +24,10 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/secure-world-evidence.json",
+        "research/platform-dependency-inventory.json"
+      ],
       "status": "unverified"
     },
     {

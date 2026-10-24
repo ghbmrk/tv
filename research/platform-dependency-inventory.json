@@ -41,6 +41,12 @@
                 "line": 56,
                 "line_sha256": "851f3b6cf53d81d3240651179d2ee4cdf17714173b6d95550efb536b73f3df98"
               }
+            ],
+            "secure_driver_init": [
+              {
+                "line": 191,
+                "line_sha256": "4d7a808282f9857b8e2e8d9a7722c76d10e7e958518f256deb7d02c1d79d594d"
+              }
             ]
           }
         }
@@ -444,6 +450,56 @@
       "declared_expanded_bytes": 453997,
       "selected_files": [
         {
+          "path": "trustzone-drivers/packaging/trustzone-drivers.spec",
+          "size_bytes": 13088,
+          "sha256": "60aa204fb4ee9c8a08f5f46b1773692c4f8a511cfb29136e2c9268718ac14e9a",
+          "lexical_markers": {
+            "trustware_family_reference": [
+              {
+                "line": 219,
+                "line_sha256": "37279715baaea9670ce5bbc685c8177641f6af4e536e74de1aed9642c3a72628"
+              }
+            ],
+            "secure_build_external_input": [
+              {
+                "line": 26,
+                "line_sha256": "6d53c4f60d0b9eb575731919d67c452311aa2888665e981f6ecd9d149c1cc786"
+              }
+            ]
+          }
+        },
+        {
+          "path": "trustzone-drivers/source/tzdev/CMakeLists.txt",
+          "size_bytes": 4678,
+          "sha256": "1d70a570a3d6a6030c86590f0a4d37a39071babf0e2424e70d123629f1f82498",
+          "lexical_markers": {
+            "trustware_family_reference": [
+              {
+                "line": 77,
+                "line_sha256": "3de74ac2661b8ab8e0f61c5c28e65ff779a07f7b66bffeb5e782a78c90343b5d"
+              }
+            ],
+            "secure_build_external_input": [
+              {
+                "line": 1,
+                "line_sha256": "871fbf971ca1afec700f4c77dfee2deb9c6624a946f8380a239dd260793cf60f"
+              },
+              {
+                "line": 18,
+                "line_sha256": "0d2c200d86739bdb327d0106a8cf6f2f2d291ed2495ffab580e67ee04aae6aa0"
+              },
+              {
+                "line": 31,
+                "line_sha256": "0750e6939b07e840fbab3e7a0c8506f8a30a2d5aaa37ed7ce367c22d07c8fa4c"
+              },
+              {
+                "line": 77,
+                "line_sha256": "3de74ac2661b8ab8e0f61c5c28e65ff779a07f7b66bffeb5e782a78c90343b5d"
+              }
+            ]
+          }
+        },
+        {
           "path": "trustzone-drivers/source/tzdev/smc_call.S",
           "size_bytes": 2150,
           "sha256": "d7d27328195d7f945c84ac588a9c588db1481a308ccf46cbe9dd1078487d4ac8",
@@ -507,10 +563,130 @@
           }
         },
         {
+          "path": "trustzone-drivers/source/tzdev/tzdev_main.c",
+          "size_bytes": 80834,
+          "sha256": "d98ee414e37dd2b025517b6ea61b969b65e15ab84adf4522ed6d9ed1277c3d87",
+          "lexical_markers": {
+            "controller_watchdog_start": [
+              {
+                "line": 3073,
+                "line_sha256": "ee704d0a9c34dd7970ee9548fd4f4e228eaaf955b457181157e90de949e4ad25"
+              }
+            ],
+            "trustware_family_reference": [
+              {
+                "line": 2814,
+                "line_sha256": "0be237388e280b8af13d2b90fbe879f626b8e2b0cec49b5d08abfcaae35de97d"
+              }
+            ],
+            "secure_kernel_abi_check": [
+              {
+                "line": 2789,
+                "line_sha256": "c84c0dd3415b1047df0f30653734dd12aad8cf0aa4ff45784a3a0943dde74d80"
+              },
+              {
+                "line": 2807,
+                "line_sha256": "936512c25649e491898c060dcfedfd109f6d80475ac7e801e2cb9a62c436dcab"
+              }
+            ],
+            "secure_driver_init": [
+              {
+                "line": 2782,
+                "line_sha256": "cab05282ed9f25cd055912f8855f79ac72c5cc64da301ec0e557d2c07ced1ba3"
+              },
+              {
+                "line": 2945,
+                "line_sha256": "5a2651267a75b6f5415df92682036b2781a198ecf8aafae82e7a872906cfa97a"
+              },
+              {
+                "line": 2951,
+                "line_sha256": "7258dab5b75d17986e741bf4157c7061bca9d8f1cac6eb688381bb4e173d4e2d"
+              },
+              {
+                "line": 3055,
+                "line_sha256": "3383382cf3c852ab7abd85a5f0e5073170bafed5768195bc79e8b2e730c376f8"
+              },
+              {
+                "line": 3095,
+                "line_sha256": "67239d9d367988851b50ab607297b592e5f733e991e8ed7a34deae8fddcbf347"
+              },
+              {
+                "line": 3183,
+                "line_sha256": "eef130fc6c195f212cc3a92fa1575a9ab0db0f00459c826fbf62957d79a6e823"
+              }
+            ],
+            "secure_driver_file_effect": [
+              {
+                "line": 2516,
+                "line_sha256": "4ea205542423aae50fb85a6b6a7a1d550b14f32063508ef659d123c6b4364ab1"
+              },
+              {
+                "line": 2518,
+                "line_sha256": "3c24e72e3d4a596317178e69bd0f2eb3290faef9438aec610cb4786435d1b806"
+              },
+              {
+                "line": 2845,
+                "line_sha256": "7ac35739c326a458ebfb7c4022002c5b14baa7cc89fd265f869adfdbe506f642"
+              },
+              {
+                "line": 2870,
+                "line_sha256": "3d2d840539b3843c9461402dffe117605abd468a330cd92a94477f7029045d4f"
+              },
+              {
+                "line": 2874,
+                "line_sha256": "80c18461fc14b3277ecb6519ad397f0e81be4bd828246da0e2524b5d0eac0dd2"
+              },
+              {
+                "line": 2878,
+                "line_sha256": "80c18461fc14b3277ecb6519ad397f0e81be4bd828246da0e2524b5d0eac0dd2"
+              },
+              {
+                "line": 2882,
+                "line_sha256": "b59342139b065e8147cb0da43bd3664476195bb789869686e26f0ef109d1c1d5"
+              },
+              {
+                "line": 2900,
+                "line_sha256": "a6de9c62c3731d4fce8da901332bfe6e80bc896638aaaef91bf106bce76d4114"
+              },
+              {
+                "line": 2902,
+                "line_sha256": "93178a9a2b663f6a0b295231c6cb714b36d3538ac62e2dd6f0c44259d89cf9ff"
+              },
+              {
+                "line": 2931,
+                "line_sha256": "3179259a875526b7ba5f50d6710f83e5aa22631fdb65a53994016621a7a79487"
+              },
+              {
+                "line": 3112,
+                "line_sha256": "adc0a3d1bc538de6f174703ff86dea90ed030a2e8345624d87755b127426de6c"
+              }
+            ]
+          }
+        },
+        {
           "path": "trustzone-drivers/source/tzdev/tzdev_smc.c",
           "size_bytes": 16330,
           "sha256": "da0ba275e675f1d784cef72028a86afef4854e70d1fe3b1b07e6328b6d315fd4",
-          "lexical_markers": {}
+          "lexical_markers": {
+            "secure_monitor_identity_check": [
+              {
+                "line": 170,
+                "line_sha256": "5f41ff285918d1b03909579ca495bd509c08ae058fe2e2f5098ec25bef0a34a6"
+              }
+            ],
+            "secure_kernel_abi_check": [
+              {
+                "line": 201,
+                "line_sha256": "4afb651cea9c30e82e4768c32d46c54fc6273070b4bec4438577fb7b1e53a9e9"
+              }
+            ],
+            "secure_driver_init": [
+              {
+                "line": 141,
+                "line_sha256": "86ab76f13a83fe5d7475b52505aebd31914a3cd813e1296194b7d5c4fc00ddb3"
+              }
+            ]
+          }
         }
       ]
     }

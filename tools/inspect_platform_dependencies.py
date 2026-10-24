@@ -23,7 +23,8 @@ SELECTED = {
     'tztv-hdmi-sw.zip': ('include/vd_kernel-interfaces/video/frc_tcon_tztv.h',
                          'include/tztv_hdmi_switch_init.h'),
     'trustzone-drivers.tar.gz': tuple('trustzone-drivers/source/tzdev/' + name for name in (
-        'smc_call.S', 'tzdev_antirollback.c', 'ssdev_rpmb.c', 'tzdev_smc.c')),
+        'smc_call.S', 'tzdev_antirollback.c', 'ssdev_rpmb.c', 'tzdev_smc.c',
+        'tzdev_main.c', 'CMakeLists.txt')) + ('trustzone-drivers/packaging/trustzone-drivers.spec',),
 }
 MARKERS = {
     'boot_mode_observation': r'\b(?:of_get_property|gpio_get_value_cansleep|readl)\b',
@@ -44,6 +45,12 @@ MARKERS = {
     'secure_monitor_instruction': r'^\s*smc\s+#0',
     'secure_rollback_query': r'\bTZANTIROLLBACK_GET_VERSION\b',
     'rpmb_operations': r'\bMMC_RPMB_(?:READ|WRITE|WRITE_KEY|READ_CNT)\b',
+    'trustware_family_reference': r'\b(?:TrustWare|D?TRUSTWARE_BUILD_MODE|trustwareos)\b',
+    'secure_monitor_identity_check': r'\b(?:monitor_uuid_same|MONITOR_SECURE_OS_UID)\b',
+    'secure_kernel_abi_check': r'\bSECOS_ABI_VERSION\b',
+    'secure_driver_init': r'\b(?:module_init|smc_init_monitor|fetch_kernel_info|init_storage|nsrpc_init_early)\b',
+    'secure_driver_file_effect': r'\b(?:tmp_flag_file_delete|tmp_flag_file_create|vfs_unlink|vfs_mkdir|O_TRUNC)\b',
+    'secure_build_external_input': r'\b(?:TeeBoard|trustzone-common|D?CONFIG_TEE_FILE_PROVISION|BOARD_NO_RPMB)\b',
 }
 MAX_PACKAGE = 8 * 1024**2
 MAX_EXPANDED = 32 * 1024**2
