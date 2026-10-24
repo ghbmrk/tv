@@ -173,6 +173,17 @@
         "research/seret-wrapper-inventory.json"
       ],
       "status": "unverified"
+    },
+    {
+      "component": "early_memory_initialization",
+      "exact_hardware": null,
+      "executing_implementation": null,
+      "storage_domain": null,
+      "independent_replacement": null,
+      "evidence": [
+        "research/ddr-package-inventory.json"
+      ],
+      "status": "unverified"
     }
   ]
 }

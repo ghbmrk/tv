@@ -30,3 +30,7 @@ All current entries are **unverified**, not accepted risks. Fill each with the e
 Do not deliberately inject destructive faults on the household unit. Rehearse covered failure cases on a verified matching lab assembly; software simulations can test orchestration but cannot certify electrical/storage recovery. A backup hash proves byte integrity, not coverage, consistency, readability after failure or successful restoration.
 
 Before a household proposal, the reviewer must name all uncovered failure modes and reject any experiment that could cause one. The [off-TV plan](OFF_TV_READINESS.md) and read-only packet auditor organize evidence; neither grants authorization or certifies recovery.
+
+## Early-memory initialization
+
+The [DDR package investigation](../../research/DDR_PACKAGE_FINDINGS.md) identifies three bounded but unclassified payloads in the shared update. Its FIP-shaped table does not establish a standard TF-A loader or recovery route. Any experiment that can prevent DRAM bring-up requires recovery that does not depend on that successful bring-up. Do not replace memory-initialization data/code, repack the table or assume a working Linux network service covers that failure. The exact hardware, loader, payload roles and independent recovery remain unverified.

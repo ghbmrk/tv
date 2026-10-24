@@ -11,3 +11,4 @@ hdmi_input_cec,,,,,,unverified
 remote_and_input,,,,,,unverified
 network,Unverified installed radio; public WCF734M exhibit shows MT7668AUN,Google Coral MediaTek GPLv2 Wi-Fi source and upstream Linux Bluetooth/MediaTek firmware are candidates only,research/board-radio-evidence.json,Candidate host bus and target kernel ABI unverified,Filed photos visually reviewed; immutable license/build/source metadata inspected; no compile or device test,candidate implementation provenance only; hardware and firmware compatibility unverified
 power_standby_thermal,,,,,,unverified
+early_memory_initialization,Installed DRAM controller and initialization path unverified,No independent early-memory implementation qualified,research/ddr-package-inventory.json,Three payload instruction sets and loader ABI unverified,Table ranges and hashes checked against shared update; nonstandard TF-A-like marker only,No board correspondence or pre-DRAM recovery qualified
