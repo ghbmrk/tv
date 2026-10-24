@@ -19,7 +19,7 @@ MAX_PACKED = 1024**2
 MAX_DECODED = 2 * 1024**2
 
 
-def envelope(data, offset):
+def envelope(data, offset, *, interfaces=False):
     require(type(offset) is int and 0 <= offset <= len(data)-12, 'envelope range')
     marker, decoded_bytes, packed_bytes = struct.unpack_from('<III', data, offset)
     require(marker == 0x2020, 'unsupported envelope marker')
@@ -33,7 +33,7 @@ def envelope(data, offset):
         raise ValueError('invalid raw DEFLATE') from exc
     require(len(plain) == decoded_bytes and decoder.eof and not decoder.unused_data
             and not decoder.unconsumed_tail, 'DEFLATE size, completion or trailing data')
-    trees = dtb_bundle(plain)
+    trees = dtb_bundle(plain, interfaces=interfaces)
     return {'file_offset': offset, 'header_bytes': 12, 'packed_bytes': packed_bytes,
             'packed_sha256': hashlib.sha256(packed).hexdigest(),
             'decoded_bytes': len(plain), 'decoded_sha256': hashlib.sha256(plain).hexdigest(),
@@ -41,12 +41,12 @@ def envelope(data, offset):
             'dtb_bundle': trees}
 
 
-def inspect(data):
+def inspect(data, *, interfaces=False):
     require(60 <= len(data) <= MAX_INPUT, 'input budget')
     images = [r for r in arm_zimage_headers(data) if r['validated']]
     require(len(images) == 1, 'requires one unambiguous supported zImage header')
     image = {k: v for k, v in images[0].items() if k != 'contained_xz_candidate_indices'}
-    tail = envelope(data, image['offset']+image['image_bytes'])
+    tail = envelope(data, image['offset']+image['image_bytes'], interfaces=interfaces)
     return {'schema_version': 1, 'input_bytes': len(data),
             'input_sha256': hashlib.sha256(data).hexdigest(), 'zimage': image,
             'post_image_envelope': tail,
@@ -61,12 +61,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--file', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--interfaces', action='store_true', help='Report only fixed allowlisted interface strings')
     args = parser.parse_args()
     if (args.output.suffix != '.json' or args.output.is_symlink()
             or args.output.resolve() == args.file.resolve()
             or (args.output.exists() and (not args.output.is_file() or args.output.samefile(args.file)))):
         raise ValueError('output must preserve input')
-    result = inspect(read_bounded(args.file, MAX_INPUT))
+    result = inspect(read_bounded(args.file, MAX_INPUT), interfaces=args.interfaces)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2)+'\n')
     print('Post-image metadata inspected; no payload export, execution or device access.')

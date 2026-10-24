@@ -23,6 +23,16 @@ def fixture(plain=None, trailing=b''):
 
 
 class SeretWrapperTests(unittest.TestCase):
+    def test_interface_reporting_is_opt_in_and_fixed_allowlisted(self):
+        data = fixture(fdt_bytes(gpu_compatible=b'arm,mali-midgard\0vendor,private-canary\0'))
+        default = inspect(data)['post_image_envelope']['dtb_bundle']['fdts'][0]
+        self.assertNotIn('selected_interface_compatibles', default)
+        result = inspect(data, interfaces=True)
+        row = result['post_image_envelope']['dtb_bundle']['fdts'][0]
+        self.assertEqual(row['selected_interface_compatibles'], ['arm,mali-midgard'])
+        self.assertNotIn('vendor,private-canary', str(result))
+        self.assertNotIn('12345678', str(result))
+
     def test_checks_real_structure_without_exporting_payload_or_addresses(self):
         data = fixture()
         result = inspect(data)

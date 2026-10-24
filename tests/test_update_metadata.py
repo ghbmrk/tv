@@ -31,7 +31,7 @@ def tree(items=None):
     return struct.pack('<IH', 0, 256) + b'x'*256 + MAGIC + struct.pack('<I', len(entries)) + b''.join(entries)
 
 
-def fdt_bytes(duplicate=False, depth=0):
+def fdt_bytes(duplicate=False, depth=0, gpu_compatible=None):
     strings = b'model\0compatible\0'
     def word(v):
         return struct.pack('>I', v)
@@ -46,6 +46,8 @@ def fdt_bytes(duplicate=False, depth=0):
         st += prop(0, b'duplicate\0')
     st += prop(6, b'vendor,synthetic\0') + begin(b'cpus') + begin(b'cpu@0')
     st += prop(6, b'arm,cortex-a57\0arm,armv8\0') + word(2) + word(2)
+    if gpu_compatible is not None:
+        st += begin(b'gpu@12345678') + prop(6, gpu_compatible) + word(2)
     for i in range(depth):
         st += begin(('n'+str(i)).encode())
     st += word(2)*depth + word(2) + word(9)

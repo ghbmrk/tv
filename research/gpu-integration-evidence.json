@@ -1,0 +1,674 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-24",
+  "scope": "Family artifact/source declarations and a pinned upstream match table; no installed GPU identity, driver binding or board support qualification",
+  "family_wrapper_inventory": "research/seret-wrapper-inventory.json",
+  "interface_inspection": {
+    "input_section_sha256": "ad53d344b3db12a88dd140bbd5b9fd7898193ee2c083336a99fe978fbd7a985b",
+    "report_sha256": "6a53d99c83ff120c61945c882d055555882611eb5e90b2a2e904aa5f658b9d34",
+    "tree_count": 12,
+    "all_trees_have_same_selected_interface_set": true,
+    "selected_interface_compatibles": [
+      "arm,mali-midgard",
+      "samsung,sdp-card-3-codec",
+      "samsung,sdp-codec",
+      "samsung,sdp-frc",
+      "samsung,sdp-frc-8k",
+      "samsung,sdp-hdmi",
+      "samsung,sdp-mc-cecif",
+      "samsung,sdp-mc-cecif-test",
+      "samsung,sdp-sif-codec",
+      "samsung,sdp-tcon",
+      "samsung,sdp_pqe_frc",
+      "samsung,tztv-frc-tcon",
+      "samsung,tztv-hdmi-sw"
+    ],
+    "node_paths_or_register_addresses_exported": false
+  },
+  "family_gpu_source": {
+    "schema_version": 1,
+    "selected_files": [
+      {
+        "path": "tztv-media-sec/tztv-media-sec/sdp_gpu/drivers/gpu/arm/midgard/mali_kbase_core_linux.c",
+        "size_bytes": 204617,
+        "sha256": "f6cb46d417ea495e5f07a35272e57f3809d5634e3c02de4f48c6c070e0964d1d",
+        "lexical_markers": {
+          "generic_gpu_compatible": [
+            {
+              "line": 6747,
+              "line_sha256": "11583e3596fbb0a7522bcfc6788f1027aa7bc099d8abf2b61cf5ca6e07692d34"
+            }
+          ],
+          "gpu_product_label": [
+            {
+              "line": 3748,
+              "line_sha256": "1f583e01b5cc08fb5927dd2b3e82fcd2034db3ec28cf8fe9ff518eeef7a0a3e1"
+            },
+            {
+              "line": 3749,
+              "line_sha256": "5da2a0fea4f5a6ab2a04d55e47b327fcf83e9706a2d2891cb821b0bd1b9d610e"
+            },
+            {
+              "line": 3750,
+              "line_sha256": "02215fa057d0d00aabd21c9297d8699f40b6f258bb254318b2d01be9416ab1d8"
+            },
+            {
+              "line": 3751,
+              "line_sha256": "af7d1722961b8c508d009881cdcbb4d0c552be7b760cae5560a2a99c13f98a80"
+            },
+            {
+              "line": 3752,
+              "line_sha256": "0a9a92f1d5b21d5242b9b172ab8178569d6adc070b1da57af0dd5b60f6a95948"
+            },
+            {
+              "line": 3753,
+              "line_sha256": "93bb3d15a5e6c81990d412519de3fa0163e2b7e8a89dc522d312bf465601cf39"
+            },
+            {
+              "line": 3754,
+              "line_sha256": "c18d128e2ed657bdd5585443523cce50b1b5304000123ec6e8e9aa8b1d7922d8"
+            },
+            {
+              "line": 3755,
+              "line_sha256": "445c1993505fd74390972d3cc2e35ecb323d1171c1af55b4461eb1f7efbc6189"
+            },
+            {
+              "line": 3756,
+              "line_sha256": "58e875e01d54824b4d6c839c717de36953e5c1a631ff25a978619f82355f3ad4"
+            },
+            {
+              "line": 3757,
+              "line_sha256": "985fbffac72a14d4232c0df1eb54e1772a91e26746b4195a006504806781f55d"
+            },
+            {
+              "line": 3758,
+              "line_sha256": "46394464ce24d6f15d3b56acee2a3d6e28b11f78e6a52a136f5a5b41cde2d964"
+            },
+            {
+              "line": 3759,
+              "line_sha256": "2cc0492acf7b66702a5d3be47e96c021aba69be4d36da0926c3fff2d15bfdb5b"
+            },
+            {
+              "line": 3760,
+              "line_sha256": "3ca64dc5dd7d29c8d418bcb0b665adbb38753a5f5a4b471d7b7d3b385e29efcc"
+            },
+            {
+              "line": 3761,
+              "line_sha256": "4d47b124ca5c4efe23a5015dc328254a87d344859f5fd52c3925d3eabba1219c"
+            },
+            {
+              "line": 3762,
+              "line_sha256": "3a1eb9fb8c29660f2ee47419f321562d8e232484a6714f3be091684cc4dab3ee"
+            },
+            {
+              "line": 3763,
+              "line_sha256": "fe455f35650127e6614c4496f846ecfc2fa479e764199d7b282db55a9acab458"
+            },
+            {
+              "line": 3764,
+              "line_sha256": "c9ae9c907c50631c5bf16fe1607fd55a9e42f2688218c86a98e217543f27a54e"
+            },
+            {
+              "line": 3765,
+              "line_sha256": "e0779126e348f040f9c40948ce46bcf07392a99e3615cb05b9b257f5f9452395"
+            },
+            {
+              "line": 3766,
+              "line_sha256": "4b971634388b0e7476b95a2205c9edfaaf5cc23a1a4d7525e1552fe92c1aa2c2"
+            }
+          ]
+        }
+      },
+      {
+        "path": "tztv-media-sec/tztv-media-sec/sdp_gpu/drivers/gpu/arm/midgard/platform/sdp/mali_kbase_config_sdp.c",
+        "size_bytes": 2481,
+        "sha256": "7ea0eba54f7e6a36c9876229585968d379e804747560c280c394ce01a7beab7e",
+        "lexical_markers": {
+          "gpu_power_callback": [
+            {
+              "line": 61,
+              "line_sha256": "77af2d1c0570355ae125f54b7409e9933c59c6a768fd3844723f4fdd5800bb9c"
+            },
+            {
+              "line": 62,
+              "line_sha256": "6f44a7de4626957ba39b641e8a7d06cf995362e4244e3dc292941ffc51918761"
+            },
+            {
+              "line": 68,
+              "line_sha256": "597228a76b03fecdafea192f5817dd23916214064e7593be5205db89412acef3"
+            }
+          ]
+        }
+      },
+      {
+        "path": "tztv-media-sec/tztv-media-sec/sdp_gpu/drivers/gpu/arm/midgard/platform/sdp/mali_kbase_config_platform.h",
+        "size_bytes": 10459,
+        "sha256": "cb95063b95bca8b80d51288919bff90a5e0fb25b8bdbf4b833d58524447be2ed",
+        "lexical_markers": {
+          "pontus_gpu_build_branch": [
+            {
+              "line": 95,
+              "line_sha256": "e5fe13d14b38dc4d6b00854273153e20df1dbfed380e5e0590f2f9fdd8d9b3e6"
+            },
+            {
+              "line": 148,
+              "line_sha256": "e5fe13d14b38dc4d6b00854273153e20df1dbfed380e5e0590f2f9fdd8d9b3e6"
+            },
+            {
+              "line": 187,
+              "line_sha256": "e5fe13d14b38dc4d6b00854273153e20df1dbfed380e5e0590f2f9fdd8d9b3e6"
+            }
+          ]
+        }
+      },
+      {
+        "path": "tztv-media-sec/tztv-media-sec/sdp_gpu/drivers/gpu/arm/midgard/platform/sdp/mali_kbase_platform_sdp.c",
+        "size_bytes": 37593,
+        "sha256": "0e9fbc2d01114da08c740d19cdf142084c5f669e21ba0262767d07d43257a35b",
+        "lexical_markers": {
+          "pontus_gpu_build_branch": [
+            {
+              "line": 49,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 265,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 282,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 314,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 636,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 752,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 793,
+              "line_sha256": "ad9efb02d2f20a1b3e0fa1872f2905b7c7e638f7d522cf046c483351d1165ba5"
+            },
+            {
+              "line": 881,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            },
+            {
+              "line": 975,
+              "line_sha256": "8bd5d22e5b08aedd17597d8d25b35660f9dfe287e017775d57c8ec7377479114"
+            }
+          ],
+          "gpu_clock_reset_interface": [
+            {
+              "line": 44,
+              "line_sha256": "45d12825de240ca89ea5132be31b2d927faa9a39b33022f22481663bc9d723df"
+            },
+            {
+              "line": 45,
+              "line_sha256": "4384e48847d74d88b1fe13f4e92c371234c9c7c3af62249ad001e5166a02c8cf"
+            },
+            {
+              "line": 266,
+              "line_sha256": "f3aea18123d45415e5850feccb55108b78997c43554847bc0290b4baa2da0033"
+            },
+            {
+              "line": 270,
+              "line_sha256": "afb77e4bb0dacd135d4aafe168d9b62cf7602a2c1d8a9442990c8adfc4f42b73"
+            },
+            {
+              "line": 271,
+              "line_sha256": "954d3b75b1c84b305346b80dd52da8f651a280b40b64e9e3342c1d08c4693300"
+            },
+            {
+              "line": 272,
+              "line_sha256": "aff4699a1042e94d3367fb3d7c2968973bf5eaaa34ba2cd578c293581103d943"
+            },
+            {
+              "line": 274,
+              "line_sha256": "fe9c3a6d1e3b7e1cba9ae009c471aba4b6605054c72503b226a617a14f3dbadd"
+            },
+            {
+              "line": 276,
+              "line_sha256": "afb77e4bb0dacd135d4aafe168d9b62cf7602a2c1d8a9442990c8adfc4f42b73"
+            },
+            {
+              "line": 277,
+              "line_sha256": "954d3b75b1c84b305346b80dd52da8f651a280b40b64e9e3342c1d08c4693300"
+            },
+            {
+              "line": 278,
+              "line_sha256": "aff4699a1042e94d3367fb3d7c2968973bf5eaaa34ba2cd578c293581103d943"
+            },
+            {
+              "line": 283,
+              "line_sha256": "f3aea18123d45415e5850feccb55108b78997c43554847bc0290b4baa2da0033"
+            },
+            {
+              "line": 287,
+              "line_sha256": "afb77e4bb0dacd135d4aafe168d9b62cf7602a2c1d8a9442990c8adfc4f42b73"
+            },
+            {
+              "line": 288,
+              "line_sha256": "76e4b75f49df83ce08d53f5e2fac804e3b68be70f7f031cc3f20878ed2516cd5"
+            },
+            {
+              "line": 289,
+              "line_sha256": "538fbf0c4f5309b992389fc2ba048c24d3890c5b8fda015c692719f8c79478d9"
+            },
+            {
+              "line": 291,
+              "line_sha256": "b9b0dfa159da3a6e8b79752b73f159af191d2e1dc191a49c493f5b02d0253153"
+            },
+            {
+              "line": 293,
+              "line_sha256": "afb77e4bb0dacd135d4aafe168d9b62cf7602a2c1d8a9442990c8adfc4f42b73"
+            },
+            {
+              "line": 294,
+              "line_sha256": "76e4b75f49df83ce08d53f5e2fac804e3b68be70f7f031cc3f20878ed2516cd5"
+            },
+            {
+              "line": 295,
+              "line_sha256": "538fbf0c4f5309b992389fc2ba048c24d3890c5b8fda015c692719f8c79478d9"
+            },
+            {
+              "line": 300,
+              "line_sha256": "afb77e4bb0dacd135d4aafe168d9b62cf7602a2c1d8a9442990c8adfc4f42b73"
+            },
+            {
+              "line": 301,
+              "line_sha256": "aa722979a6be939683c0b8d7540c248c2c0ea475fec1bac0ca913a1914526ff6"
+            },
+            {
+              "line": 302,
+              "line_sha256": "538fbf0c4f5309b992389fc2ba048c24d3890c5b8fda015c692719f8c79478d9"
+            },
+            {
+              "line": 303,
+              "line_sha256": "aff4699a1042e94d3367fb3d7c2968973bf5eaaa34ba2cd578c293581103d943"
+            },
+            {
+              "line": 319,
+              "line_sha256": "76d83df4cfe9faaa05cdd5e9f3c3ee96cf826931bdbdf9dbbf7e2a2bff49fe53"
+            },
+            {
+              "line": 324,
+              "line_sha256": "76d83df4cfe9faaa05cdd5e9f3c3ee96cf826931bdbdf9dbbf7e2a2bff49fe53"
+            },
+            {
+              "line": 329,
+              "line_sha256": "76d83df4cfe9faaa05cdd5e9f3c3ee96cf826931bdbdf9dbbf7e2a2bff49fe53"
+            },
+            {
+              "line": 334,
+              "line_sha256": "76d83df4cfe9faaa05cdd5e9f3c3ee96cf826931bdbdf9dbbf7e2a2bff49fe53"
+            },
+            {
+              "line": 353,
+              "line_sha256": "c89a5fa3b8fdd90c1a6d5d89195f3c339060124ee529126f247c2e207b6e6b1d"
+            },
+            {
+              "line": 358,
+              "line_sha256": "9c2cf5116a87b80a3e5ff5ddb2dbe0fab16ec54757c95cb2a06c5b3242d254eb"
+            },
+            {
+              "line": 382,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 387,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 392,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 398,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 403,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 408,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 414,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 419,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 424,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 430,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 435,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 440,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 446,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 451,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 456,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 462,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 467,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 472,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 478,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 483,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 488,
+              "line_sha256": "7cb4d7755e7b24a1cab12a44efa634d998c0c656976f1cf7e5e1a1b39d46f793"
+            },
+            {
+              "line": 571,
+              "line_sha256": "384da9fe0f54635c3de816868c527f3a7e747963faf81533d61cb19cbc1c147c"
+            },
+            {
+              "line": 572,
+              "line_sha256": "4a64a6d277516d66254748656e2636a0061d3e0f95357d825b012dd6178923a6"
+            },
+            {
+              "line": 576,
+              "line_sha256": "b11a7a26d12e0a1df598b25be93f4c01fc2f3442eebbbda0225da7b9339aa097"
+            },
+            {
+              "line": 580,
+              "line_sha256": "d54c142daafdd3ecdac3d0d1fc464dd3139e64b8a12462e17ca76b92a552c2d1"
+            },
+            {
+              "line": 583,
+              "line_sha256": "7de48da8aeacbb8d53d486555af968f21a04414407b1a36fef96001077368b52"
+            },
+            {
+              "line": 584,
+              "line_sha256": "f25976a3b5277a502e306f2bab23dff0e3d0e79d967e2185814734a58f03c437"
+            },
+            {
+              "line": 585,
+              "line_sha256": "d4a1ee7788d96f31242104c180af03b2a26aace41b048f7d9a78c77026bc11d0"
+            },
+            {
+              "line": 639,
+              "line_sha256": "13250953eddaf9898d01b9255fb3c5f96a88cdcc501e3b61be24d9e71543ba94"
+            },
+            {
+              "line": 643,
+              "line_sha256": "2cf15b9cca87d36225c7da0f0f891da7e53d3f2b0ca77864b4911aa9d211cb7b"
+            },
+            {
+              "line": 647,
+              "line_sha256": "7feb3c8596336e96ada7f3fa1961306f7ce17db07747f8a3c4998f08a3df2139"
+            },
+            {
+              "line": 651,
+              "line_sha256": "9f09fcd52be23f7529517342f70bcf3e21926f58b6886a318bfae3a799c7cb58"
+            },
+            {
+              "line": 655,
+              "line_sha256": "c667a7f11ae22e15e5b68d6f2ee488a97c20506c636f99289f03c9fdef152850"
+            },
+            {
+              "line": 659,
+              "line_sha256": "eb525b574d91ee1a1934b560659172475c50ee2bb9821d557f45adadf08cb5b1"
+            },
+            {
+              "line": 663,
+              "line_sha256": "038ace95a9615b6085e9a3ae5975b7228d77e98ed9d5c8fddfe4b8001b85ef94"
+            },
+            {
+              "line": 665,
+              "line_sha256": "d3031df3c297a161de6aac48fbaf8c3ffdda27e52e0f35e0ca8611bfbe559896"
+            },
+            {
+              "line": 666,
+              "line_sha256": "ebfe8e745e92b3c5c88eb68a0e48e34e4ebef6b09dd0efad35f468eb47c72492"
+            },
+            {
+              "line": 667,
+              "line_sha256": "c6d8f8b573a0840df1a8853e346f837fb1c79208fd247fdfea3d0b11a6fe96b0"
+            },
+            {
+              "line": 668,
+              "line_sha256": "4b2739f39914cd45f34831b97819bb416b005085e2d57fdb2032df85d04c343c"
+            },
+            {
+              "line": 669,
+              "line_sha256": "95648da8fb326593f07e334c417194cbd0893f037125b13fae00608bf06a08bc"
+            },
+            {
+              "line": 672,
+              "line_sha256": "ddfbe0840842d7f179d38ddcd5080a33ae5f96a4b3cd85aa080f287f4b5074ec"
+            },
+            {
+              "line": 673,
+              "line_sha256": "bfe59ff3d59da0e66f20e5d89edeea59599583e940cbeb0e8e8ab371afb6e068"
+            },
+            {
+              "line": 674,
+              "line_sha256": "1f52632d75ca8d6769c153498910d002c66a824e9f6da5b6eebc98bf08aa66be"
+            },
+            {
+              "line": 675,
+              "line_sha256": "0b094b5285b55ab841b322b16fe78ad16c3585bed9974acb176b036f3edccdc4"
+            },
+            {
+              "line": 676,
+              "line_sha256": "565efa71400003683f466bde2fe8e72165c9278caf1acdfacc6b048a8905ed34"
+            },
+            {
+              "line": 677,
+              "line_sha256": "476afac2e41c14b5e4811a81b5df5908084afde9efc72d34b7819c13ae159b8d"
+            },
+            {
+              "line": 755,
+              "line_sha256": "d7c31d4aadc3e716bd2738eea8531f6919abf314f3a92d00d8f4e86f48e4fc2a"
+            },
+            {
+              "line": 758,
+              "line_sha256": "5db04a841e955fb96edb906c2616f66d21cd66e184057ddf2dae5580ad3e8ed8"
+            },
+            {
+              "line": 761,
+              "line_sha256": "f06f95c0d998a87f5ba1350f402a00d03324726e415565571b542b244d627dc9"
+            },
+            {
+              "line": 768,
+              "line_sha256": "8e51f910a86f8cf478859ef7ec96a2b587f5980709ac77912ae17f9baa93f6aa"
+            },
+            {
+              "line": 771,
+              "line_sha256": "9899e5bb5974ccef24b703edd634e27b5c0c5d831f19f3aa55fff5a012c4656c"
+            },
+            {
+              "line": 915,
+              "line_sha256": "5210b9d00d0d9460d0378b1f3dffa7fed24ec9c08d644e097d82cd07ff95ea29"
+            },
+            {
+              "line": 929,
+              "line_sha256": "4603d18eb15ed21d0efa262da02dcff7879849b296ca6107647206a5a8b88477"
+            },
+            {
+              "line": 932,
+              "line_sha256": "248256f27dc9b1c1490bd0879f3de873539abeee5bd849aaa6295f1f245ff9ef"
+            },
+            {
+              "line": 936,
+              "line_sha256": "9d880365d39461ed75aad7009159b9dafb1bab84cd78f26b43fd235771d59bb0"
+            },
+            {
+              "line": 938,
+              "line_sha256": "3b86eb045d8c1736fe8b1953e54bcc2d40b4d2ec2cf66b363e0f7c945f036a2c"
+            },
+            {
+              "line": 939,
+              "line_sha256": "424d4dec4d8d00bd883ad3f11a3ef3b68b663c448f784712306d0f1d8b5538af"
+            },
+            {
+              "line": 940,
+              "line_sha256": "85ea163810717b0a5162be7ae39cc6b5612c9fb35170ad4a03dbcef8efc59085"
+            },
+            {
+              "line": 942,
+              "line_sha256": "85ea163810717b0a5162be7ae39cc6b5612c9fb35170ad4a03dbcef8efc59085"
+            },
+            {
+              "line": 943,
+              "line_sha256": "424d4dec4d8d00bd883ad3f11a3ef3b68b663c448f784712306d0f1d8b5538af"
+            },
+            {
+              "line": 948,
+              "line_sha256": "92eba0b3700b7d02a82b52f11f0d050478c2582a8679d9a644df91a278b0ee3e"
+            },
+            {
+              "line": 962,
+              "line_sha256": "6e94e2bead863535f2b1ca245cc9e777bdc53171a010c8ee2be6b6e645def3c6"
+            },
+            {
+              "line": 963,
+              "line_sha256": "71b8197e681069aca2b9fca4887df4efa3a8850bd5dd11836150ff2da957a6d7"
+            },
+            {
+              "line": 964,
+              "line_sha256": "b08c09186a9547488cf88b8ada8ca4e9b39652f87d79acc0110b2c54348b2f50"
+            },
+            {
+              "line": 965,
+              "line_sha256": "c56ab927ca3173e6183a7b4e8ce6702484ccd7485b09e62b4be69f93f3f54c35"
+            },
+            {
+              "line": 968,
+              "line_sha256": "b7f99dce171a0b725e380ae4814d21b2a4053befae92248cc9d20f15399e427d"
+            },
+            {
+              "line": 969,
+              "line_sha256": "b08c09186a9547488cf88b8ada8ca4e9b39652f87d79acc0110b2c54348b2f50"
+            },
+            {
+              "line": 970,
+              "line_sha256": "6e94e2bead863535f2b1ca245cc9e777bdc53171a010c8ee2be6b6e645def3c6"
+            },
+            {
+              "line": 973,
+              "line_sha256": "b08c09186a9547488cf88b8ada8ca4e9b39652f87d79acc0110b2c54348b2f50"
+            },
+            {
+              "line": 974,
+              "line_sha256": "6e94e2bead863535f2b1ca245cc9e777bdc53171a010c8ee2be6b6e645def3c6"
+            }
+          ]
+        }
+      }
+    ],
+    "selected_crc_checked": true,
+    "files_extracted": false,
+    "code_executed": false,
+    "device_accessed": false,
+    "target_applicability": "family source only; exact board and build unverified",
+    "marker_semantics": "Lexical evidence; control flow and applicability require manual review.",
+    "source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e"
+  },
+  "independent_source_references": [
+    {
+      "repository": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux",
+      "commit": "7d0a66e4bb9081d75c82ec4957c50034cb0ea449",
+      "path": "Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml",
+      "url": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux/+/7d0a66e4bb9081d75c82ec4957c50034cb0ea449/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml?format=TEXT",
+      "bytes": 4674,
+      "sha256": "29cc039197bf174115d4889bc449e6c6070cafee35a0337fed658eb2eeb5182e"
+    },
+    {
+      "repository": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux",
+      "commit": "7d0a66e4bb9081d75c82ec4957c50034cb0ea449",
+      "path": "Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml",
+      "url": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux/+/7d0a66e4bb9081d75c82ec4957c50034cb0ea449/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml?format=TEXT",
+      "bytes": 7739,
+      "sha256": "2f55f4d10e3dc294f9d543f730a298ccbf6d97ecc0404ecc01a576f33bc04a47"
+    },
+    {
+      "repository": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux",
+      "commit": "7d0a66e4bb9081d75c82ec4957c50034cb0ea449",
+      "path": "drivers/gpu/drm/panfrost/panfrost_drv.c",
+      "url": "https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux/+/7d0a66e4bb9081d75c82ec4957c50034cb0ea449/drivers/gpu/drm/panfrost/panfrost_drv.c?format=TEXT",
+      "bytes": 26632,
+      "sha256": "21c145d402027e2505ee011bfc30aa6d40b3e53829d37de8e3be3eba6451c0e3"
+    }
+  ],
+  "panfrost_match_array": {
+    "source_path": "drivers/gpu/drm/panfrost/panfrost_drv.c",
+    "first_line": 930,
+    "last_line": 955,
+    "lines_sha256": "b6ed4612d968c9dbe7d52400b5c84def6d62eab3fe3e3a16529ead5a8be05668",
+    "declared_compatibles": [
+      "amlogic,meson-gxm-mali",
+      "amlogic,meson-g12a-mali",
+      "arm,mali-t604",
+      "arm,mali-t624",
+      "arm,mali-t628",
+      "arm,mali-t720",
+      "arm,mali-t760",
+      "arm,mali-t820",
+      "arm,mali-t830",
+      "arm,mali-t860",
+      "arm,mali-t880",
+      "arm,mali-bifrost",
+      "arm,mali-valhall-jm",
+      "mediatek,mt8183-mali",
+      "mediatek,mt8183b-mali",
+      "mediatek,mt8186-mali",
+      "mediatek,mt8188-mali",
+      "mediatek,mt8192-mali",
+      "mediatek,mt8370-mali",
+      "allwinner,sun50i-h616-mali"
+    ],
+    "family_generic_compatible": "arm,mali-midgard",
+    "literal_match_present": false,
+    "limit": "This array does not match this declared string. It is not a physical GPU incompatibility proof and does not justify renaming the device tree."
+  },
+  "installed_gpu_product_id": null,
+  "candidate_selected": false,
+  "independent_hardware_support_qualified": false,
+  "vendor_code_executed": false,
+  "device_accessed": false
+}
