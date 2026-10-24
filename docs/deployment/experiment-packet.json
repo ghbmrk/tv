@@ -5,8 +5,8 @@
     "installed_build": "T-PTMFAKUC-0090-1301.0",
     "board_id": null,
     "board_revision": null,
-    "one_connect_model": null,
-    "one_connect_assembly": null,
+    "one_connect_model": "SOC1001F",
+    "one_connect_assembly": "BN96-61147A",
     "power_label_code": null,
     "panel_id": null
   },
