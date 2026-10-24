@@ -21,7 +21,10 @@ def main():
     parser.add_argument('--adb', default='adb')
     parser.add_argument('--serial', required=True)
     parser.add_argument('--go-executor', type=Path, help='Built owned-emulator Go interop probe; never a guest command')
+    parser.add_argument('--kernel-clerk', action='store_true', help='Require the current-kernel signed-plan interop probe')
     args = parser.parse_args()
+    if args.kernel_clerk and not args.go_executor:
+        parser.error('--kernel-clerk requires --go-executor')
     command = [args.adb, '-s', args.serial]
     def adb(*parts, input=None, check=True):
         return subprocess.run(command + list(parts), input=input, check=check, capture_output=True, timeout=20)
@@ -115,9 +118,12 @@ def main():
                         env=dict(os.environ, SOVEREIGN_OWNED_EMULATOR='1'), capture_output=True, timeout=20)
                 except subprocess.TimeoutExpired:
                     raise RuntimeError('Owned-emulator Go executor deadline exceeded; reconcile from native evidence') from None
-                if probe.returncode or json.loads(probe.stdout) != {'go_executor': True, 'state_inspection': True, 'validation_preview': True,
+                expected_probe = {'go_executor': True, 'state_inspection': True, 'validation_preview': True,
                         'application_discovery': True, 'stale_preview_refused': True, 'operation_receipt_verified': True,
-                        'reconcile': True, 'exact_retry': True, 'undo': True, 'agentos_qualified': False}:
+                        'reconcile': True, 'exact_retry': True, 'undo': True, 'agentos_qualified': False}
+                if args.kernel_clerk:
+                    expected_probe['kernel_clerk'] = True
+                if probe.returncode or json.loads(probe.stdout) != expected_probe:
                     raise RuntimeError('Owned-emulator Go executor assertions failed; no raw output printed')
                 after = call('state')
                 if after['document'] != before['document'] or after['revision'] != base + expected_delta:
