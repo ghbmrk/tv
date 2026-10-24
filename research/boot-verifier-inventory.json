@@ -459,5 +459,140 @@
       "Direct-call checks do not prove symbol semantics, dynamic reachability, successful writes or recovery.",
       "No controller firmware replacement, ROM trust policy or independent-image acceptance is established."
     ]
+  },
+  "update_core": {
+    "stored_bytes": 2293240,
+    "stored_sha256": "8bd274e3e35d71adbb8cd821a50b1467b636ee3fb626479672c92249ca610077",
+    "decoded_bytes": 4737944,
+    "decoded_sha256": "c538eb0d686dd1d4b336e11262b81ecab2af3b34d1dc3f6ae0ef827eb3d4e731",
+    "compression": {
+      "layout": 6,
+      "chunks": 37,
+      "descriptor_crc_matches": true,
+      "chunk_and_descriptor_hashes_match": true,
+      "zero_alignment_padding_bytes": 1150,
+      "signature_type_id": 1,
+      "signature_verified": false,
+      "encrypted_chunks_accepted": false
+    },
+    "elf": {
+      "class_bits": 32,
+      "endianness": "little",
+      "machine_id": 40,
+      "type_id": 3,
+      "needed_libraries": [
+        "ld-linux.so.3",
+        "libEM_REE.so",
+        "libSWUProductionConfig.so",
+        "libVDCurl.so.0",
+        "libapputil.so.0",
+        "libavoc.so",
+        "libboost_chrono.so.1.83.0",
+        "libboost_filesystem.so.1.83.0",
+        "libboost_program_options.so.1.83.0",
+        "libboost_serialization.so.1.83.0",
+        "libboost_thread.so.1.83.0",
+        "libc.so.6",
+        "libcapi-network-connection.so.1",
+        "libcapi-system-info.so.0",
+        "libcapi-system-tvtimer.so",
+        "libcapi-system-usbdevice.so",
+        "libcrypto.so.3",
+        "libdbus-1.so.3",
+        "libdeviced.so.1",
+        "libdl.so.2",
+        "libdlog.so.0",
+        "libfactory-interface.so",
+        "libgcc_s.so.1",
+        "libgio-2.0.so.0",
+        "libglib-2.0.so.0",
+        "libgobject-2.0.so.0",
+        "liblzma.so.5",
+        "libm.so.6",
+        "libpower-control.so.0",
+        "libproc-stat.so.5",
+        "libpthread.so.0",
+        "libsecure-clock.so.0",
+        "libsecurestorage-client.so.1",
+        "libsmart-deadlock.so",
+        "libstdc++.so.6",
+        "libstreaming-accelerator.so.2",
+        "libteec.so",
+        "libtvs-api.so",
+        "libtvs-parser.so",
+        "libtzplatform-config-2.0.so.2",
+        "libvconf.so.0",
+        "libvd-capi-network.so.0"
+      ]
+    },
+    "executed": false,
+    "device_accessed": false,
+    "analysis_image_base": 65536,
+    "call_sites": [
+      {
+        "operation": "userspace-signature-verification",
+        "address": "0x308b8e",
+        "file_offset": "0x2f8b8e",
+        "target": "0x5f0b8",
+        "import_name": "EVP_PKEY_verify",
+        "instruction_sha256": "3e4568d7229302261389fb5915a91f74d2de05bde1a652905e4fe9807742300a",
+        "evidence_id": "ev_7952be08d65804491efda382ebf5f86eda72a27490eb1a5934b6f1d210aeafe2",
+        "private_report_sha256": "e0a15fbc3c60d6f4a4927fe24515398b91cdb1842cec78f130b8dfa75c69ac22"
+      }
+    ],
+    "observed": "2026-10-23",
+    "analysis_coordinates_are_not_device_addresses": true,
+    "derivation": {
+      "catalog_path": "/usr/bin/SWUCoreTV",
+      "unique_rooted_catalog_path_checked": true,
+      "regular_file_and_single_extent_checked": true,
+      "extent_within_declared_vdfs_volume_checked": true,
+      "catalog_source": "runtime-dependency-inventory.json",
+      "source_archive": "decrypted-update-inventory.json"
+    },
+    "observations": [
+      {
+        "classification": "decompiler-inference",
+        "claim": "Function at analysis coordinate 0x308b54 calls EVP_PKEY_verify and tests its result against one. Error propagation, runtime reachability and binding to specific update items are not established.",
+        "evidence_id": "ev_c2196b1c4aaaedf98c4a4d473828335509f930b8b3a2633b967e283ae045b919",
+        "private_report_sha256": "f19ec1ef53173aad89851f6b5e69985e229b3eb60548af40955043153f6f5001"
+      },
+      {
+        "classification": "decompiler-inference",
+        "claim": "Nearby context setup uses EVP_PKEY_CTX_new, verify/sign initialization, RSA padding and signature-digest configuration imports. Presence does not establish active parameters, key origin or possession of signing authority.",
+        "evidence_id": "ev_2b4837c4678bb5e1fd6d2c60eaed4cd2d5bc16c81d0426d082d3a2bd1ba9a0cc",
+        "private_report_sha256": "a72d8287f8ef0c28200c3484a26491e7b6722e788b31d43e977506a841a1f1d3"
+      }
+    ],
+    "api_semantics_reference": "https://docs.openssl.org/3.0/man3/EVP_PKEY_verify/",
+    "provider_closed": true,
+    "cleanup_pending": false,
+    "input_hash_unchanged": true,
+    "cross_checks": {
+      "schema_version": 1,
+      "input_sha256": "c538eb0d686dd1d4b336e11262b81ecab2af3b34d1dc3f6ae0ef827eb3d4e731",
+      "analysis_rebase_bytes": 65536,
+      "checked_calls": [
+        {
+          "address": "0x308b8e",
+          "file_offset": "0x2f8b8e",
+          "target": "0x5f0b8"
+        }
+      ],
+      "executed": false,
+      "device_accessed": false,
+      "scope": "ELF mapping, four-byte digest and direct branch destination only; no symbol binding, reachability or boot proof."
+    },
+    "key_material_inspected_or_exported": false,
+    "signatures_authenticated": false,
+    "rom_policy_established": false,
+    "independent_boot_or_recovery_qualified": false,
+    "limitations": [
+      "Code-level userspace signature-check evidence only; no update section signature has been authenticated by this investigation.",
+      "A bounded RTTI-layout attempt did not establish a complete class/vtable binding. No specific image role is assigned from a class-name string.",
+      "Incoming procedure references include internal jumps and data pointers; they are not automatically dynamic callers.",
+      "No public-key origin, accepted owner authority, secure-world validation or boot-ROM trust policy is established.",
+      "The shared update has not been matched to an observed executing implementation on the household board."
+    ]
   }
 }
