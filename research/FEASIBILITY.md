@@ -12,7 +12,7 @@ The [October 17 board and media investigation](BOARD_AND_MEDIA_ELIGIBILITY.md) a
 
 ## New source evidence
 
-The [dependency inventory](platform-dependency-inventory.json) identifies 12 selected files across four nested packages by archive/member/file SHA-256, and locates ASCII markers by line number and line hash. It contains no vendor source text. The outer source digest agrees with the [previously acquired archive](PONTUS_SOURCE_FINDINGS.md). Manual review of the selected code supports the observations below; marker matching alone does not establish control flow or active build branches.
+The [dependency inventory](platform-dependency-inventory.json) identifies 16 selected files across four nested packages by archive/member/file SHA-256, and locates ASCII markers by line number and line hash. It contains no vendor source text. The outer source digest agrees with the [previously acquired archive](PONTUS_SOURCE_FINDINGS.md). Manual review of the selected code supports the observations below; marker matching alone does not establish control flow or active build branches.
 
 | Family source location | Established observation | Architectural consequence and limit |
 | --- | --- | --- |
@@ -81,3 +81,7 @@ The subsequent [media source review](MEDIA_SOURCE_FINDINGS.md) identifies embedd
 Retain the existing local experience model and emulator shell as product prototypes. Reserve an AOSP host, a narrow privileged hardware bridge and a separately protected provider-media path as conditional interfaces only. Do not choose an Android/kernel ABI, reuse the released Samsung drivers in the final system, allocate a full board port, or write an installer until the decisive evidence supports those choices.
 
 The next concrete dependency is actual-unit identity and access. Independently, the chip-specific provisioning route needs a qualified answer. Neither can be replaced by further UI work. This verdict must change to no-go if a binding incompatibility is demonstrated, or to a qualified bring-up recommendation when exact boot, provenance, recovery and media routes are established.
+
+## Secure-world follow-up, October 24
+
+The [secure-world investigation](SECURE_WORLD_FINDINGS.md) identifies a TrustWare family-source interface and an active initialization sequence behind version reporting. TV-specific certification documentation covers a different Tizen environment and a limited library scope; it is not exact-unit boot evidence. Independent secure-world support and recovery remain unqualified. The exterior version label is inaccessible while mounted; leave that identity field unresolved and continue offline investigation without requesting movement or enclosure access.
