@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect bounded embedded XZ streams without exporting or executing their payloads."""
+"""Inspect bounded XZ streams and conservative ARM zImage headers, without execution."""
 import argparse
 import hashlib
 import json
@@ -7,6 +7,7 @@ import lzma
 from pathlib import Path
 import re
 import stat
+import struct
 import zlib
 
 MAX_INPUT = 16 * 1024**2
@@ -14,6 +15,44 @@ MAX_OUTPUT = 32 * 1024**2
 MAX_MEMORY = 64 * 1024**2
 MAX_CANDIDATES = 64
 MAGIC = b'\xfd7zXZ\0'
+
+
+def arm_zimage_headers(data):
+    """Recognize only the conservative little-endian A32, zero-linked header form.
+
+    Format reference: Linux v5.4 arch/arm/boot/compressed/head.S, lines 155-185,
+    and vmlinux.lds.S, lines 111-114 (captured source line numbers).
+    This checks file structure, never load addresses, execution or authenticity.
+    """
+    rows = []
+    magic = struct.pack('<I', 0x016f2818)
+    for hit in re.finditer(re.escape(magic), data):
+        if len(rows) >= MAX_CANDIDATES:
+            raise ValueError('zImage candidate budget exceeded')
+        offset = hit.start() - 36
+        row = {'offset': offset, 'validated': False}
+        rows.append(row)
+        if offset < 0 or offset % 4 or offset + 60 > len(data):
+            row['rejection'] = 'header_bounds_or_alignment'
+            continue
+        words = struct.unpack_from('<15I', data, offset)
+        if (words[:8] != (0xe1a00000,) * 8 or words[8] != 0xea000005
+                or words[12:14] != (0x04030201, 0x45454545)):
+            row['rejection'] = 'unsupported_entry_or_header_shape'
+            continue
+        start, end, table = words[10], words[11], words[14]
+        # Nonzero-linked, Thumb2, BE and EFI forms need their own reviewed parser.
+        if start != 0:
+            row['rejection'] = 'unsupported_nonzero_link_base'
+            continue
+        if end < 60 or end > len(data) - offset or table < 60 or table % 4 or table >= end:
+            row['rejection'] = 'image_or_table_range'
+            continue
+        row.update(validated=True, image_bytes=end,
+                   image_sha256=hashlib.sha256(data[offset:offset + end]).hexdigest(),
+                   header_form='Linux ARM A32 little-endian zero-linked candidate',
+                   contained_xz_candidate_indices=[])
+    return rows
 
 
 def inspect(data):
@@ -62,11 +101,19 @@ def inspect(data):
         row.update(validated=True, stored_stream_bytes=len(source)-len(decoder.unused_data),
                    decoded_bytes=len(plain), decoded_sha256=hashlib.sha256(plain).hexdigest(),
                    integrity_check_id=decoder.check, linux_version_tokens=sorted(versions))
+    images = arm_zimage_headers(data)
+    for image in images:
+        if image['validated']:
+            image['contained_xz_candidate_indices'] = [
+                i for i, stream in enumerate(records) if stream['validated']
+                and image['offset'] + 60 <= stream['offset']
+                and stream['stored_stream_bytes'] <= image['offset'] + image['image_bytes'] - stream['offset']]
     return {'schema_version': 1, 'input_bytes': len(data),
             'input_sha256': hashlib.sha256(data).hexdigest(), 'candidates': records,
+            'arm_zimage_candidates': images,
             'payload_exported': False, 'executed': False, 'device_accessed': False,
             'signature_authenticated': False, 'boot_or_recovery_qualified': False,
-            'scope': 'XZ stream integrity and bounded version tokens only; no executable identity, '
+            'scope': 'XZ integrity/version tokens and conservative ARM zImage header/range checks only; no executable identity, '
                      'boot-stage role, installed-unit correspondence or trust-policy proof.'}
 
 

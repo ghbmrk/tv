@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-24",
+  "scope": "Public TV security documentation and private family-source analysis; no installed secure-OS identity or boot/recovery qualification",
+  "sources": [
+    {
+      "url": "https://www.commoncriteriaportal.org/nfs/ccpfiles/files/epfiles/Smart%20TV%20and%20Monitor%20Security%20Solution%20V9.0%20for%20Samsung%20Knox%20Security%20Target%20Lite_V1.1.pdf",
+      "bytes": 533514,
+      "sha256": "e3349597dd3608816112ffd51209561917dee931974769ede1c3f23dd462ada0",
+      "kind": "primary_security_target",
+      "reviewed_pdf_pages": [
+        9,
+        10
+      ],
+      "rendered_and_visually_reviewed": true,
+      "applicability": "Tizen 10.0 environment; not an LS03F installed-unit observation"
+    },
+    {
+      "url": "https://www.commoncriteriaportal.org/nfs/ccpfiles/files/epfiles/KECS-CR-26-10%20Smart%20TV%20and%20Monitor%20Security%20Solution%20V9.0%20for%20Samsung%20Knox%20%28eng%29.pdf",
+      "bytes": 322593,
+      "sha256": "77631a0e416bee3d094e7370063a583b76281176845f8b3824ac9ec47e7d3eb1",
+      "kind": "primary_scheme_certification_report",
+      "reviewed_pdf_pages": [
+        11
+      ],
+      "rendered_and_visually_reviewed": true,
+      "applicability": "Tizen 10.0 environment; not an LS03F installed-unit observation"
+    }
+  ],
+  "family_source_inventory": "research/platform-dependency-inventory.json",
+  "target_secure_os": null,
+  "target_secure_os_version": null,
+  "independent_replacement": null,
+  "device_accessed": false,
+  "vendor_code_executed": false
+}

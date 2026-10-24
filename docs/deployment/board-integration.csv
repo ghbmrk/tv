@@ -1,6 +1,6 @@
 component,exact_hardware,independent_implementation,provenance,abi,test_evidence,status
 boot_chain,unverified; shared update names PontusM,No independent boot implementation qualified,research/DECRYPTED_UPDATE_FINDINGS.md,Update kernel declares ARM; executing ABI unverified,Kernel CRC and source/update version agreement only,boot acceptance and recovery unverified
-secure_world,,,,,,unverified
+secure_world,Installed secure OS and chip unverified; family-source TrustWare lead,No independent secure OS or monitor qualified,research/secure-world-evidence.json,Family driver validates monitor identity and kernel-info ABI; actual values unverified,Static source and TV-specific evaluation-scope review only; no module load or monitor call,normal-world driver is not replacement secure-world implementation
 storage_and_recovery,unverified live storage; checked update-image GPT only,No independent restore implementation qualified,research/DECRYPTED_UPDATE_FINDINGS.md,not established,Primary/backup file GPT and VDFS headers checked; not a restore test,live layout and failure recovery unverified
 graphics_display_composer,,,,,,unverified
 panel_one_connect_controller,Unverified installed controller; shared update and family-source candidates only,No independent controller implementation qualified,research/controller-recovery-inventory.json,Source message-device handler and ELF32 ARM wrapper; request ABI unverified,Independent direct-call check and source startup trace; no controller operation,implicit rollback/liveness startup effects and recovery unresolved
