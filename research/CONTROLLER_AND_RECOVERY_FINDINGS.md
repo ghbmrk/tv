@@ -52,3 +52,7 @@ These results narrow what a replacement must implement and what a trial could af
 ## Wrapper follow-up
 
 The [October 24 wrapper trace](SERET_WRAPPER_FINDINGS.md) now independently checks a direct A32 call into the nested image and decodes twelve additional family trees from a post-image DEFLATE envelope. It also records a raw-analysis control that exposed spurious exception-vector names at analysis zero. This narrows file structure and static control flow without qualifying installed identity, boot authority or recovery.
+
+## Early-userspace follow-up
+
+The [nested archive investigation](RECOVERY_INITRAMFS_FINDINGS.md) validates a complete 272-member newc archive inside the decoded Linux-bearing payload, with an independent host reader comparison. Selected startup files name a concrete ARM updater. Its side effects require static analysis; it is not a qualified rescue shell or independent recovery implementation.
