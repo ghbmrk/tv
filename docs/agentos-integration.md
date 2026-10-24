@@ -2,6 +2,18 @@
 
 Full interaction through agentOS is a product requirement, alongside native playback quality and local ownership. Build the TV as an observable, controllable local device. Every owner-built function has a typed operation and readable state; each required provider has an independently qualified navigation and playback workflow. This is the implementation design, not a claim that either integration or the Android port already runs.
 
+## Current upstream contract, October 24
+
+The [pinned primary-source review](../research/agentos-current-contract.json) checks agentOS `9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137`. It supersedes the current-applicability claims of the older journal/lane discussion below; retain that discussion as the existing adapter's historical basis.
+
+The new execution boundary is `kernel.Clerk.Do/Probe`, using a signed `kernel.Request` and `kernel.View`. `clerk.Check` independently checks anchors, the signed plan, live grants, dispatch, hold and clerk-computed facts. The TV module still implements the older `journal.Executor`, pinned to `603cad7ce180`; it is not a current kernel clerk. Passing its component tests cannot qualify production integration or justify relabeling its calls as kernel operations.
+
+The new `broker/kernel/key` list **does include** `actuate`, `actuate-physical` and `present`. Their absence from the legacy `broker/verb` list is no longer evidence that current agentOS lacks them. However, `key/verbs.go` classes `Present` as `Reversible`, while the same revision's SPEC DEV-6 says presentation is irreversible and defines audience/disclosure rules. This specific discrepancy is unresolved. Do not resolve it by weakening the TV's authority boundary or substituting an unrelated verb.
+
+Current SPEC DEV-4 treats device configuration as administration, distinct from ordinary actuation; DEV-6/DEV-9 separately govern presentation, audience and vendor visibility. A future TV clerk needs a reviewed declaration for the actual combined persistence/presentation effects, device-local facts and disclosure routing. Receipt integrity alone establishes none of those. No production request shape or verb mapping is claimed by this review.
+
+The current lane record reintroduces a limited Codex lane for non-gate documentation/tests; it does not authorize broker writes. No agentOS repository change, issue or message was made. TV-owned work can preserve its transport/domain implementation, but production migration must use the frozen kernel/clerk boundary with its authority semantics resolved. No TV operation or automatic module upgrade follows from this contract review.
+
 ## Control architecture
 
 ```mermaid

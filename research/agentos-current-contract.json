@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-24",
+  "repository": "https://github.com/ghbmrk/agentOS",
+  "commit": "9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137",
+  "review_scope": "Primary-source contract review; no production broker wiring or policy changes",
+  "references": [
+    {
+      "path": "SPEC.md",
+      "url": "https://github.com/ghbmrk/agentOS/blob/9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137/SPEC.md",
+      "bytes": 339299,
+      "sha256": "98d05728bb5e26182c7ec01d7fed48397b4319dcb0c3814de67b3881c07ed4e9"
+    },
+    {
+      "path": "docs/LANES.md",
+      "url": "https://github.com/ghbmrk/agentOS/blob/9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137/docs/LANES.md",
+      "bytes": 11358,
+      "sha256": "e2594c29934af24cf4c1f1cae5de8ea09a4f01871d53736a38ea191e26f4c118"
+    },
+    {
+      "path": "broker/kernel/kernel.go",
+      "url": "https://github.com/ghbmrk/agentOS/blob/9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137/broker/kernel/kernel.go",
+      "bytes": 31757,
+      "sha256": "3d04fd850fa50f0e7a2176bcb35e9edb42b0428e5f610641511a3f3b535d57c8"
+    },
+    {
+      "path": "broker/kernel/key/verbs.go",
+      "url": "https://github.com/ghbmrk/agentOS/blob/9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137/broker/kernel/key/verbs.go",
+      "bytes": 3745,
+      "sha256": "5d1c8d0d6b334d63751919993b77f9b649275a207fb31984a13deb355e4006a1"
+    },
+    {
+      "path": "broker/clerk/clerk.go",
+      "url": "https://github.com/ghbmrk/agentOS/blob/9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137/broker/clerk/clerk.go",
+      "bytes": 7707,
+      "sha256": "d116ef57a7a461d7f50acd8a82c5f98a5a0c10c83aaaa76b8d6619cc8ce53ae5"
+    }
+  ],
+  "legacy_tv_executor_pin": "603cad7ce180c7f4f45447b64e652fa4a15d5563",
+  "current_clerk_methods": [
+    "Do(kernel.Request, kernel.View) kernel.Result",
+    "Probe(kernel.Request, kernel.View) kernel.Result"
+  ],
+  "current_device_verbs_present": [
+    "actuate",
+    "actuate-physical",
+    "present"
+  ],
+  "presentation_class_discrepancy": {
+    "spec_reference": "DEV-6",
+    "spec_class": "irreversible",
+    "kernel_key_code_class": "Reversible",
+    "resolved": false
+  },
+  "legacy_adapter_is_current_clerk": false,
+  "production_qualification": false,
+  "upstream_repository_modified": false,
+  "third_parties_contacted": false
+}
