@@ -19,3 +19,7 @@ python3 tools/inspect_media_source.py reference/source/25_DTV_PontusM.zip --outp
 ```
 
 The tool limits the outer archive and selected member sizes, rejects duplicate/missing/nonregular selected entries, hashes the complete source archive and completes selected ZIP-member reads for CRC verification. It does not decompress/CRC-check every unrelated member or authenticate the publisher. Line hashes exclude LF and preserve CR/legacy bytes. The manual control-flow finding must be re-reviewed if the file hash changes.
+
+## GPU follow-up, October 24
+
+The [GPU binding investigation](GPU_BINDING_FINDINGS.md) adds CRC-checked GPU source locations and opt-in address-free interface declarations from the recovered wrapper trees. The generic Mali name does not identify a product or match the inspected upstream Panfrost table. This is a driver-selection boundary, not proof of physical incompatibility, and does not qualify the separate panel/decoder/protected-media paths.

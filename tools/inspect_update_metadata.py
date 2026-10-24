@@ -135,7 +135,15 @@ def cstring(data, offset, limit, budget):
     return data[offset:stop].decode('ascii'), stop + 1
 
 
-def fdt(data, offset):
+INTERFACE_COMPATIBLES = frozenset((
+    'arm,mali-midgard', 'samsung,sdp-card-3-codec', 'samsung,sdp-codec',
+    'samsung,sdp-frc', 'samsung,sdp-frc-8k', 'samsung,sdp-hdmi',
+    'samsung,sdp-mc-cecif', 'samsung,sdp-mc-cecif-test', 'samsung,sdp-sif-codec',
+    'samsung,sdp-tcon', 'samsung,sdp_pqe_frc', 'samsung,tztv-frc-tcon',
+    'samsung,tztv-hdmi-sw'))
+
+
+def fdt(data, offset, *, interfaces=False):
     magic, total, st, ss, reserve, version, last, _, strsize, stsize = unpack(data, offset, '>10I')
     require(magic == 0xd00dfeed and 40 <= total <= 2*1024**2 and offset + total <= len(data)
             and 16 <= last <= version <= 17)
@@ -156,6 +164,7 @@ def fdt(data, offset):
             and (reserve_end <= ss or reserve >= ss + strsize))
     cursor, end, stack = st, st + stsize, []
     selected, seen, node_paths = {}, set(), set()
+    compatible_hits = set()
     nodes = properties = 0
     ended = False
     while cursor < end:
@@ -181,6 +190,10 @@ def fdt(data, offset):
             require(key not in seen); seen.add(key)
             value = blob[cursor:cursor + length]; cursor = (cursor + length + 3) & ~3
             properties += 1; require(properties <= 16384)
+            if interfaces and name == 'compatible':
+                require(0 < len(value) <= 1024 and value.endswith(b'\0'))
+                values = value.rstrip(b'\0').decode('ascii').split('\0')
+                compatible_hits.update(v for v in values if v in INTERFACE_COMPATIBLES)
             if (len(stack) == 1 and name in ('model', 'compatible')) or (path.startswith('/cpus/') and name == 'compatible'):
                 require(0 < len(value) <= 1024 and value.endswith(b'\0'))
                 text = value.rstrip(b'\0').decode('ascii')
@@ -194,14 +207,17 @@ def fdt(data, offset):
             raise ValueError('unsupported FDT token')
     require(ended and cursor <= end and all(v == 0 for v in blob[cursor:end]))
     cpu = {tuple(v) for k, v in selected.items() if k.startswith('/cpus/')}
-    return {'file_offset': offset, 'bytes': total, 'sha256': hashlib.sha256(blob).hexdigest(),
+    result = {'file_offset': offset, 'bytes': total, 'sha256': hashlib.sha256(blob).hexdigest(),
             'version': version, 'nodes': nodes, 'properties': properties,
             'root_model': selected.get('/model', []), 'root_compatible': selected.get('/compatible', []),
             'cpu_compatible_sets': [list(v) for v in sorted(cpu)],
             'cpu_compatible_node_count': sum(k.startswith('/cpus/') for k in selected)}
+    if interfaces:
+        result['selected_interface_compatibles'] = sorted(compatible_hits)
+    return result
 
 
-def dtb_bundle(data):
+def dtb_bundle(data, *, interfaces=False):
     require(0 < len(data) <= 2*1024**2)
     offset, records = 0, []
     while True:
@@ -209,7 +225,7 @@ def dtb_bundle(data):
         if offset < 0:
             break
         require(len(records) < 64)
-        record = fdt(data, offset)
+        record = fdt(data, offset, interfaces=interfaces)
         if records:
             require(offset >= records[-1]['file_offset'] + records[-1]['bytes'])
         records.append(record); offset += 4
