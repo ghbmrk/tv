@@ -43,12 +43,12 @@ func (v *testTV) Request(_ context.Context, op string, fields map[string]any, _ 
 	v.mu.Lock()
 	defer v.mu.Unlock()
 	if op == "capabilities" {
-		return native.Response{"ok", encode(map[string]bool{"receipt_operation_sha256": true})}, nil
+		return native.Response{Status: "ok", Result: encode(map[string]bool{"receipt_operation_sha256": true})}, nil
 	}
 	id, _ := fields["request_id"].(string)
 	if op == "receipt" {
 		if r, ok := v.receipts[id]; ok && !v.hide {
-			return native.Response{"ok", encode(r)}, nil
+			return native.Response{Status: "ok", Result: encode(r)}, nil
 		}
 		return native.Response{Status: "not_found"}, nil
 	}
@@ -75,7 +75,7 @@ func (v *testTV) Request(_ context.Context, op string, fields map[string]any, _ 
 	if v.lost {
 		return native.Response{}, errors.New(privateDocument)
 	}
-	return native.Response{"ok", encode(map[string]any{"receipt": r, "state": map[string]string{"document": document}})}, nil
+	return native.Response{Status: "ok", Result: encode(map[string]any{"receipt": r, "state": map[string]string{"document": document}})}, nil
 }
 
 type harness struct {
