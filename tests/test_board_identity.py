@@ -7,7 +7,7 @@ import sys
 import time
 import unittest
 from unittest.mock import patch
-from tools.collect_board_identity import collect, public_cpu, write_report, PinnedSdb, source_family_match
+from tools.collect_board_identity import collect, collect_files, public_cpu, write_report, PinnedSdb, source_family_match, MAX_OUTPUT, resource
 
 
 class FakeSdb:
@@ -17,6 +17,8 @@ class FakeSdb:
 
     def run(self, arguments, timeout):
         self.calls.append(tuple(arguments))
+        if arguments[-1] == 'wait-for-device':
+            return subprocess.CompletedProcess(arguments, 1, b'', b'')
         if arguments[0] == 'connect':
             return subprocess.CompletedProcess(arguments, 0, b'connected to synthetic endpoint', b'')
         if arguments[0] == 'devices':
@@ -29,9 +31,171 @@ class FakeSdb:
         return subprocess.CompletedProcess(arguments, 0, output, b'')
 
 
+class FakeFileSdb(FakeSdb):
+    def __init__(self, capability=b'filesync_support:pushpull\n', output=None):
+        super().__init__()
+        self.capability = capability
+        self.output = output
+
+    def run(self, arguments, timeout):
+        if arguments[-1] == 'capability':
+            self.calls.append(tuple(arguments))
+            return subprocess.CompletedProcess(arguments, 0, self.capability, b'')
+        return super().run(arguments, timeout)
+
+    def capabilities(self, serial, timeout):
+        return self.run(['-s', serial, 'capability'], timeout)
+
+    def pull(self, serial, remote, timeout):
+        self.calls.append(('-s', serial, 'pull', remote))
+        data = { '/proc/cpuinfo': b'processor : 0\nCPU implementer : 0x41\nCPU architecture : 8\nCPU part : 0xd07\nSerial : PRIVATE-SERIAL-CANARY\n',
+                 '/proc/device-tree/compatible': b'vendor,PRIVATE-COMPATIBLE\0samsung,sdp-pontusm\0'}[remote]
+        return subprocess.CompletedProcess([], 0, data if self.output is None else self.output, b'')
+
+
 class BoardIdentityTests(unittest.TestCase):
     def identity(self, _host):
         return {'model_match': 'full_sku', 'reported_model_code': 'QN50LS03FAFXZA'}
+
+    def test_file_transfer_uses_only_two_fixed_reads_and_preserves_private_identifiers(self):
+        runner = FakeFileSdb()
+        report = collect_files('192.168.1.2', runner, identifier=self.identity)
+        public = report['public']
+        self.assertEqual(public['status'], 'file_reads_completed')
+        self.assertEqual(public['validated_reads'], 2)
+        self.assertEqual(public['cpu']['parts'], ['0xd07'])
+        self.assertTrue(public['source_family_compatible_match'])
+        self.assertFalse(public['shell_commands_requested'])
+        self.assertFalse(public['settings_or_software_changed'])
+        self.assertNotIn('PRIVATE', json.dumps(public))
+        self.assertNotIn('192.168.1.2', json.dumps(public))
+        self.assertIn('PRIVATE-SERIAL', json.dumps(report['private']))
+        self.assertEqual([c[3:] for c in runner.calls if len(c)>2 and c[2]=='pull'],
+                         [('/proc/cpuinfo',), ('/proc/device-tree/compatible',)])
+        self.assertFalse(any('shell' in c or 'root' in c or 'push' in c for c in runner.calls))
+
+    def test_file_transfer_requires_fresh_pull_capability_and_exact_target(self):
+        for capability in (b'', b'filesync_support:push\n', b'filesync_support:pushpull\nfilesync_support:pull\n'):
+            runner = FakeFileSdb(capability)
+            result = collect_files('192.168.1.2', runner, identifier=self.identity)['public']
+            self.assertEqual(result['status'], 'file_transfer_unavailable')
+            self.assertFalse(result['file_reads_attempted'])
+        runner = FakeFileSdb()
+        result = collect_files('192.168.1.2', runner, identifier=lambda _: {'model_match':'family_only'})
+        self.assertEqual(runner.calls, [])
+        self.assertFalse(result['public']['file_reads_attempted'])
+        for collector in (collect, collect_files):
+            runner = FakeFileSdb()
+            runner.run = lambda args, timeout: subprocess.CompletedProcess(args, 1, b'', b'')
+            self.assertEqual(collector('192.168.1.2', runner, identifier=self.identity)['public']['status'], 'device_unconfirmed')
+
+    def test_one_bounded_same_endpoint_wait_and_stderr_capability(self):
+        runner = FakeFileSdb()
+        original = runner.run
+        ready = False
+        def run(args, timeout):
+            nonlocal ready
+            if args[-1] == 'wait-for-device':
+                self.assertEqual(args, ['-s','192.168.1.2:26101','wait-for-device'])
+                self.assertEqual(timeout, 5)
+                runner.calls.append(tuple(args)); ready = True
+                return subprocess.CompletedProcess(args, 0, b'', b'')
+            if args == ['devices'] and not ready:
+                runner.calls.append(tuple(args))
+                return subprocess.CompletedProcess(args, 0, b'List of devices attached\n', b'')
+            return original(args, timeout)
+        runner.run = run
+        runner.capabilities = lambda serial, timeout: subprocess.CompletedProcess([], 0, b'',
+                                         b'filesync_support:pushpull\nPRIVATE-DIAGNOSTIC-CANARY\n')
+        report = collect_files('192.168.1.2', runner, identifier=self.identity)
+        self.assertEqual(report['public']['status'], 'file_reads_completed')
+        self.assertEqual(report['public']['capability_query_status'], 'parsed')
+        self.assertEqual(sum(c[0]=='connect' for c in runner.calls), 1)
+        self.assertEqual(sum(c[-1]=='wait-for-device' for c in runner.calls), 1)
+        self.assertEqual(sum(c[0]=='devices' for c in runner.calls), 2)
+        self.assertNotIn('PRIVATE-DIAGNOSTIC', json.dumps(report['public']))
+        self.assertIn('PRIVATE-DIAGNOSTIC', json.dumps(report['private']))
+
+    def test_empty_failed_and_unrecognized_files_do_not_establish_identity(self):
+        for output, status in ((b'', 'file_reads_empty'), (b' \n', 'file_reads_empty'),
+                               (b'PRIVATE-UNRECOGNIZED', 'file_reads_partial')):
+            result = collect_files('192.168.1.2', FakeFileSdb(output=output), identifier=self.identity)['public']
+            self.assertEqual(result['status'], status)
+            self.assertEqual(result['validated_reads'], 0)
+            self.assertNotIn('PRIVATE', json.dumps(result))
+        runner = FakeFileSdb()
+        runner.pull = lambda *args, **kwargs: subprocess.CompletedProcess([], 1, b'processor : 0\nCPU part : 0xd07\n', b'')
+        result = collect_files('192.168.1.2', runner, identifier=self.identity)['public']
+        self.assertIsNone(result['cpu'])
+        self.assertEqual(result['successful_reads'], 0)
+
+    def test_partial_file_evidence_survives_a_later_client_failure_without_error_leak(self):
+        runner = FakeFileSdb()
+        original = runner.pull
+        def pull(serial, remote, timeout):
+            if remote.endswith('compatible'):
+                raise TimeoutError('PRIVATE-ERROR-CANARY')
+            return original(serial, remote, timeout)
+        runner.pull = pull
+        result = collect_files('192.168.1.2', runner, identifier=self.identity)
+        public = result['public']
+        self.assertTrue(public['collection_interrupted'])
+        self.assertEqual(public['status'], 'file_reads_partial')
+        self.assertEqual(public['validated_reads'], 1)
+        self.assertEqual(public['cpu']['parts'], ['0xd07'])
+        self.assertNotIn('PRIVATE-ERROR-CANARY', json.dumps(result))
+        runner = FakeFileSdb(output=b'x'*(MAX_OUTPUT+1))
+        public = collect_files('192.168.1.2', runner, identifier=self.identity)['public']
+        self.assertEqual(public['status'], 'collection_unavailable')
+        self.assertEqual(len(public['file_read_results']), 1)
+
+    @unittest.skipIf(resource is None or (hasattr(os, 'geteuid') and os.geteuid() == 0), 'normal POSIX host account required')
+    def test_pull_has_no_remote_path_or_endpoint_escape_and_private_regular_destination(self):
+        runner = object.__new__(PinnedSdb)
+        runner.path = Path(sys.executable)
+        seen = []
+        def run(args, timeout, *, limit_files, capture_errors):
+            self.assertTrue(limit_files)
+            self.assertTrue(capture_errors)
+            path = Path(args[-1])
+            self.assertTrue(path.is_file())
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+            self.assertEqual(path.parent.stat().st_mode & 0o777, 0o500)
+            with self.assertRaises(PermissionError):
+                (path.parent / 'unexpected-directory-output').write_bytes(b'not allowed')
+            seen.append(args)
+            path.write_bytes(b'payload')
+            return subprocess.CompletedProcess(args, 0, b'unpublished SDK progress', b'')
+        runner._run = run
+        result = runner.pull('192.168.1.2:26101', '/proc/cpuinfo')
+        self.assertEqual(result.stdout, b'payload')
+        self.assertEqual(result.transfer_status, 'bytes_received')
+        self.assertFalse(Path(seen[0][-1]).exists())
+        for endpoint, remote in (('8.8.8.8:26101','/proc/cpuinfo'), ('192.168.1.2:22','/proc/cpuinfo'),
+                                  ('192.168.1.2:26101','/dev/mmcblk0'), ('192.168.1.2:26101','/proc')):
+            with self.assertRaises(ValueError): runner.pull(endpoint, remote)
+        self.assertEqual(len(seen), 1)
+
+    @unittest.skipIf(resource is None, 'POSIX resource limit unavailable')
+    def test_sdk_client_file_output_has_an_os_enforced_size_limit(self):
+        runner = object.__new__(PinnedSdb)
+        runner.path = Path(sys.executable)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'limited-output'
+            result = runner._run(['-c', 'import sys; open(sys.argv[1],"wb").write(b"x"*1000000)', str(path)],
+                                 timeout=2, limit_files=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertLessEqual(path.stat().st_size, MAX_OUTPUT)
+
+    def test_pull_diagnostics_have_a_shared_bounded_budget(self):
+        runner = object.__new__(PinnedSdb)
+        runner.path = Path(sys.executable)
+        with self.assertRaises(ValueError):
+            runner._run(['-c', 'import os; os.write(1,b"x"*40000); os.write(2,b"y"*40000)'],
+                        timeout=2, capture_errors=True)
+        result = runner._run(['-c', 'import os; os.write(1,b"out"); os.write(2,b"err")'],
+                             timeout=2, capture_errors=True)
+        self.assertEqual((result.stdout,result.stderr),(b'out',b'err'))
 
     def test_wrong_model_or_unconfirmed_device_never_reaches_a_shell(self):
         runner = FakeSdb()
@@ -41,7 +205,7 @@ class BoardIdentityTests(unittest.TestCase):
             runner = FakeSdb(status)
             report = collect('192.168.1.2', runner, identifier=self.identity)
             self.assertFalse(report['public']['board_commands_executed'])
-            self.assertTrue(all('-s' not in call for call in runner.calls))
+            self.assertTrue(all('shell' not in call and 'pull' not in call for call in runner.calls))
         with self.assertRaises(ValueError):
             collect('8.8.8.8', FakeSdb(), identifier=self.identity)
 
@@ -142,7 +306,7 @@ class BoardIdentityTests(unittest.TestCase):
             runner.run = run
             report = collect('192.168.1.2', runner, identifier=self.identity)
             self.assertFalse(report['public']['board_commands_executed'])
-            self.assertFalse(any(call[0] == '-s' for call in runner.calls))
+            self.assertFalse(any('shell' in call or 'pull' in call for call in runner.calls))
 
     def test_failed_cpu_read_is_unknown_not_zero_and_errors_are_sanitized(self):
         runner = FakeSdb()
