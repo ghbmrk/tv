@@ -74,7 +74,7 @@ The household agent can author layouts, navigation, themes and widgets; curate d
 
 Use an agentOS device executor connected to a paired TV control service. The guest reaches broker tools, and the executor alone reaches the pinned TV endpoint. Keep provider playback native and give the control service no access to DRM keys or protected video frames. The TV remains usable by physical remote when agentOS is unavailable. The [integration design and acceptance cases](docs/agentos-integration.md) define the boundary, operation coverage, provider testing, and outstanding agentOS dependencies.
 
-The [TV-owned Go executor](executor/README.md) implements the pinned agentOS journal interface for native apply/undo with stable attempt IDs and verified receipts. Production broker wiring and policy qualification remain required before household agents can use it.
+The [TV-owned Go component](executor/README.md) implements the current signed-plan kernel clerk for native apply/undo with authority rechecks, stable attempt IDs and verified receipts; the legacy journal adapter remains available. Production broker wiring and policy qualification remain required before household agents can use it.
 
 ## Media integration
 

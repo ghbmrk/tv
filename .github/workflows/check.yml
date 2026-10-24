@@ -40,6 +40,9 @@ jobs:
           go vet -mod=readonly ./...
           mkdir -p ../.local
           go build -mod=readonly -o ../.local/tv-executor-interop ./cmd/interop
+          go build -mod=readonly -o ../.local/tv-kernel-clerk-interop ./cmd/kernelinterop
+          go list -deps ./kernelclerk > ../.local/kernel-clerk-dependencies.txt
+          python3 -c 'from pathlib import Path; bad={"github.com/ghbmrk/agentos/broker/journal","github.com/ghbmrk/agentos/broker/durable"}; assert not bad.intersection(Path("../.local/kernel-clerk-dependencies.txt").read_text().splitlines())'
       - uses: android-actions/setup-android@v3
         with:
           packages: platform-tools
@@ -65,7 +68,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader -no-snapshot -no-audio -no-boot-anim -no-metrics
           script: |
             gradle -p android :app:connectedDebugAndroidTest :control:connectedDebugAndroidTest --no-daemon
-            python tools/qualify_control_interop.py --serial emulator-5554 --go-executor .local/tv-executor-interop
+            python tools/qualify_control_interop.py --serial emulator-5554 --go-executor .local/tv-kernel-clerk-interop --kernel-clerk
       - uses: actions/upload-artifact@v4
         with:
           name: sovereign-tv-debug

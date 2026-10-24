@@ -1,10 +1,33 @@
-# TV-owned agentOS executor
+# TV-owned agentOS control components
 
-This development Go module implements the actual `journal.Executor` interface for native experience apply and undo. It is an isolated broker component, with no guest endpoint. Production broker registration, operation classification, grants, audience/private-data routing and capture enforcement remain unimplemented and unqualified. The adapter does not grant authority or make the TV agentOS-compatible by itself.
+This development Go module implements native experience apply/undo through the current Linux `kernel.Clerk` interface in `kernelclerk/`, and preserves the older `journal.Executor` interface at the module root. It is an isolated broker component, with no guest endpoint. Production broker registration, operation classification, grants, audience/private-data routing and capture enforcement remain unimplemented and unqualified. The adapter does not grant authority or make the TV agentOS-compatible by itself.
 
-The [October 24 contract review](../docs/agentos-integration.md#current-upstream-contract-october-24) identifies the newer kernel/clerk boundary. This module is a legacy journal adapter, not an implementation of that current interface. Its pinned tests remain useful component evidence; they are not production migration or authority qualification. The current kernel has device verbs, with an unresolved presentation-class discrepancy against its spec. No dependency upgrade or verb substitution is made automatically.
+The dependency now pins agentOS [`9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137`](https://github.com/ghbmrk/agentOS/tree/9806a98dd2b8b85f8f3db1e7e9d7432a1f0bd137/broker), module `v0.0.0-20261024140559-9806a98dd2b8`, with source checksums in `go.sum`. Go 1.26.8 matches upstream. The [contract review](../docs/agentos-integration.md#current-upstream-contract-october-24) still applies: the kernel's presentation class disagrees with its spec. Configuration uses the specified administrative `change-account` verb at the high class; this is not a general presentation or device-actuation clerk.
 
-The dependency pins public agentOS commit [`603cad7ce180c7f4f45447b64e652fa4a15d5563`](https://github.com/ghbmrk/agentOS/tree/603cad7ce180c7f4f45447b64e652fa4a15d5563/broker), with module/source checksums in `go.sum`. No local replacement or copied interface is used. Go 1.26.8 matches that upstream module's toolchain; official [release checksums](https://go.dev/dl/) identify the project-local SDK. This replaces the earlier October 13 module pin; it is not a production broker installation.
+## Current kernel clerk
+
+`native/` contains the paired client, inspection and exact edit/receipt protocol, with no agentOS dependency. `kernelclerk/` imports that package and the current kernel/clerk APIs; it imports no legacy journal/durable code. The module root is a compatibility adapter over the same native editor. Both protocols preserve their own stable request-ID domain; kernel IDs additionally bind the signed plan's signature, preventing a different signed plan from borrowing its receipt.
+
+The current clerk accepts exactly one pinned TV, two configuration operations and the fixed `target`/`value` shape. It independently verifies the signed plan, grant/dispatch/hold state on its own clock, and private content facts before dispatch. It snapshots caller input before clock/view callbacks. Request IDs, endpoints, credentials and executable operations cannot be supplied in the command. Native validation remains authoritative for experience schema and local assets.
+
+Trusted construction requires owner anchors and a qualified declaration: `local-only` visibility, and `owner` or `household` audience. Unknown/cloud-visible declarations and public audiences are refused. These construction inputs are not hardware/privacy proofs. An owner-audience device can use a properly granted delegated configuration key. Because private curation on a household screen is a disclosure, household edits currently require an owner-signed exact plan with a bare passkey root; delegated household templates are not implemented. No approval prompt or widening is created inside this library. The actual owner broker must prepare and authorize the exact plan through its own trusted path.
+
+`Do` sends one native operation after the current authority recheck. Duplicate native request IDs remain governed by the atomic, non-evicting native receipt journal. `Probe` verifies the original signed plan and only requests its exact receipt, even after STOP, expiry or revocation. Absence stays unknown and never returns `notdone`, which could trigger a replay. Kernel results contain fixed wording only: no document, private metadata or raw error. A verified commit does not prove current screen visibility or provider playback.
+
+The current upstream clerk package depends on Linux network code, so `kernelclerk` and its current-kernel emulator probe are Linux-only. Native transport and the preserved legacy adapter remain testable on macOS. Linux CI runs the real-kernel authority/restart tests, checks that the clerk has no legacy-core imports, and drives the paired Android TV emulator with `cmd/kernelinterop`. Its owner keys, grants, clock and in-memory kernel store are synthetic test fixtures; the native Keystore/mutual-TLS service and SQLite transactions are real. This is component interoperability, not production registration, grants/disclosure routing or household-TV qualification.
+
+```sh
+cd executor
+GOTOOLCHAIN=local go test -mod=readonly -race ./...
+GOTOOLCHAIN=local go vet -mod=readonly ./...
+# Linux: compile the current-kernel owned-emulator probe.
+go build -mod=readonly -o ../.local/tv-kernel-clerk-interop ./cmd/kernelinterop
+cd ..
+python3 tools/qualify_control_interop.py --serial EMULATOR_SERIAL \
+  --go-executor .local/tv-kernel-clerk-interop --kernel-clerk
+```
+
+The static Linux ARM64 authority and file-store tests pass inside the local Android emulator, including lost-reply reconciliation after reopening the upstream fsynced file store (with a synthetic retained anchor), real-kernel restart reconciliation, revocation, STOP, expiry, signed-plan tampering and household exact-plan checks. The current-kernel probe also passes against the real paired Android service: apply, exact retry, clerk/kernel recreation, receipt reconciliation and undo. This local run used an emulator-only wrapper and temporary synthetic credentials; it does not verify production process isolation. The additional Unix-socket protocol test requires hosted Linux: the Android emulator shell denies filesystem socket binding, and its security policy was left unchanged. The [implementation PR](https://github.com/ghbmrk/tv/pull/40) records the separate hosted Linux race/vet, Unix-socket and x86_64 paired-service checks. Local runtime success is not a substitute for those checks. Historical journal verification below remains scoped to that adapter.
 
 ## Owner embedding boundary
 
@@ -77,8 +100,8 @@ The driver checks the owned emulator, transfers only a temporary public client c
 The unit suite also uses agentOS's actual file-backed journal engine to verify policy recheck before dispatch, lost-reply fencing across restart, no effect replay while a receipt is missing, and resolution from the original receipt. Its synthetic policy and redactor are fixtures, never production authorization.
 
 
-## Current journal compatibility
+## Historical journal compatibility
 
-Pinned upstream: `603cad7ce180c7f4f45447b64e652fa4a15d5563`, module `v0.0.0-20261017235249-603cad7ce180` (checked 2026-10-17). Upstream may resend an unknown attempt only for executors that opt into its key-honouring contract. This adapter deliberately does not advertise that capability: stable native request IDs alone are not permission for automatic effect replay.
+Historical qualification pin: `603cad7ce180c7f4f45447b64e652fa4a15d5563`, module `v0.0.0-20261017235249-603cad7ce180` (checked 2026-10-17). The preserved adapter is now also compiled/tested against the current pinned dependency; that does not turn it into a current clerk. Upstream may resend an unknown attempt only for executors that opt into its key-honouring contract. This adapter deliberately does not advertise that capability: stable native request IDs alone are not permission for automatic effect replay.
 
 `TestCurrentBrokerParksMissingReceiptWithoutResendingTVEffect` exercises the actual current engine through repeated missing-receipt checks and parking, verifies exactly one edit/attempt, and restores the original receipt to prove settlement without another edit. The race-enabled suite and existing restart/policy tests qualify these fixture paths only. Production registration, grants, routing and household end-to-end operation remain unqualified. The upstream Codex lane was retired at this historical revision; the October 24 review records its later limited reintroduction. This dependency update changes only TV-owned code and does not authorize broker edits.

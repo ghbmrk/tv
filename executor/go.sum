@@ -1,4 +1,4 @@
-github.com/ghbmrk/agentos/broker v0.0.0-20261013165717-c17b5a92b95c h1:8bjliidHobRhKJnrSsmugE7MD80Dn+0UXEhucxfGAEo=
-github.com/ghbmrk/agentos/broker v0.0.0-20261013165717-c17b5a92b95c/go.mod h1:E+AjRvK0drCu/oECFBacDsRsQw+BomGctyvugJnIcyw=
-github.com/ghbmrk/agentos/broker v0.0.0-20261017235249-603cad7ce180 h1:MkzvUqixkQ0b2rQN3EwIQCGkZHFPj4dkJQny8lbe7bQ=
-github.com/ghbmrk/agentos/broker v0.0.0-20261017235249-603cad7ce180/go.mod h1:0Nr+dsIFEAZA2N/7jC5+LPvsyL5pAI8MRq8avJ+1MDQ=
+github.com/ghbmrk/agentos/broker v0.0.0-20261024140559-9806a98dd2b8 h1:lOiB+cnGENDtWb3sqBX8o1QgOZjSaVy68fX9uqXsjq4=
+github.com/ghbmrk/agentos/broker v0.0.0-20261024140559-9806a98dd2b8/go.mod h1:Jk8EllmWM5xN8ZeHm2CftcRm1YCpM+PnQaUDFpUWBys=
+golang.org/x/sys v0.48.0 h1:bbX/i/6MgT9BVLM9RT1thmxL04yeTAhbEz4SyadbXoo=
+golang.org/x/sys v0.48.0/go.mod h1:hNLxWAXmnKAxqDtdwIYC4bM9oQPEecfsnNMuSxOs3og=

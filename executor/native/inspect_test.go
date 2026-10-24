@@ -1,4 +1,4 @@
-package executor
+package native
 
 import (
 	"context"
@@ -302,12 +302,12 @@ func TestTypedDecodingRejectsGoCaseFoldAliasesAtEveryTypedBoundary(t *testing.T)
 func TestRequiredCapabilityCannotUseACaseFoldedAlias(t *testing.T) {
 	for _, body := range []string{`{"Receipt_Operation_Sha256":true}`, `{"receipt_operation_sha256":true,"RECEIPT_OPERATION_SHA256":false}`} {
 		f := &inspectionTransport{id: device, response: Response{"ok", json.RawMessage(body)}}
-		if _, err := New(context.Background(), Config{Namespace: "owner", Account: "tv:room", Transport: f}); err == nil || len(f.calls) != 1 || f.calls[0] != "capabilities" {
+		if _, err := NewEditor(context.Background(), f); err == nil || len(f.calls) != 1 || f.calls[0] != "capabilities" {
 			t.Fatal("ambiguous capability enabled effects")
 		}
 	}
 	f := &inspectionTransport{id: device, response: Response{"ok", json.RawMessage(`{"receipt_operation_sha256":true,"other_known_or_future_capability":true}`)}}
-	if _, err := New(context.Background(), Config{Namespace: "owner", Account: "tv:room", Transport: f}); err != nil {
+	if _, err := NewEditor(context.Background(), f); err != nil {
 		t.Fatal("unrelated additive capabilities refused", err)
 	}
 }

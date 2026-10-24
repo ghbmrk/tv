@@ -20,7 +20,10 @@
     "kernel": null,
     "storage_layout": null,
     "boot_chain": null,
-    "recovery_method": null
+    "recovery_method": null,
+    "one_connect_model": "SOC1001F",
+    "one_connect_assembly": "BN96-61147A",
+    "one_connect_identity_basis": "owner_supplied_exterior_labels; research/owner-label-observations.json; not a PCB identification"
   },
   "research_leads": {
     "confirmed_us_sku": "QN50LS03FAFXZA",

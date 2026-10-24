@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-10-24",
+  "basis": "Owner-supplied exterior-label photographs rendered in the task conversation; not a teardown or live device read",
+  "observations": [
+    {
+      "component": "One Connect enclosure",
+      "field": "model",
+      "value": "SOC1001F",
+      "status": "label_observation",
+      "limit": "An exterior model marking does not identify the installed PCB revision or executing processor"
+    },
+    {
+      "component": "supplied exterior assembly label",
+      "field": "assembly_part",
+      "value": "BN96-61147A",
+      "status": "label_observation",
+      "limit": "The part-number substring on the supplied label does not establish the enclosed PCB BOM, firmware stores or compatibility of another assembly"
+    }
+  ],
+  "source_limits": [
+    "Raw image files are unavailable in the current workspace; no image digest or capture date is asserted",
+    "The photographs are owner-supplied target evidence, not independent physical verification of the complete hardware topology",
+    "Serials, QR payloads and unique manufacturing identifiers are excluded"
+  ],
+  "qualifies_board_identity": false,
+  "qualifies_boot_or_recovery": false,
+  "hardware_accessed": false
+}
