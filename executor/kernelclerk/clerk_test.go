@@ -331,3 +331,30 @@ func TestFileBackedKernelSettlesLostReplyAfterStoreReopen(t *testing.T) {
 		t.Fatal("file-backed restart failed to settle the existing effect", got)
 	}
 }
+
+// Exercise the exported kernel-to-clerk socket protocol as well as direct
+// calls. Same-UID fixtures do not establish production UID/network isolation.
+func TestKernelClerkWireRoundTripAndPeerCheck(t *testing.T) {
+	h := fixture(t, "owner")
+	path := filepath.Join(t.TempDir(), "clerk.sock")
+	ln, err := proc.ListenClerk(path, os.Getuid())
+	check(t, err)
+	done := make(chan error, 1)
+	go func() { done <- proc.ServeClerk(ln, h.clerk, h.clerk.anchors) }()
+	defer func() { ln.Close(); <-done }()
+	remote := proc.Remote{Socket: path, UID: os.Getuid()}.Clerk(h.clerk.anchors)
+	call := h.dispatch(h.plan("wire-lost-reply", false))
+	h.transport.lost = true
+	got := remote.Do(call.Req, h.engine.State())
+	if got.Outcome != "unknown" || strings.Contains(got.Detail, "CANARY") || h.transport.edits != 1 {
+		t.Fatal("wire dispatch violated uncertainty or disclosure boundary", got)
+	}
+	check(t, h.engine.Revoke(h.now, h.grant.Tip()))
+	if got := remote.Probe(call.Req, h.engine.State()); got.Outcome != "done" || h.transport.edits != 1 {
+		t.Fatal("wire reconciliation lost original receipt", got)
+	}
+	wrongPeer := proc.Remote{Socket: path, UID: os.Getuid() + 1}.Clerk(h.clerk.anchors)
+	if got := wrongPeer.Do(call.Req, h.engine.State()); got.Outcome != kernel.OUnsent || h.transport.edits != 1 {
+		t.Fatal("wrong clerk peer received request", got)
+	}
+}
