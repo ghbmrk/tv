@@ -15,7 +15,9 @@
       "executing_implementation": null,
       "storage_domain": null,
       "independent_replacement": null,
-      "evidence": [],
+      "evidence": [
+        "research/seret-wrapper-inventory.json"
+      ],
       "status": "unverified"
     },
     {
@@ -37,7 +39,8 @@
       "storage_domain": null,
       "independent_replacement": null,
       "evidence": [
-        "research/controller-recovery-inventory.json"
+        "research/controller-recovery-inventory.json",
+        "research/seret-wrapper-inventory.json"
       ],
       "status": "unverified"
     },
@@ -164,7 +167,8 @@
       "storage_domain": null,
       "independent_replacement": null,
       "evidence": [
-        "research/controller-recovery-inventory.json"
+        "research/controller-recovery-inventory.json",
+        "research/seret-wrapper-inventory.json"
       ],
       "status": "unverified"
     }

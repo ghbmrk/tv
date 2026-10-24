@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-24",
+  "source_kind": "Static analysis of checked shared update section; not household-unit memory or executing boot trace",
+  "update_inventory": "research/decrypted-update-inventory.json",
+  "section": "seret.bin",
+  "prefix": {
+    "bytes": 32768,
+    "sha256": "01b9d14b09051ef127a59b742a4463bdc765b9a56f63cb7f555e568d30886103",
+    "architecture": "Caller-imposed ARM:LE:32:v7; consistent instruction interpretation, not observed target CPU state"
+  },
+  "toolchain_inventory": "research/boot-verifier-inventory.json",
+  "raw_control": {
+    "source": "tools/rea/fixtures/raw_arm_control.S",
+    "source_sha256": "ec4c73f954899f982f02eab934f0c4a9326557466a7d4806adda7d08ce801be5",
+    "assembled_bytes": 28,
+    "assembled_sha256": "786175195116c0d52f3103c8db616f896e3806f4e603f980f0793ccf215cbcac",
+    "known_predicate_recovered": true,
+    "neutral_coordinate_body_bytes": 28,
+    "zero_coordinate_body_bytes": 16,
+    "zero_coordinate_artifact": "Ghidra named the conditional target DataAbort and split the original function; this is an analyzer interpretation, not an actual vector role.",
+    "neutral_coordinate_report": {
+      "evidence_id": "ev_be1de5348bae26f49369d7853e3d2de3325372b4608e54aad639915f3d6d820e",
+      "report_sha256": "502b087aa6be90ec680f50b0b66beeff0e62421a191f4df97be277f5e811d6b8",
+      "analysis_profile_digest": "33a5bf6c7e3904311b6c6a3a92f0a6ebfc2501328657e282bc31e4e8028d18c1"
+    },
+    "zero_coordinate_report": {
+      "evidence_id": "ev_fef4488528dc1fe446110de5e9069502a1352c1169cd5c765bd52c2bdc24ca15",
+      "report_sha256": "0a679315ee505c67ba9a229d33f58c2bd902ca83184b6b298f2139410142109e",
+      "analysis_profile_digest": "ebe2e1475aed43e16275cc67f56eafb4443a57e3eac0154b9129410db148af1f"
+    }
+  },
+  "wrapper_control_flow": {
+    "input_bytes": 3661824,
+    "input_sha256": "ad53d344b3db12a88dd140bbd5b9fd7898193ee2c083336a99fe978fbd7a985b",
+    "analysis_image_base": 1048576,
+    "mapping_limit": "Imposed analysis coordinate only; file offset zero is hypothesized wrapper entry, not an observed boot entry or device address.",
+    "branch_sites": [
+      {
+        "operation": "entry-relative-branch",
+        "file_offset": 48,
+        "target_file_offset": 648,
+        "link": false,
+        "condition_id": 14,
+        "instruction_sha256": "989780e1482cf7c773174140e287ea90a06ef3857770dcd37a028b53b6a5a451"
+      },
+      {
+        "operation": "decode-helper-call",
+        "file_offset": 740,
+        "target_file_offset": 10532,
+        "link": true,
+        "condition_id": 14,
+        "instruction_sha256": "facb5b9aed1ec69ee9d75d9d04030d862a26aa040a33b48bf0b0ab448cb0db5b"
+      },
+      {
+        "operation": "nested-image-call",
+        "file_offset": 1184,
+        "target_file_offset": 32768,
+        "link": true,
+        "condition_id": 14,
+        "instruction_sha256": "8fc405033b0894c0dc3ff7c00bcd688a79ccba179e912e8d96991ecbf238265d"
+      }
+    ]
+  },
+  "entry_analysis": {
+    "evidence_id": "ev_d0405a910db330acc56f2336588e134ea123b888a81309e1e1a1b15f70d78617",
+    "report_sha256": "23bc16a4462ac4dbd19bc85dd325bed86d0b66169c4d0601481ef577ceb49f87",
+    "analysis_profile_digest": "33a5bf6c7e3904311b6c6a3a92f0a6ebfc2501328657e282bc31e4e8028d18c1"
+  },
+  "handoff_instruction": {
+    "evidence_id": "ev_f6e35f19ee3158902136178dc1f405ea174e7b45573c1bc2f7c7a0bf4767bb2a",
+    "report_sha256": "7c264e752623e25ccf822b6c214e6c3664ca23ed1274a5a4b325f1aa3f27ca3f",
+    "analysis_profile_digest": "33a5bf6c7e3904311b6c6a3a92f0a6ebfc2501328657e282bc31e4e8028d18c1"
+  },
+  "post_image_structure": {
+    "schema_version": 1,
+    "input_bytes": 3661824,
+    "input_sha256": "ad53d344b3db12a88dd140bbd5b9fd7898193ee2c083336a99fe978fbd7a985b",
+    "zimage": {
+      "offset": 32768,
+      "validated": true,
+      "image_bytes": 2017152,
+      "image_sha256": "2872e7b0731f33bded6ed9acf443837689084e6eef9b5f563f006d2231c58bdc",
+      "header_form": "Linux ARM A32 little-endian zero-linked candidate"
+    },
+    "post_image_envelope": {
+      "file_offset": 2049920,
+      "header_bytes": 12,
+      "packed_bytes": 163859,
+      "packed_sha256": "d1a8c59fab772f2ebb035d0a706b45b22755254fbd558c26da55a702dba87643",
+      "decoded_bytes": 1032208,
+      "decoded_sha256": "98899d88ebe971f0aacee314b1dc973862238d1349704cc7896b73357178321b",
+      "deflate_eof": true,
+      "checksum_or_signature_authenticated": false,
+      "dtb_bundle": {
+        "bytes": 1032208,
+        "sha256": "98899d88ebe971f0aacee314b1dc973862238d1349704cc7896b73357178321b",
+        "fdts": [
+          {
+            "file_offset": 16,
+            "bytes": 63241,
+            "sha256": "16c40e82a2ff14b21e16f520b58ded06654a94e8fa0d3cb439bd589155554747",
+            "version": 17,
+            "nodes": 503,
+            "properties": 2177,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 86032,
+            "bytes": 62298,
+            "sha256": "00a57987bc2ddaf41a48f57d418535b9479530f2f548d4700074812784733594",
+            "version": 17,
+            "nodes": 502,
+            "properties": 2148,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 172048,
+            "bytes": 61983,
+            "sha256": "73bef0352256a19b94c13160580f686d004476b38b14653e720233a64c6c0fd6",
+            "version": 17,
+            "nodes": 503,
+            "properties": 2130,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 258064,
+            "bytes": 61685,
+            "sha256": "8cf6d3bb65c7734e58b43462e392223a72b055c502a903461d8b0beb1c58d4a9",
+            "version": 17,
+            "nodes": 500,
+            "properties": 2127,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 344080,
+            "bytes": 62195,
+            "sha256": "7a9293dfa1c408e287dd7a38c3825b0345c743340dfcaf5867378f3c7da81bba",
+            "version": 17,
+            "nodes": 499,
+            "properties": 2139,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 430096,
+            "bytes": 62179,
+            "sha256": "16165b41e4927f4e17e3608b62b3166d618233b454283dbf7f443bdc467d6faa",
+            "version": 17,
+            "nodes": 501,
+            "properties": 2141,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 516112,
+            "bytes": 60819,
+            "sha256": "9b4836b649361acbb779527fc5c716d43ef21a2b3feae93a7295fee61fc92dea",
+            "version": 17,
+            "nodes": 498,
+            "properties": 2085,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 602128,
+            "bytes": 62623,
+            "sha256": "4537af061b7f9c21f9006e13ccad19ceca78197afc0f47f2b713e40c57d5d66a",
+            "version": 17,
+            "nodes": 503,
+            "properties": 2154,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 688144,
+            "bytes": 62486,
+            "sha256": "b620e652b780aa1b385fd419754c38c1b4ed8b996a94df9b7a3d1add43c3792a",
+            "version": 17,
+            "nodes": 503,
+            "properties": 2153,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 774160,
+            "bytes": 62714,
+            "sha256": "b08ceadc42121f4d86042ce731bcdcababee824d005d990da6763baa906c5f29",
+            "version": 17,
+            "nodes": 502,
+            "properties": 2155,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 860176,
+            "bytes": 61836,
+            "sha256": "f22dd4ff70d2f823f2de5008d3309500aaaeb16023e1d6b484813ccca6a05fab",
+            "version": 17,
+            "nodes": 504,
+            "properties": 2122,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          },
+          {
+            "file_offset": 946192,
+            "bytes": 61875,
+            "sha256": "c237505ba8f548b541e1044d8358d9ede968aea89d22d5d38c18db4b98bf9571",
+            "version": 17,
+            "nodes": 504,
+            "properties": 2123,
+            "root_model": [
+              "Samsung DTV based on PontusM SoC"
+            ],
+            "root_compatible": [
+              "samsung,dtv",
+              "samsung,sdp-pontusm"
+            ],
+            "cpu_compatible_sets": [
+              [
+                "arm,cortex-a57",
+                "arm,armv8"
+              ]
+            ],
+            "cpu_compatible_node_count": 4
+          }
+        ],
+        "trailing_or_inter_tree_bytes_interpreted": false
+      }
+    },
+    "uninterpreted_bytes_after_envelope": 1448033,
+    "payload_exported": false,
+    "executed": false,
+    "device_accessed": false,
+    "boot_or_recovery_qualified": false,
+    "scope": "One observed envelope form and structurally valid device trees; no executing variant, boot trust, live storage map or independent recovery proof."
+  },
+  "selection_inference": {
+    "classification": "decompiler inference, not independently proved execution",
+    "fixed_tree_stride_bytes": 86016,
+    "index_above_nine_falls_back_to_zero_in_inferred_path": true,
+    "selector_byte_source": "unresolved upstream state; not identified as controller or observed board identity",
+    "executing_variant_identified": false
+  },
+  "vendor_code_executed": false,
+  "device_accessed": false,
+  "signature_authenticated": false,
+  "independent_boot_or_recovery_qualified": false,
+  "provider_closed": true,
+  "cleanup_pending": false,
+  "independent_branch_check": {
+    "schema_version": 1,
+    "input_sha256": "ad53d344b3db12a88dd140bbd5b9fd7898193ee2c083336a99fe978fbd7a985b",
+    "checked_branches": [
+      {
+        "file_offset": 48,
+        "target_file_offset": 648,
+        "link": false,
+        "condition_id": 14
+      },
+      {
+        "file_offset": 740,
+        "target_file_offset": 10532,
+        "link": true,
+        "condition_id": 14
+      },
+      {
+        "file_offset": 1184,
+        "target_file_offset": 32768,
+        "link": true,
+        "condition_id": 14
+      }
+    ],
+    "executed": false,
+    "device_accessed": false,
+    "boot_or_recovery_qualified": false,
+    "scope": "Raw-file mapping, instruction digest and A32 direct branch arithmetic only; analysis base is imposed, not a device address. No reachability, condition outcome, actual execution or boot-authority proof."
+  },
+  "update_archive_sha256": "e15357631ee015215a096690f5e9b2bb9419400044572c59fa344f9730194164",
+  "main_update_dtb_digest_comparison": {
+    "main_tree_count": 12,
+    "embedded_tree_count": 12,
+    "identical_tree_digest_count": 0,
+    "scope": "Byte identity only; different hashes do not identify different physical boards."
+  }
+}

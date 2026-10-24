@@ -48,3 +48,7 @@ The tool bounds input, candidates, decoder memory and total decoded output; reje
 ## Remaining decision boundary
 
 These results narrow what a replacement must implement and what a trial could affect. They do not establish independent boot acceptance, Samsung-free controller firmware, complete recovery or provider-quality media. Exact installed board/controller correspondence and an independently demonstrated restore mechanism remain required. The [recovery plan](../docs/deployment/recovery-plan.md) now explicitly includes implicit initialization effects, even for a proposed RAM boot.
+
+## Wrapper follow-up
+
+The [October 24 wrapper trace](SERET_WRAPPER_FINDINGS.md) now independently checks a direct A32 call into the nested image and decodes twelve additional family trees from a post-image DEFLATE envelope. It also records a raw-analysis control that exposed spurious exception-vector names at analysis zero. This narrows file structure and static control flow without qualifying installed identity, boot authority or recovery.
