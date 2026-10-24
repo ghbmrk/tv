@@ -40,7 +40,8 @@
       "independent_replacement": null,
       "evidence": [
         "research/controller-recovery-inventory.json",
-        "research/seret-wrapper-inventory.json"
+        "research/seret-wrapper-inventory.json",
+        "research/recovery-initramfs-inventory.json"
       ],
       "status": "unverified"
     },
@@ -170,7 +171,8 @@
       "independent_replacement": null,
       "evidence": [
         "research/controller-recovery-inventory.json",
-        "research/seret-wrapper-inventory.json"
+        "research/seret-wrapper-inventory.json",
+        "research/recovery-initramfs-inventory.json"
       ],
       "status": "unverified"
     },

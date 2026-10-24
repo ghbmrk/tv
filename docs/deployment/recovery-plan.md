@@ -2,6 +2,8 @@
 
 Status: unverified for QN50LS03FAFXZA. Persistent device modification is not authorized by this record.
 
+The [embedded early-userspace investigation](../../research/RECOVERY_INITRAMFS_FINDINGS.md) identifies startup files naming an ARM updater in a checked nested archive. This is not a passive rescue-shell guarantee. Qualify its boot prerequisites and all updater/controller/storage effects before considering it in any recovery argument; no such execution or restore test has occurred. Retaining vendor recovery software would also fail the final removal requirement.
+
 For each proposed write, document the affected storage/controller and exact failure modes. Identify the independent restore mechanism, hardware/tool dependencies, required off-device artifacts and their digests, unique private data excluded from public records, and a measured restoration test. Explicitly state uncovered failures.
 
 RAM/alternate boot also requires a side-effect review before execution. The released family controller driver starts a watchdog thread during message-device probing; its ordinary branch attempts a rollback-control message and periodic liveness messages. Initialization can therefore affect an external controller even without an explicit flash operation. This is source evidence, not installed-unit behavior. Establish the actual controller, active branch, watchdog deadlines, boot-health semantics and recovery coverage before any candidate kernel runs. Do not use the vendor driver to discover those effects on the household TV. See the [controller and recovery investigation](../../research/CONTROLLER_AND_RECOVERY_FINDINGS.md).

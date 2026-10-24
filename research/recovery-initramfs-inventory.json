@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "observed": "2026-10-24",
+  "source": "Nested stream in the checked seret.bin Linux-bearing shared-update payload; not a household-unit dump",
+  "parent_inventory": "research/controller-recovery-inventory.json",
+  "metadata": {
+    "schema_version": 1,
+    "input_bytes": 4952320,
+    "input_sha256": "a60e1b13bd45c952647427d15799d01d72bde6fdc531a9205a574f1d3ad76e51",
+    "xz_candidates": [
+      {
+        "file_offset": 3720079,
+        "validated": false,
+        "rejection": "invalid_or_memory_limited_xz"
+      },
+      {
+        "file_offset": 4279572,
+        "validated": true,
+        "stored_bytes": 468796,
+        "decoded_bytes": 1171968,
+        "decoded_sha256": "a99d9c5faa39edc307c589f4e5e0663e209fbff4fa7652234f803aaf0d9accb3",
+        "integrity_check_id": 1,
+        "archive": {
+          "bytes": 1171968,
+          "sha256": "a99d9c5faa39edc307c589f4e5e0663e209fbff4fa7652234f803aaf0d9accb3",
+          "members": 272,
+          "member_type_counts": {
+            "directory": 11,
+            "regular": 4,
+            "character_device": 24,
+            "block_device": 97,
+            "symlink": 136
+          },
+          "selected_members": [
+            {
+              "path": "bin/upgrade_mgr",
+              "type": "regular",
+              "bytes": 149124,
+              "sha256": "79030af058b797433616fea71d5d2cc9dd070e4f69a60604bc9f52dca69f9431",
+              "elf_header": {
+                "class_bits": 32,
+                "little_endian": true,
+                "machine_id": 40
+              }
+            },
+            {
+              "path": "bin/toybox",
+              "type": "regular",
+              "bytes": 987396,
+              "sha256": "6079e8c4a8e12919896a2f700c7cf41b856f8af9da15b3bf3097b83770687484",
+              "elf_header": {
+                "class_bits": 32,
+                "little_endian": true,
+                "machine_id": 40
+              }
+            },
+            {
+              "path": "etc/init.d/rcS",
+              "type": "regular",
+              "bytes": 121,
+              "sha256": "172d5d2e991774564f258a3b3cf7425fdaca9980d57f69fd5a168db2663fc00c",
+              "standalone_upgrade_mgr_line": true,
+              "classification": "Lexical script observation, not execution or side-effect proof"
+            },
+            {
+              "path": "etc/inittab",
+              "type": "regular",
+              "bytes": 48,
+              "sha256": "9238e4192b24e28bbd80566dd6a0df70d74569e4b9bb3a8c85a77c2aaa598ca0",
+              "sysinit_rcs_line": true
+            },
+            {
+              "path": "init",
+              "type": "symlink",
+              "bytes": 12,
+              "sha256": "9e2f5af09dde4542e468d099e532cfb5abae7d5cb3d019588eee8adf02425456",
+              "targets_bin_toybox": true
+            },
+            {
+              "path": "bin/sh",
+              "type": "symlink",
+              "bytes": 12,
+              "sha256": "9e2f5af09dde4542e468d099e532cfb5abae7d5cb3d019588eee8adf02425456",
+              "targets_bin_toybox": true
+            }
+          ],
+          "complete_trailer": true,
+          "remaining_bytes_zero": true,
+          "hardlinked_nondirectories_supported": false
+        }
+      }
+    ],
+    "payload_exported": false,
+    "executed": false,
+    "device_accessed": false,
+    "recovery_qualified": false,
+    "scope": "Bounded nested XZ and a conservative single newc archive subset. No filesystem creation, code execution, boot reachability or recovery proof."
+  },
+  "primary_format_references": [
+    {
+      "url": "https://www.kernel.org/doc/html/v5.4/driver-api/early-userspace/early_userspace_support.html",
+      "bytes": 32388,
+      "sha256": "d0afb6079f0ead85cd051575efc5df1783cab4a5c6ee680bcf89d9d883048e53"
+    },
+    {
+      "url": "https://www.kernel.org/doc/html/v5.4/driver-api/early-userspace/buffer-format.html",
+      "bytes": 30190,
+      "sha256": "10f7d6fc2576e2003d8f1b40010ae58eba0f1c3206fc7895b629ed8528e70654"
+    }
+  ],
+  "independent_archive_reader": {
+    "implementation": "bsdcpio 3.5.3 / libarchive 3.5.3",
+    "operation": "list only; no extraction",
+    "returncode": 0,
+    "listed_members": 272,
+    "normalized_name_set_and_order_independent_comparison_matches": true
+  },
+  "installed_unit_correspondence_verified": false,
+  "startup_script_execution_verified": false,
+  "updater_side_effects_bounded": false,
+  "independent_recovery_demonstrated": false,
+  "native_updater": {
+    "input_bytes": 149124,
+    "toolchain_inventory": "research/boot-verifier-inventory.json",
+    "record": {
+      "decoded_sha256": "79030af058b797433616fea71d5d2cc9dd070e4f69a60604bc9f52dca69f9431",
+      "analysis_image_base": 65536,
+      "call_sites": [
+        {
+          "address": "0x1a512",
+          "file_offset": "0xa512",
+          "target": "0x20fdc",
+          "instruction_sha256": "18557d414ab9d89907a71907e2568414a26335c3c0dc90956dd0d4fae5e06a5e"
+        },
+        {
+          "address": "0x1a53c",
+          "file_offset": "0xa53c",
+          "target": "0x20fdc",
+          "instruction_sha256": "215cd70058c7b5d0ec8c97c6c03bc96a23d5882821f2167ac7fa8bfbb3cd4da1"
+        },
+        {
+          "address": "0x1a59a",
+          "file_offset": "0xa59a",
+          "target": "0x20fdc",
+          "instruction_sha256": "85f2fc9f858ddb911b14ac06762cf705af1dba1a9935a644f7eae261ac1f5e76"
+        }
+      ]
+    },
+    "independent_direct_call_check": {
+      "schema_version": 1,
+      "input_sha256": "79030af058b797433616fea71d5d2cc9dd070e4f69a60604bc9f52dca69f9431",
+      "analysis_rebase_bytes": 0,
+      "checked_calls": [
+        {
+          "address": "0x1a512",
+          "file_offset": "0xa512",
+          "target": "0x20fdc"
+        },
+        {
+          "address": "0x1a53c",
+          "file_offset": "0xa53c",
+          "target": "0x20fdc"
+        },
+        {
+          "address": "0x1a59a",
+          "file_offset": "0xa59a",
+          "target": "0x20fdc"
+        }
+      ],
+      "executed": false,
+      "device_accessed": false,
+      "scope": "ELF mapping, four-byte digest and direct branch destination only; no symbol binding, reachability or boot proof."
+    },
+    "analysis_reports": [
+      {
+        "label": "recovery-updater-open",
+        "private_report_sha256": "f6927d2ff4c94b5d3f2c9a0421111415371f378d8344aa2f701b7d341123e253"
+      },
+      {
+        "label": "recovery-updater-overview",
+        "private_report_sha256": "feb8eeaf31f76cbc8d8dca9b9f9548a22ff731079ab2a71ca598ed32292f8e58",
+        "evidence_id": "ev_fa6ab58c127f6e9c1d74058e887cd0a905ff12c7fa470619d1eb1d793310742e",
+        "analysis_profile_digest": "c58cfeefcb4fd0d3bab90a77ff35ba87158ea8077af41055a6c9161a4f4a61f4"
+      },
+      {
+        "label": "recovery-updater-adjacent-writer",
+        "private_report_sha256": "9709061d03df31509c31fdbedb5f7d9071d482ed74dec6618bda266661310dc5",
+        "evidence_id": "ev_fd0d1996113ae91ee5bf262ec0a102f46ddf950ff2cad25a720163c33879db0f",
+        "analysis_profile_digest": "2db309e5f1db503531cadd2a4dfd8b650a9aa950a8f81626a16ad1d183534fae"
+      },
+      {
+        "label": "recovery-updater-block-write",
+        "private_report_sha256": "65e297e1b8a85e5da7eb3529b772b8efe64292e44e454a7c187f6721a576b647",
+        "evidence_id": "ev_d4ab234fccdb1b5c7715a6104a92a495c609d8de5d7315b86d7216beab620cd5",
+        "analysis_profile_digest": "2db309e5f1db503531cadd2a4dfd8b650a9aa950a8f81626a16ad1d183534fae"
+      },
+      {
+        "label": "recovery-updater-write-wrapper",
+        "private_report_sha256": "e6ff130095886c8312246768a6d6e46f83e7c6af9902e997ba8ab76f4bc95e3b",
+        "evidence_id": "ev_670e087a818004b945439dd9c404b159317544d9ecdbbafb5e6f51ecc0cb3736",
+        "analysis_profile_digest": "2db309e5f1db503531cadd2a4dfd8b650a9aa950a8f81626a16ad1d183534fae"
+      },
+      {
+        "label": "recovery-updater-syscall-entry",
+        "private_report_sha256": "63eda4e5194378bc65ee767389cb0ea5d0350f5308b7e584b6ec82b272179b8c",
+        "evidence_id": "ev_de7e141520b44f7610d4214cb445201ae73c2dac7de39fbeb0fc7d9a73cd9f99",
+        "analysis_profile_digest": "2db309e5f1db503531cadd2a4dfd8b650a9aa950a8f81626a16ad1d183534fae"
+      },
+      {
+        "label": "recovery-updater-write-call",
+        "private_report_sha256": "82585b0ec2f09ec5b7b2e18551d48cbafba18c698b8fdd669975b7e9e5103a58",
+        "evidence_id": "ev_eca6066dfff97cea2b9b7a6c32644a48ab41cb2f204f917c38fcb712a620871e",
+        "analysis_profile_digest": "2db309e5f1db503531cadd2a4dfd8b650a9aa950a8f81626a16ad1d183534fae"
+      },
+      {
+        "label": "recovery-updater-write-call-offset",
+        "private_report_sha256": "9cdc2ba9fa4163ff2805d6baea39f4058e9f7122866a3cf25fa57983b921d09c",
+        "evidence_id": "ev_44fd582db99243a66db605069fc3abd229c3b5efdc75e31974f0f00e21014ddb",
+        "analysis_profile_digest": "2db309e5f1db503531cadd2a4dfd8b650a9aa950a8f81626a16ad1d183534fae"
+      },
+      {
+        "label": "recovery-updater-close",
+        "private_report_sha256": "16db00a61b54c9963c10c8b04d5407a9b20f3fe717c0c4f8cf4f3200c7866c4c"
+      },
+      {
+        "label": "recovery-updater-final-session",
+        "private_report_sha256": "c5d06cd31de8d6243f24b473d66c53d9fa0b5688903f0f47a174d58925ff8621"
+      }
+    ],
+    "primary_syscall_references": [
+      {
+        "url": "https://raw.githubusercontent.com/torvalds/linux/v5.4/arch/arm/tools/syscall.tbl",
+        "bytes": 16266,
+        "sha256": "538e6a9d383f0cb72e781505670b3b0755720f792720790d0cdfbbe4c3ece3fb"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/torvalds/linux/v5.4/arch/arm/kernel/entry-common.S",
+        "bytes": 11375,
+        "sha256": "95d11d997a8e61d36a126960f945f4b5249a8324f1c628e388d03a800037165c"
+      }
+    ],
+    "inference": "A storage-mode branch opens a boot-storage path and its force_ro attribute; it calls the same syscall-4 wrapper for protection-control and storage writes. Other branch and error behavior remain incompletely recovered.",
+    "write_syscall_number": 4,
+    "runtime_reachability_verified": false,
+    "successful_write_or_restore_verified": false,
+    "provider_closed": true,
+    "cleanup_pending": false,
+    "vendor_code_executed": false
+  }
+}
