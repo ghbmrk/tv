@@ -3,6 +3,7 @@
 package kernelclerk
 
 import (
+	"bytes"
 	"context"
 	"crypto/ed25519"
 	"crypto/rand"
@@ -11,12 +12,15 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
 
 	"github.com/ghbmrk/agentos/broker/kernel"
 	"github.com/ghbmrk/agentos/broker/kernel/key"
+	"github.com/ghbmrk/agentos/broker/kernel/proc"
 	"github.com/ghbmrk/tv/executor/native"
 )
 
@@ -77,7 +81,7 @@ func (v *testTV) Request(_ context.Context, op string, fields map[string]any, _ 
 type harness struct {
 	t                             *testing.T
 	owner, backup, holder, signer ed25519.PrivateKey
-	store                         *kernel.MemStore
+	store                         kernel.Store
 	anchor                        *kernel.MemAnchor
 	engine                        *kernel.Kernel
 	clerk                         *Clerk
@@ -103,7 +107,10 @@ func check(t *testing.T, e error) {
 	}
 }
 func fixture(t *testing.T, audience string) *harness {
-	h := &harness{t: t, owner: privateKey(t), backup: privateKey(t), holder: privateKey(t), signer: privateKey(t), store: &kernel.MemStore{}, anchor: &kernel.MemAnchor{}, now: 1700000000000, audience: audience, transport: &testTV{receipts: map[string]native.Receipt{}}}
+	return fixtureStore(t, audience, &kernel.MemStore{})
+}
+func fixtureStore(t *testing.T, audience string, store kernel.Store) *harness {
+	h := &harness{t: t, owner: privateKey(t), backup: privateKey(t), holder: privateKey(t), signer: privateKey(t), store: store, anchor: &kernel.MemAnchor{}, now: 1700000000000, audience: audience, transport: &testTV{receipts: map[string]native.Receipt{}}}
 	h.reboot()
 	h.root = key.Issue(h.owner, key.Root{Clerk: "tv-fixture", Verbs: []key.Verb{key.ChangeAccount}, Serial: "synthetic-tv-root"})
 	var err error
@@ -293,5 +300,34 @@ func TestDeclarationAndSignedSnapshotBoundaries(t *testing.T) {
 	}
 	if got := h.clerk.Do(call.Req, h.engine.State()); got.Outcome != "ok" || h.transport.edits != 1 {
 		t.Fatal("duplicate step committed twice", got)
+	}
+}
+
+// This uses the upstream fsynced/locked file store, with a synthetic retained
+// anchor. It does not qualify production rollback protection or power loss.
+func TestFileBackedKernelSettlesLostReplyAfterStoreReopen(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "kernel.log")
+	store, err := proc.OpenFileStore(path)
+	check(t, err)
+	h := fixtureStore(t, "owner", store)
+	h.transport.lost = true
+	call := h.dispatch(h.plan("file-backed-lost-reply", false))
+	if got := h.clerk.Do(call.Req, h.engine.State()); got.Outcome != "unknown" {
+		t.Fatal(got)
+	}
+	check(t, store.Close())
+	data, err := os.ReadFile(path)
+	check(t, err)
+	if len(data) == 0 || bytes.Contains(data, []byte("PRIVATE-CONFIGURATION-CANARY")) {
+		t.Fatal("kernel log absent or private command stored in plaintext")
+	}
+	reopened, err := proc.OpenFileStore(path)
+	check(t, err)
+	defer reopened.Close()
+	h.store = reopened
+	h.reboot()
+	check(t, h.engine.Revoke(h.now, h.grant.Tip()))
+	if got := h.clerk.Probe(call.Req, h.engine.State()); got.Outcome != "done" || h.transport.edits != 1 {
+		t.Fatal("file-backed restart failed to settle the existing effect", got)
 	}
 }

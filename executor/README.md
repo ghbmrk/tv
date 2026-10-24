@@ -27,7 +27,7 @@ python3 tools/qualify_control_interop.py --serial EMULATOR_SERIAL \
   --go-executor .local/tv-kernel-clerk-interop --kernel-clerk
 ```
 
-Linux runtime verification is pending for the new clerk until the implementation's CI completes. Historical journal verification below remains scoped to that adapter.
+The static Linux ARM64 clerk tests pass inside the local Android emulator, including lost-reply reconciliation after reopening the upstream fsynced file store (with a synthetic retained anchor), real-kernel restart reconciliation, revocation, STOP, expiry, signed-plan tampering and household exact-plan checks. The current-kernel probe also passes against the real paired Android service: apply, exact retry, clerk/kernel recreation, receipt reconciliation and undo. This local run used an emulator-only wrapper and temporary synthetic credentials; it does not verify production process isolation. Hosted Linux race/vet and x86_64 emulator checks remain pending. Historical journal verification below remains scoped to that adapter.
 
 ## Owner embedding boundary
 
