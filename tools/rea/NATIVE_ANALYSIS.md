@@ -52,3 +52,9 @@ Retain full tool results privately; publish only the minimum factual inventory a
 `tools/check_native_calls.py` implements only the Thumb-2 BLX immediate destination calculation and bounded ELF mapping. The encoding's sign extension, J1/J2 transform and PC alignment follow Arm's [AArch32 instruction reference](https://documentation-service.arm.com/static/6762baf227eda361ad4e0735); the [LLVM LLDB implementation](https://lldb.llvm.org/cpp_reference/EmulateInstructionARM_8cpp_source.html) provides another primary implementation reference. No upstream implementation was copied.
 
 This corroborates three direct calls in the recorded verifier. It cannot independently validate imported symbol semantics, configuration, dynamic reachability or boot/recovery behavior. See [the findings](../../research/BOOT_VERIFIER_FINDINGS.md) before drawing conclusions.
+
+## Headerless ARM control
+
+Use the original `fixtures/raw_arm_control.S` to check a new raw-loader interpretation before vendor analysis. Compile it with `clang --target=armv7-none-eabi -c`, then independently read the single bounded `.text` section into a private raw file. The observed 28-byte output digest is recorded in `research/seret-wrapper-inventory.json`; compare both decompiled behavior and complete function-body ranges.
+
+With this toolchain, mapping the fixture at analysis zero created a spurious `DataAbort` function at its ordinary conditional target and split its body. A neutral imposed coordinate recovered all 28 bytes. Do not interpret those vector names as discovered device roles. Use `open_binary` with the documented `raw-binary`, `architecture` and `entry_point` arguments; the chosen entry/load coordinate is an analysis hypothesis, not a hardware address. Preserve this qualification in every finding, especially for absolute references. No raw vendor image is executed by this workflow.
