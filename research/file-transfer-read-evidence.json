@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-10-24",
+  "retained_capability_observed": "2026-10-15",
+  "retained_sdk_report": {
+    "filesync_support": "pushpull",
+    "intershell_support": "disabled",
+    "rootonoff_support": "disabled"
+  },
+  "capability_limit": "Historical SDK report, not current file access or boot authority; new collection requires a fresh target-specific pull advertisement.",
+  "sdk": {
+    "version": "4.2.36",
+    "binary_sha256": "05db410d2e36e85147f95b20bae6296a71c54dab0e1ec79f9e11b89c4b6bd2cd",
+    "official_package": "https://download.tizen.org/sdk/tizenstudio/official/binary/sdb_4.2.36_macos-64.zip",
+    "own_help_sha256": "90c9e826ff453a097790fafd4f370224d9e96c319e42758574945434fb8b4235",
+    "own_help_pull_semantics": "Copy a file or directory recursively from the target"
+  },
+  "family_source_archive_sha256": "7ec0b6fbe6ff8273d93fc7e6b9ddf8c84f9959a45884313b3d3a6f94d235b94e",
+  "family_source_files": [
+    {
+      "path": "linux-5.4/drivers/of/kobj.c",
+      "bytes": 3952,
+      "sha256": "e4a802e4232aaadc0e473dbb0cdbdd695c03f23f629299964e8a8029a9642d0b",
+      "reviewed_line_ranges": [
+        {
+          "first": 32,
+          "last": 37,
+          "sha256": "024df8dd1a3c0363e49b33a0bd647a82ac187f800a6ba54ef0d488e2262712d7"
+        },
+        {
+          "first": 72,
+          "last": 84,
+          "sha256": "e7017eef03de12b4439feaf92762a627befb4529156db1fdea4693dcf40bb1e7"
+        }
+      ]
+    },
+    {
+      "path": "linux-5.4/drivers/of/base.c",
+      "bytes": 62708,
+      "sha256": "97d8ed80d6fb3b3f40b42e67d3067fe650458c5cb6cedd65958e82f8bc1734f2",
+      "reviewed_line_ranges": [
+        {
+          "first": 238,
+          "last": 251,
+          "sha256": "7a0ce22ae9a818057685c2e17f6eb80e81f78abc56ce606fb92e924907e054c5"
+        }
+      ]
+    }
+  ],
+  "source_claims": [
+    "The OF property read callback copies from the in-memory property value through memory_read_from_buffer.",
+    "Non-security properties get a readable bin attribute and this read callback.",
+    "The /proc/device-tree path is a symlink to /sys/firmware/devicetree/base."
+  ],
+  "installed_exact_build_correspondence_verified": false,
+  "allowed_remote_files": [
+    "/proc/cpuinfo",
+    "/proc/device-tree/compatible"
+  ],
+  "method_changes_tv_settings_or_software": false,
+  "source_or_vendor_payload_executed": false,
+  "qualified_for_boot_or_recovery": false,
+  "current_observation": {
+    "observed_utc": "2026-10-24T14:44:56.815192+00:00",
+    "full_sku_http_match": true,
+    "normal_sdb_connection_returncode": 1,
+    "normal_sdb_session_confirmed": false,
+    "file_reads_attempted": false,
+    "capability_requested": false,
+    "result": "device_unconfirmed",
+    "sdk_report": "failed to connect",
+    "cause": "unknown",
+    "settings_or_software_changed": false
+  }
+}
